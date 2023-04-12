@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
-import 'package:poly_playground/ui/authentication/phone_number_screen.dart';
-import 'package:poly_playground/ui/authentication/signup_screen.dart';
+import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart';
+import 'package:poly_playground/ui/authentication/signup/signup_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 
 import '../home/home_screen.dart';
-import 'auth_page.dart';
-import 'login_screen.dart';
+import 'auth/auth_page.dart';
+import 'login/login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);

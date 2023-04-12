@@ -5,10 +5,10 @@ import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
-import '../../common/custom_nav.dart';
-import '../../utils/constants/app_colors.dart';
-import '../home/home_screen.dart';
-import '../ui_components/custom_text_field.dart';
+import '../../../common/custom_nav.dart';
+import '../../../utils/constants/app_colors.dart';
+import '../../home/home_screen.dart';
+import '../../ui_components/custom_text_field.dart';
 
 
 class SignUpScreen extends StatefulWidget {
