@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../common/nav_function.dart';
 import '../../utils/constants/app_colors.dart';
-import '../authentication/add_picture_screen.dart';
 import '../ui_components/simple_button.dart';
 
 class EditProfileScreen extends StatefulWidget {

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "905433858881",
+    "project_id": "poly-playground-f4875",
+    "storage_bucket": "poly-playground-f4875.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905433858881:android:39953cdfd3ac362295d7c0",
+        "android_client_info": {
+          "package_name": "com.example.poly_playground"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905433858881-112kdtrsubamqubvdd5abtp8igqbprvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvw-AZH_DmcBXOw1L7bQnT7OM3Yn1YOLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905433858881-112kdtrsubamqubvdd5abtp8igqbprvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

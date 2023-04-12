@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
+
+import '../home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -10,17 +11,13 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-
-
 class _SplashScreenState extends State<SplashScreen> {
-
-
-
+  bool islogin = false;
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      screenPush(context, const WelcomeScreen());
+      Navigator.push(context, MaterialPageRoute(builder: (context) => islogin ? const HomeScreen() : const WelcomeScreen()));
     });
   }
 
@@ -35,4 +32,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-

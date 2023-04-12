@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/home/profile_screen.dart';
@@ -15,6 +16,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+
+    final user = FirebaseAuth.instance.currentUser!;
+    
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -72,10 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        }, icon: Image.asset("assets/menu.png")
+                        
+                        ),
+                        
+                    IconButton(
                         onPressed: () {},
                         icon: Image.asset("assets/search.png")),
-                    IconButton(
-                        onPressed: () {}, icon: Image.asset("assets/menu.png")),
+                    
                     InkWell(
                       onTap: () {},
                       child: Text(
@@ -116,6 +126,28 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
+              Container(
+                height: 50,
+                width: size.width,
+                color: Colors.white,
+                child:Row(
+                  mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
+                  children: [
+                  Text(user.email!,style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w700),),
+                  const SizedBox(width: 10,),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(100, 30),
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: ()=> FirebaseAuth.instance.signOut(), icon: const Icon(Icons.arrow_back), label: const Text(
+                      "Logout",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w700),
+                    ),
+                    ),
+                ],)
+                ),
               Expanded(
                 child: GridView.builder(
                   itemCount: 6,

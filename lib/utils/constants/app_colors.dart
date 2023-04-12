@@ -9,4 +9,6 @@ class AppColors {
   get whiteColor => Colors.white;
 
   get blackColor => Colors.black;
+
+  get lightBrownColor => null;
 }

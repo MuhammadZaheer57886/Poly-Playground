@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
               AppColors.i.darkBrownColor.withOpacity(0.4),
             ])),
         child: Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
           width: size.width * 0.9,
