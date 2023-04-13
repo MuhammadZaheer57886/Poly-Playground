@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
@@ -17,7 +18,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => islogin ? const HomeScreen() : const WelcomeScreen()));
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    user != null ? const HomeScreen() : const WelcomeScreen()));
+
+        // if (user != null) {
+        //   print(user.uid);
+        // }
+      });
+
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => islogin ? const HomeScreen() : const WelcomeScreen()));
     });
   }
 
