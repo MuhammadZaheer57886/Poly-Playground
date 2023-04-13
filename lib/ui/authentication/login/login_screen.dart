@@ -1,18 +1,20 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:poly_playground/ui/authentication/signup_screen.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/signup/signup_screen.dart';
 
-import '../../common/pop_message.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_strings.dart';
-import '../ui_components/custom_text_field.dart';
+import '../../../common/pop_message.dart';
+import '../../../utils/constants/app_colors.dart';
+import '../../../utils/constants/app_strings.dart';
+import '../../ui_components/custom_text_field.dart';
+import 'forgotpassword.dart';
 
 class Loginwidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
   const Loginwidget({
     
-    super.key, required this.onClickedSignUp});
+    super.key,  required this.onClickedSignUp});
 
   @override
   State<Loginwidget> createState() => LloginwidgetState();
@@ -127,7 +129,9 @@ class LloginwidgetState extends State<Loginwidget> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            screenPush(context, const ForgotPasswordPage());
+                          },
                           child: Text(
                             "Forgot your password ?",
                             style: TextStyle(

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/ui/authentication/phone_verification.dart';
 
-import '../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_strings.dart';
-import '../ui_components/custom_text_field.dart';
+import '../../../utils/constants/app_colors.dart';
+import '../../ui_components/custom_text_field.dart';
 
-class PhoneNumberScreen extends StatefulWidget {
-  const PhoneNumberScreen({Key? key}) : super(key: key);
+class PhoneVerificationScreen extends StatefulWidget {
+  const PhoneVerificationScreen({Key? key}) : super(key: key);
 
   @override
-  State<PhoneNumberScreen> createState() => _PhoneNumberScreenState();
+  State<PhoneVerificationScreen> createState() =>
+      _PhoneVerificationScreenState();
 }
 
-class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
+class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
 
@@ -56,40 +54,35 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 width: size.width,
                 height: size.height * 0.21,
                 child: Text(
-                  "Connect by Phone Number",
+                  "Verification Code",
                   style: TextStyle(
                       color: Colors.black,
-                      fontSize: size.width * 0.045,
+                      fontSize: size.width * 0.05,
                       fontWeight: FontWeight.w700),
                 )),
             SizedBox(
               height: size.height * 0.12,
             ),
             CustomTextField(
-                titleText: "PHONE NUMBER",
-                imageAddress: "assets/phone.png",
+                titleText: "_ _ _ _",
+                imageAddress: "assets/verification_code.png",
                 controller: controllerEmail),
             SizedBox(
               height: size.height * 0.04,
             ),
-            InkWell(
-              onTap: () {
-                screenPush(context, PhoneVerificationScreen());
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.12, vertical: 17),
-                decoration: BoxDecoration(
-                  color: AppColors.i.darkBrownColor,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Text(
-                  "CONTINUE",
-                  style: TextStyle(
-                    color: AppColors.i.whiteColor,
-                    fontSize: size.width * 0.04,
-                    fontWeight: FontWeight.w700,
-                  ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.12, vertical: 17),
+              decoration: BoxDecoration(
+                color: AppColors.i.darkBrownColor,
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: Text(
+                "CONTINUE",
+                style: TextStyle(
+                  color: AppColors.i.whiteColor,
+                  fontSize: size.width * 0.04,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
