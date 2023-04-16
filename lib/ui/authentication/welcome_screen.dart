@@ -2,14 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/provider/internet_provider.dart';
+import 'package:poly_playground/provider/sign_in_provider.dart';
 import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart';
-import 'package:poly_playground/ui/authentication/signup/signup_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
+import 'package:provider/provider.dart';
 
 import '../home/home_screen.dart';
 import 'auth/auth_page.dart';
-import 'login/login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -92,7 +93,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   height: 15,
                 ),
                 loginButton(size, AppStrings.i.google, "assets/google.png", () {
-                  showFailedToast(context, "Coming soon");
+                  handleGoogleSignIn();
+                  
                 }),
                 const SizedBox(
                   height: 15,
@@ -176,5 +178,48 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ],
           ),
         ));
+  }
+  //handling google sign in
+  Future handleGoogleSignIn() async {
+    final sp = context.read<SignInProvider>();
+    // interner provider
+    final ip = context.read<InternetProvider>();
+
+    await ip.checkInternetConnection();
+    if (ip.hasInternet == false) {
+      showFailedToast(context, "No internet connection");
+
+    } else {
+      await sp.signInWithGoogle().then((value) async{
+        if (sp.hasError == true) {
+          showFailedToast(context, sp.errorCode.toString());
+        } else {
+          sp.checkUserExist().then((value) async{
+            if(value ==true){
+              // user exist
+              sp.getUserDataFromFireStore(sp.uid).then((value) => 
+              sp.saveDataToSharedPref().then( (value) => sp.setSignIn().then((value) => {
+                handleAfterSignIn(),
+              }))
+              );
+
+            }else{
+              // user does not exist
+              sp.saveUserDataToFireStore().then((value) => sp
+              .saveDataToSharedPref().then((value)=> sp.setSignIn().then((value) => {
+                handleAfterSignIn(),
+              })));
+            }
+          });
+        }
+      });
+      
+  }
+}
+// handeling after sign in
+  void handleAfterSignIn() {
+    Future.delayed(const Duration(seconds: 3), () {
+      screenPush(context, const HomeScreen());
+    });
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:provider/provider.dart';
 
-import '../../utils/constants/app_colors.dart';
-import 'edit_profile_screen.dart';
+import '../../../provider/sign_in_provider.dart';
+import '../../../utils/constants/app_colors.dart';
+import '../../authentication/welcome_screen.dart';
+import '../edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,8 +15,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Future getData() async {
+    final sp = context.read<SignInProvider>();
+    sp.getDataFromSharedPreferences();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final sp = context.read<SignInProvider>();
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -70,15 +85,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Row(
                     children: [
-                      Container(
-                        width: size.width * 0.22,
-                        height: size.width * 0.22,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: AssetImage("assets/temp/5.png"),
-                                fit: BoxFit.fill)),
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage('${sp.photoUrl}'),
                       ),
+                      // Container(
+                      //   width: size.width * 0.22,
+                      //   height: size.width * 0.22,
+                      //   decoration: const BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //       image: DecorationImage(
+                      //           image: NetworkImage('${sp}'),
+                      //           fit: BoxFit.fill)),
+                      // ),
                       const SizedBox(
                         width: 20,
                       ),
@@ -87,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Display name",
+                            "${sp.name}",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -107,7 +127,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
+                          // Text(
+                          //   "${sp.email}",
+                          //   style: TextStyle(
+                          //       color: Colors.black,
+                          //       fontWeight: FontWeight.w500,
+                          //       fontSize: size.width * 0.037),
+                          // ),
+                          const SizedBox(
+                            width: 10,
+                          ),
                         ],
+                      ),
+                      SizedBox(
+                        width: size.width * 0.05,
+                      ),
+
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(100, 30),
+                          backgroundColor: AppColors.i.darkBrownColor,
+                        ),
+                        onPressed: () {
+                          sp.signOutGoogle();
+                          screenPushRep(context, const WelcomeScreen());
+                        },
+                        child: const Text(
+                          "Sign Out",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ],
                   ),

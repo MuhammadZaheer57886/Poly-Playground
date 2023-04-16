@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/ui/home/profile_screen.dart';
+import 'package:poly_playground/provider/sign_in_provider.dart';
+import 'package:poly_playground/ui/authentication/welcome_screen.dart';
+import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/constants/app_colors.dart';
 import '../chat/chat_screen.dart';
@@ -16,9 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-
-    final user = FirebaseAuth.instance.currentUser!;
-    
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -126,28 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                height: 50,
-                width: size.width,
-                color: Colors.white,
-                child:Row(
-                  mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
-                  children: [
-                  Text(user.email!,style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w700),),
-                  const SizedBox(width: 10,),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(100, 30),
-                      backgroundColor: Colors.red,
-                    ),
-                    onPressed: ()=> FirebaseAuth.instance.signOut(), icon: const Icon(Icons.arrow_back), label: const Text(
-                      "Logout",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                    ),
-                    ),
-                ],)
-                ),
               Expanded(
                 child: GridView.builder(
                   itemCount: 6,

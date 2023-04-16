@@ -3,7 +3,6 @@ import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/authentication/phone/phone_verification.dart';
 
 import '../../../utils/constants/app_colors.dart';
-import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
@@ -74,7 +73,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             ),
             InkWell(
               onTap: () {
-                screenPush(context, PhoneVerificationScreen());
+                screenPush(context, const PhoneVerificationScreen());
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

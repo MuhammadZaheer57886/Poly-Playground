@@ -40,8 +40,14 @@ dependencies:
   fluttertoast: ^8.2.1
   flutter_launcher_icons: ^0.13.0
   firebase_core: ^2.9.0
-  firebase_auth: ^4.4.0
+  firebase_auth: ^4.4.1
   email_validator: ^2.1.17
+  google_sign_in: ^6.1.0
+  provider: ^6.0.5
+  cloud_firestore: ^4.5.1
+  shared_preferences: ^2.1.0
+  flutter_facebook_auth: ^5.0.8
+  connectivity_plus: ^3.0.4
 
 dev_dependencies:
   flutter_test:
