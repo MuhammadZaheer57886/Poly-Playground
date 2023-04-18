@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
@@ -66,9 +67,10 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
               height: 40,
             ),
             GestureDetector(
-              onTap: (){
-                final a = getImageFromUser();
-                print(a);
+              onTap: () {
+                final file = getImageFromUser();
+                // if (file != null) uploadImage(file);
+                file != null ? uploadImage(file) : null;
               },
               child: Container(
                 alignment: Alignment.center,
@@ -106,7 +108,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
 
   Future<File?> getImageFromUser() async {
     final picker = ImagePicker();
-    try{
+    try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
         return null; // User did not select an image
@@ -120,6 +122,18 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     }
   }
 
+  void uploadImage(Future<File> file) {
+    // Create a storage reference from our app
+    final storageRef = FirebaseStorage.instance.ref();
 
+// Create a reference to "mountains.jpg"
+    final mountainsRef = storageRef.child("mountains.jpg");
 
+// Create a reference to 'images/mountains.jpg'
+    final mountainImagesRef = storageRef.child("images/mountains.jpg");
+
+// While the file names are the same, the references point to different files
+    assert(mountainsRef.name == mountainImagesRef.name);
+    assert(mountainsRef.fullPath != mountainImagesRef.fullPath);
+  }
 }
