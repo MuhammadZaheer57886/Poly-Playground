@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../utils/constants/app_colors.dart';
 import 'basic_info_screen.dart';
 
@@ -64,23 +65,29 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             const SizedBox(
               height: 40,
             ),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              margin: EdgeInsets.symmetric(
-                horizontal: size.width * 0.16,
-              ),
-              width: size.width * 0.65,
-              height: 45,
-              child: Text(
-                "INSERT YOUR PHOTO",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: size.width * 0.045,
-                    fontWeight: FontWeight.w500),
+            GestureDetector(
+              onTap: (){
+                final a = getImageFromUser();
+                print(a);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.16,
+                ),
+                width: size.width * 0.65,
+                height: 45,
+                child: Text(
+                  "INSERT YOUR PHOTO",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: size.width * 0.045,
+                      fontWeight: FontWeight.w500),
+                ),
               ),
             ),
             SizedBox(
@@ -96,4 +103,23 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
       ),
     );
   }
+
+  Future<File?> getImageFromUser() async {
+    final picker = ImagePicker();
+    try{
+      final pickedFile = await picker.pickImage(source: ImageSource.camera);
+      if (pickedFile == null) {
+        return null; // User did not select an image
+      }
+
+      final file = File(pickedFile.path);
+      return file;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+
+
 }

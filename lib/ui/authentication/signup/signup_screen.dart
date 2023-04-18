@@ -9,6 +9,7 @@ import '../../../common/custom_nav.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../photo_profile_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -206,7 +207,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           password: controllerPass.text.trim());
           // Registration successful, navigate to home screen
   // Navigator.of(navigatorKey.currentContext!).popUntil((route) => route.isFirst);
-  Navigator.of(navigatorKey.currentContext!).pushReplacement( MaterialPageRoute(builder: (context) => const HomeScreen()));
+  Navigator.of(navigatorKey.currentContext!).pushReplacement( MaterialPageRoute(builder: (context) => const  PhotoProfileScreen()));
     
     } on FirebaseAuthException catch (e) {
       print(e.message);

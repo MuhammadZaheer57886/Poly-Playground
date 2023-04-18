@@ -7,6 +7,7 @@ import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../photo_profile_screen.dart';
 import 'forgotpassword.dart';
 
 class Loginwidget extends StatefulWidget {
@@ -266,6 +267,10 @@ class LloginwidgetState extends State<Loginwidget> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: controllerEmail.text.trim(),
           password: controllerPassword.text.trim());
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PhotoProfileScreen()),
+      );
     } on FirebaseAuthException catch (e) {
       print(e);
       showFailedToast(context, e.message!);
