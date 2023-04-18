@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscuretext;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidateMode;
+  final TextInputType? keyboardType;
   const CustomTextField({
     Key? key,
     required this.controller,
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.obscuretext = false,
     this.autovalidateMode, 
+    this.keyboardType, 
     
   }) : super(key: key);
 
@@ -39,6 +41,7 @@ class CustomTextField extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               validator: validator,
+              keyboardType: keyboardType,
               autovalidateMode: autovalidateMode,
               obscureText: obscuretext ,
               decoration: InputDecoration(
