@@ -15,6 +15,8 @@ class PhotoProfileScreen extends StatefulWidget {
 }
 
 class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
+  FileImage? imageFile;
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -56,21 +58,31 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
                 fontSize: size.width * 0.05,
               ),
             ),
+
             Container(
               margin: EdgeInsets.only(top: size.height * 0.08),
               width: size.width * 0.4,
               height: size.width * 0.4,
-              decoration: const BoxDecoration(
-                  color: Color(0xffB40303), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    imageFile != null ? Colors.transparent :const  Color(0xffB40303),
+                image: imageFile != null
+                    ? DecorationImage(
+                        image: imageFile!,
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
             ),
+            //
             const SizedBox(
               height: 40,
             ),
             GestureDetector(
               onTap: () {
-                final file = getImageFromUser();
-                // if (file != null) uploadImage(file);
-                file != null ? uploadImage(file) : null;
+                getImageFromUser();
+                uploadImage(imageFile as FileImage);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -106,34 +118,51 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     );
   }
 
-  Future<File?> getImageFromUser() async {
+  Future getImageFromUser() async {
     final picker = ImagePicker();
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
-        return null; // User did not select an image
+         // ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to get image from camera.'),
+          );
+        // );
+        return;
       }
-
-      final file = File(pickedFile.path);
-      return file;
+      setState(() {
+        imageFile = FileImage(File(pickedFile.path));
+      });
     } catch (e) {
-      print(e);
-      return null;
+      // print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to get image from camera.'),
+        ),
+      );
     }
   }
 
-  void uploadImage(Future<File> file) {
+  Future<String?> uploadImage(FileImage file) async {
     // Create a storage reference from our app
-    final storageRef = FirebaseStorage.instance.ref();
+    final fileName = file.file.path.split('/').last;
 
-// Create a reference to "mountains.jpg"
-    final mountainsRef = storageRef.child("mountains.jpg");
-
-// Create a reference to 'images/mountains.jpg'
-    final mountainImagesRef = storageRef.child("images/mountains.jpg");
-
-// While the file names are the same, the references point to different files
-    assert(mountainsRef.name == mountainImagesRef.name);
-    assert(mountainsRef.fullPath != mountainImagesRef.fullPath);
+    try {
+      final Reference firebaseStorageRef =
+      FirebaseStorage.instance.ref().child('images/$fileName');
+      final UploadTask uploadTask = firebaseStorageRef.putFile(file.file);
+      await uploadTask;
+      final downloadUrl = await firebaseStorageRef.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      // print(e);
+      // Show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to save Image.'),
+        ),
+      );
+      return null;
+    }
   }
 }
