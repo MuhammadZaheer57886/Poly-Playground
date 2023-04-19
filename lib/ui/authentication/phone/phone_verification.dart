@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart';
+import 'package:poly_playground/ui/home/home_screen.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {
-  const PhoneVerificationScreen({Key? key}) : super(key: key);
+  final String verificationId;
+
+  const PhoneVerificationScreen({Key? key, required this.verificationId})
+      : super(key: key);
 
   @override
   State<PhoneVerificationScreen> createState() =>
@@ -12,8 +18,22 @@ class PhoneVerificationScreen extends StatefulWidget {
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
-  final TextEditingController controllerEmail = TextEditingController();
-  final TextEditingController controllerPassword = TextEditingController();
+  final TextEditingController controllerVerify = TextEditingController();
+
+  void _onContinuePressed() {
+    // Retrieve verification code from controller
+    
+    if(widget.verificationId==controllerVerify.text)
+    {
+      screenPush(context, const HomeScreen());
+    }else{
+      showFailedToast(context, 'Verification code is incorrect');
+    }
+    // TODO: Perform validation logic for verification code
+    // You can use the verificationId and verificationCode to verify the phone number
+
+    // TODO: Proceed with desired action (e.g. navigate to next screen, make API call, etc.)
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +84,10 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
               height: size.height * 0.12,
             ),
             CustomTextField(
-                titleText: "_ _ _ _",
+                titleText: '_ _ _ _ _ _ _',
+                keyboardType: TextInputType.number,
                 imageAddress: "assets/verification_code.png",
-                controller: controllerEmail),
+                controller: controllerVerify),
             SizedBox(
               height: size.height * 0.04,
             ),
@@ -77,12 +98,15 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 color: AppColors.i.darkBrownColor,
                 borderRadius: BorderRadius.circular(40),
               ),
-              child: Text(
-                "CONTINUE",
-                style: TextStyle(
-                  color: AppColors.i.whiteColor,
-                  fontSize: size.width * 0.04,
-                  fontWeight: FontWeight.w700,
+              child: TextButton(
+                onPressed: _onContinuePressed,
+                child: Text(
+                  "CONTINUE",
+                  style: TextStyle(
+                    color: AppColors.i.whiteColor,
+                    fontSize: size.width * 0.04,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

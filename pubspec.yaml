@@ -48,6 +48,7 @@ dependencies:
   shared_preferences: ^2.1.0
   flutter_facebook_auth: ^5.0.8
   connectivity_plus: ^3.0.4
+  twilio_flutter: ^0.0.9
 
 dev_dependencies:
   flutter_test:
