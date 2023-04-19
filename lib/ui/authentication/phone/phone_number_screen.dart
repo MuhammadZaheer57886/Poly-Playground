@@ -126,7 +126,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 TwilioFlutter twilioFlutter = TwilioFlutter(
   accountSid: 'ACbfb7848e63772d5dda4d1579b2a0a655',
   authToken: '8ddffe241449cea80476d1252ed0dacb',
-  twilioNumber: '+92 308 5745875',
+  twilioNumber: '+1 620 536 0691',
 );
 
 void _onContinuePressed(BuildContext context, String phoneNumber) async {
@@ -153,7 +153,7 @@ void _onContinuePressed(BuildContext context, String phoneNumber) async {
     }
   } else {
     // Show an error message to the user for invalid phone number
-    showFailedToast(context, "Invalid phone number");
+    showFailedToast(context, "Invalid phone number.ie. +[country code][number]");
   }
 }
 

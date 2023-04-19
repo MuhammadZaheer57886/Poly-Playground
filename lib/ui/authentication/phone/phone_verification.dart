@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart';
+import 'package:poly_playground/ui/home/home_screen.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 
@@ -18,8 +22,13 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
 
   void _onContinuePressed() {
     // Retrieve verification code from controller
-    String verificationCode = controllerVerify.text;
-
+    
+    if(widget.verificationId==controllerVerify.text)
+    {
+      screenPush(context, const HomeScreen());
+    }else{
+      showFailedToast(context, 'Verification code is incorrect');
+    }
     // TODO: Perform validation logic for verification code
     // You can use the verificationId and verificationCode to verify the phone number
 
