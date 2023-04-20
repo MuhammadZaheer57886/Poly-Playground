@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -257,26 +259,42 @@ class LloginwidgetState extends State<Loginwidget> {
         ),
       ),
     );
-  }
-  _login(String email, String password){
-    bool isValid = EmailValidator.validate(email);
-    bool isValidPass = password.length >= 6;
-    if (!isValid && !isValidPass) {
-      setState(() {
-        emailError = "Please enter a valid email";
-        passError = "Password must be at least 6 characters ";
-      });
-      return;
-    }
-    _auth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((uid) => {
-              showSuccessToast(context, "Login Successful"),
-              screenPush(context, const HomeScreen())
-            })
-        .catchError((e) {
-      print(e);
-      showFailedToast(context, e.message!);
+  }_login(String email, String password) async {
+  bool isValid = EmailValidator.validate(email);
+  bool isValidPass = password.length >= 6;
+  if (!isValid && !isValidPass) {
+     setState(() {
+      emailError = "Please enter a valid email";
+      passError = "Password must be at least 6 characters";
     });
+
+    // Show error messages for 3 seconds.
+    Timer(const Duration(seconds: 4), () {
+      setState(() {
+        emailError = null;
+        passError = null;
+      });
+    });
+
+    return;
   }
+
+  try {
+    List<String> signInMethods =
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+    if (signInMethods.contains('password')) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      showSuccessToast(context, "Login Successful");
+      screenPush(context, const HomeScreen());
+    } else {
+      showFailedToast(context, "SIGNUP: Email not found");
+    }
+  } catch (e) {
+    print(e);
+    showFailedToast(context, e.toString());
+  }
+}
 }
