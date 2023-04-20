@@ -6,8 +6,7 @@ import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../provider/sign_in_provider.dart';
-import '../../utils/constants/app_colors.dart';
+import '../../../utils/constants/app_colors.dart';
 import 'basic_info_screen.dart';
 
 class PhotoProfileScreen extends StatefulWidget {
@@ -87,7 +86,6 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             GestureDetector(
               onTap: () {
                 getImageFromUser();
-                // uploadImage(imageFile as FileImage);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -121,16 +119,16 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
               //   screenPush(context, const BasicInfoScreen());
               // })
               onTap: () async {
-                String? downloadUrl = await uploadImage(imageFile as FileImage);
+                 String downloadUrl = await uploadImage(imageFile as FileImage);
                 if (downloadUrl != null && downloadUrl.isNotEmpty) {
                   try {
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .update({
-                      'photoUrl': downloadUrl,
-                    });
-                    screenPush(context, const BasicInfoScreen());
+                    // await FirebaseFirestore.instance
+                    //     .collection('users')
+                    //     .doc(FirebaseAuth.instance.currentUser!.uid)
+                    //     .update({
+                    //   'photoUrl': downloadUrl,
+                    // });
+                      screenPush(context,BasicInfoScreen(photoUrl: downloadUrl));
                   } catch (e) {
                     print(e);
                   }
@@ -148,7 +146,6 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
-        // ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to get image from camera.'),
         );
@@ -168,7 +165,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     }
   }
 
-  Future<String> uploadImage(FileImage file) async {
+  Future< String> uploadImage(FileImage file) async {
     final fileName = file.file.path.split('/').last;
 
     try {

@@ -9,7 +9,7 @@ import '../../../common/custom_nav.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
-import '../photo_profile_screen.dart';
+import '../profile_info/photo_profile_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget {

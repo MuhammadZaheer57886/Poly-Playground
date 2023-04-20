@@ -7,7 +7,7 @@ import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
-import '../photo_profile_screen.dart';
+import '../profile_info/photo_profile_screen.dart';
 import 'forgotpassword.dart';
 
 class Loginwidget extends StatefulWidget {
