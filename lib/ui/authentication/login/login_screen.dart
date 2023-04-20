@@ -8,7 +8,9 @@ import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../phone/phone_number_screen.dart';
 import '../signup/signup_screen.dart';
+import '../welcome_screen.dart';
 import 'forgotpassword.dart';
 
 class Loginwidget extends StatefulWidget {
@@ -27,7 +29,7 @@ class LloginwidgetState extends State<Loginwidget> {
   final TextEditingController controllerPassword = TextEditingController();
   //calling fire base
   final _auth = FirebaseAuth.instance;
-
+  
   String? emailError;
   String? passError;
   
@@ -164,15 +166,15 @@ class LloginwidgetState extends State<Loginwidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  roundButton("assets/phone.png", size, () => null),
+                  roundButton("assets/phone.png", size, () => screenPush(context, const PhoneNumberScreen())),
                   const SizedBox(
                     width: 20,
                   ),
-                  roundButton("assets/google_g.png", size, () => null),
+                  roundButton("assets/google_g.png", size, () => screenPush(context, const WelcomeScreen())),
                   const SizedBox(
                     width: 20,
                   ),
-                  roundButton("assets/facebook_round.png", size, () => null),
+                  roundButton("assets/facebook_round.png", size, () => screenPush(context, const WelcomeScreen())),
                 ],
               ),
               const SizedBox(
@@ -244,6 +246,7 @@ class LloginwidgetState extends State<Loginwidget> {
 
   roundButton(String imageAddress, Size size, Function() onTap) {
     return InkWell(
+      onTap: onTap,
       child: Container(
         width: size.width * 0.15,
         height: size.width * 0.15,

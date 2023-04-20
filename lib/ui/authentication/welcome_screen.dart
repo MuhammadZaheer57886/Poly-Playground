@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
@@ -8,7 +7,6 @@ import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-
 import '../home/home_screen.dart';
 import 'login/login_screen.dart';
 import 'signup/signup_screen.dart';

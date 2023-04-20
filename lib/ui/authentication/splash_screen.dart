@@ -27,21 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ? screenPushRep(context, const WelcomeScreen())
           : screenPushRep(context, const HomeScreen());
     });
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) =>
-    //                 user != null ? const HomeScreen() : const WelcomeScreen()));
-
-    //     // if (user != null) {
-    //     //   print(user.uid);
-    //     // }
-    //   });
-
-    //   // Navigator.push(context, MaterialPageRoute(builder: (context) => islogin ? const HomeScreen() : const WelcomeScreen()));
-    // });
   }
 
   @override
