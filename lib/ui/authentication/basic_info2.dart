@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 
+import '../../common/pop_message.dart';
 import '../../utils/constants/app_colors.dart';
+import '../ui_components/custom_text_field.dart';
 import '../ui_components/simple_button.dart';
 import 'add_picture_screen.dart';
 
@@ -14,11 +18,20 @@ class BasicInfo2Screen extends StatefulWidget {
 
 class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
   String role = "";
+  String date = "";
+  String city = "";
+  String town = "";
+  final TextEditingController controllerDay = TextEditingController();
+  final TextEditingController controllerMonth = TextEditingController();
+  final TextEditingController controllerYear = TextEditingController();
+  final TextEditingController controllerCity = TextEditingController();
+  final TextEditingController controllerTown = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: AppColors.i.darkBrownColor,
         elevation: 0,
@@ -35,7 +48,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
         width: size.width,
-        height: size.height,
+        height: size.height * 0.9,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -181,39 +194,27 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 5),
+                CustomTextField(
+                  titleText: "Day",
                   width: size.width * 0.25,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                        hintText: "Day", border: InputBorder.none),
-                  ),
+                  controller: controllerDay,
+                  isDark: false,
+                  radius: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 5),
+                CustomTextField(
+                  titleText: "Month",
                   width: size.width * 0.25,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                        hintText: "Month", border: InputBorder.none),
-                  ),
+                  controller: controllerMonth,
+                  isDark: false,
+                  radius: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 5),
+                CustomTextField(
+                  titleText: "Year",
                   width: size.width * 0.25,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                        hintText: "Year", border: InputBorder.none),
-                  ),
-                )
+                  controller: controllerYear,
+                  isDark: false,
+                  radius: 15,
+                ),
               ],
             ),
             const SizedBox(
@@ -230,24 +231,13 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20, top: 2),
-              width: size.width * 0.88,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Town",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+            CustomTextField(
+                titleText: "City",
+                width: size.width * 0.88,
+                controller: controllerCity,
+                isDark: false,
+                radius: 15,
+                pl: 20),
             const SizedBox(
               height: 20,
             ),
@@ -262,29 +252,15 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20, top: 2),
-              width: size.width * 0.88,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Town",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            CustomTextField(
+                titleText: "Town",
+                width: size.width * 0.88,
+                controller: controllerTown,
+                isDark: false,
+                radius: 15,
+                pl: 20),
             SizedBox(
-              height: size.height * 0.12,
+              height: size.height * 0.08,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -292,7 +268,9 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                 SimpleButton(
                     title: "CONTINUE",
                     onTap: () {
-                      screenPush(context, const AddPictureScreen());
+                      setDate();
+                      updateInfo();
+                      // screenPush(context, const AddPictureScreen());
                     }),
               ],
             )
@@ -300,5 +278,45 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
         ),
       ),
     );
+  }
+
+  void setDate() {
+    if (controllerDay.text.isNotEmpty &&
+        controllerMonth.text.isNotEmpty &&
+        controllerYear.text.isNotEmpty &&
+        controllerCity.text.isNotEmpty &&
+        controllerTown.text.isNotEmpty) {
+      if (int.parse(controllerDay.text) > 31 ||
+          int.parse(controllerDay.text) < 1) {
+        showFailedToast(context, "Please enter valid day");
+      } else if (int.parse(controllerMonth.text) > 12 ||
+          int.parse(controllerMonth.text) < 1) {
+        showFailedToast(context, "Please enter valid month");
+      } else if (int.parse(controllerYear.text) > 2021 ||
+          int.parse(controllerYear.text) < 1900) {
+        showFailedToast(context, "Please enter valid year");
+      } else {
+        setState(() {
+          date =
+              "${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}";
+          city = controllerCity.text;
+          town = controllerTown.text;
+        });
+      }
+    }
+  }
+  void updateInfo() {
+    if (date.isNotEmpty && city.isNotEmpty && town.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "date": date,
+        "city": city,
+        "town": town,
+      }).then((value) {
+        screenPush(context, const AddPictureScreen());
+      });
+    }
   }
 }
