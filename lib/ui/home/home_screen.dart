@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/provider/sign_in_provider.dart';
-import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
-import 'package:provider/provider.dart';
-
 import '../../utils/constants/app_colors.dart';
 import '../chat/chat_screen.dart';
 

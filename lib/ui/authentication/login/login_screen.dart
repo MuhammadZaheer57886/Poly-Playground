@@ -2,18 +2,21 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/home/home_screen.dart';
 
 import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../signup/signup_screen.dart';
 import 'forgotpassword.dart';
 
 class Loginwidget extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
+  // final VoidCallback onClickedSignUp;
   const Loginwidget({
-    
-    super.key,  required this.onClickedSignUp});
+    super.key,
+    // required this.onClickedSignUp
+  });
 
   @override
   State<Loginwidget> createState() => LloginwidgetState();
@@ -22,8 +25,12 @@ class Loginwidget extends StatefulWidget {
 class LloginwidgetState extends State<Loginwidget> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
+  //calling fire base
+  final _auth = FirebaseAuth.instance;
+
   String? emailError;
   String? passError;
+  
 
   @override
   void dispose() {
@@ -78,23 +85,23 @@ class LloginwidgetState extends State<Loginwidget> {
                 height: size.height * 0.04,
               ),
               CustomTextField(
-                  titleText: "E-MAIL",
-                  imageAddress: "assets/email.png",
-                  controller: controllerEmail,
-                  errorText: emailError,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
+                titleText: "E-MAIL",
+                imageAddress: "assets/email.png",
+                controller: controllerEmail,
+                errorText: emailError,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
               const SizedBox(
                 height: 12,
               ),
               CustomTextField(
-                  titleText: "PASSWORD",
-                  imageAddress: "assets/lock.png",
-                  controller: controllerPassword,
-                  obscuretext: true,
-                  errorText: passError,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
+                titleText: "PASSWORD",
+                imageAddress: "assets/lock.png",
+                controller: controllerPassword,
+                obscuretext: true,
+                errorText: passError,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -104,7 +111,10 @@ class LloginwidgetState extends State<Loginwidget> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: _login,
+                      onTap: () async {
+                        await _login(
+                            controllerEmail.text, controllerPassword.text);
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: size.width * 0.12, vertical: 17),
@@ -188,7 +198,9 @@ class LloginwidgetState extends State<Loginwidget> {
                       width: 5,
                     ),
                     InkWell(
-                      onTap: widget.onClickedSignUp,
+                      onTap: () {
+                        screenPush(context, const SignUpScreen());
+                      },
                       child: Text(
                         AppStrings.i.signUp,
                         style: TextStyle(
@@ -197,8 +209,7 @@ class LloginwidgetState extends State<Loginwidget> {
                           fontSize: size.width * 0.037,
                         ),
                       ),
-                      ),
-                    
+                    ),
                   ],
                 ),
               )
@@ -244,10 +255,9 @@ class LloginwidgetState extends State<Loginwidget> {
       ),
     );
   }
-
-  Future _login() async {
-    bool isValid = EmailValidator.validate(controllerEmail.text);
-    bool isValidPass =  controllerPassword.text.length >= 6;
+  _login(String email, String password){
+    bool isValid = EmailValidator.validate(email);
+    bool isValidPass = password.length >= 6;
     if (!isValid && !isValidPass) {
       setState(() {
         emailError = "Please enter a valid email";
@@ -255,20 +265,15 @@ class LloginwidgetState extends State<Loginwidget> {
       });
       return;
     }
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: controllerEmail.text.trim(),
-          password: controllerPassword.text.trim());
-    } on FirebaseAuthException catch (e) {
+    _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((uid) => {
+              showSuccessToast(context, "Login Successful"),
+              screenPush(context, const HomeScreen())
+            })
+        .catchError((e) {
       print(e);
       showFailedToast(context, e.message!);
-    }
+    });
   }
 }
