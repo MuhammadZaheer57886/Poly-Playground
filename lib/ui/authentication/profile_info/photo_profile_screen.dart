@@ -112,25 +112,18 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             ),
             SimpleButton(
               title: "CONTINUE",
-              // onTap: () {
-              //  String url = uploadImage(imageFile as FileImage) as String;
-              //   url != '' ? updateProfileImage(url!) : '';
-              //
-              //   screenPush(context, const BasicInfoScreen());
-              // })
               onTap: () async {
                  String downloadUrl = await uploadImage(imageFile as FileImage);
-                if (downloadUrl != null && downloadUrl.isNotEmpty) {
+                if (downloadUrl.isNotEmpty) {
                   try {
-                    // await FirebaseFirestore.instance
-                    //     .collection('users')
-                    //     .doc(FirebaseAuth.instance.currentUser!.uid)
-                    //     .update({
-                    //   'photoUrl': downloadUrl,
-                    // });
-                      screenPush(context,BasicInfoScreen(photoUrl: downloadUrl));
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({
+                      'photoUrl': downloadUrl,
+                    });
+                      screenPush(context,const BasicInfoScreen());
                   } catch (e) {
-                    print(e);
                   }
                 }
               },
@@ -182,10 +175,8 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
         throw Exception('Failed to upload image.');
       }
     } on FirebaseException catch (e) {
-      print(e);
       throw Exception('Failed to upload image.');
     } catch (e) {
-      print(e);
       throw Exception('Failed to upload image.');
     }
   }

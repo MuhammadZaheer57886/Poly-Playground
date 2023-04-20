@@ -6,11 +6,10 @@ import 'package:poly_playground/common/nav_function.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
-import '../basic_info2.dart';
+import 'basic_info2.dart';
 
 class BasicInfoScreen extends StatefulWidget {
-  final String? photoUrl;
-  const BasicInfoScreen({Key? key, this.photoUrl}) : super(key: key);
+  const BasicInfoScreen({Key? key, }) : super(key: key);
 
   @override
   State<BasicInfoScreen> createState() => _BasicInfoScreenState();
@@ -122,14 +121,13 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   void initState() {
     // TODO: implement initState
       super.initState();
-      print(widget.photoUrl);
   }
   void updateBasicInfo() async {
     // Check if any of the fields are empty
     if (controllerFullName.text.isEmpty ||
         controllerJOB.text.isEmpty ||
-        controllerIntro.text.isEmpty ||
-        widget.photoUrl == null) {
+        controllerIntro.text.isEmpty
+        ) {
       return;
     }
 
@@ -142,14 +140,10 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
         'job': controllerJOB.text,
         'name': controllerFullName.text,
         'intro': controllerIntro.text,
-        'photoUrl': widget.photoUrl,
       });
 
       // Navigate to the next screen
       screenPush(context, const BasicInfo2Screen());
-    } catch (e) {
-      // Handle any errors that may occur during the process
-      print(e);
-    }
+    } catch (e) {}
   }
 }

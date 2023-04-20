@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 
-import '../../common/pop_message.dart';
-import '../../utils/constants/app_colors.dart';
-import '../ui_components/custom_text_field.dart';
-import '../ui_components/simple_button.dart';
+import '../../../common/pop_message.dart';
+import '../../../utils/constants/app_colors.dart';
+import '../../ui_components/custom_text_field.dart';
+import '../../ui_components/simple_button.dart';
 import 'add_picture_screen.dart';
 
 class BasicInfo2Screen extends StatefulWidget {
@@ -314,6 +314,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
         "date": date,
         "city": city,
         "town": town,
+        "role" : role ,
       }).then((value) {
         screenPush(context, const AddPictureScreen());
       });
