@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../provider/sign_in_provider.dart';
 import '../../utils/constants/app_colors.dart';
 import 'basic_info_screen.dart';
 
@@ -17,6 +20,7 @@ class PhotoProfileScreen extends StatefulWidget {
 class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
   FileImage? imageFile;
 
+  @override
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -65,8 +69,9 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
               height: size.width * 0.4,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    imageFile != null ? Colors.transparent :const  Color(0xffB40303),
+                color: imageFile != null
+                    ? Colors.transparent
+                    : const Color(0xffB40303),
                 image: imageFile != null
                     ? DecorationImage(
                         image: imageFile!,
@@ -82,7 +87,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             GestureDetector(
               onTap: () {
                 getImageFromUser();
-                uploadImage(imageFile as FileImage);
+                // uploadImage(imageFile as FileImage);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -108,10 +113,30 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
               height: size.height * 0.25,
             ),
             SimpleButton(
-                title: "CONTINUE",
-                onTap: () {
-                  screenPush(context, const BasicInfoScreen());
-                })
+              title: "CONTINUE",
+              // onTap: () {
+              //  String url = uploadImage(imageFile as FileImage) as String;
+              //   url != '' ? updateProfileImage(url!) : '';
+              //
+              //   screenPush(context, const BasicInfoScreen());
+              // })
+              onTap: () async {
+                String? downloadUrl = await uploadImage(imageFile as FileImage);
+                if (downloadUrl != null && downloadUrl.isNotEmpty) {
+                  try {
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({
+                      'photoUrl': downloadUrl,
+                    });
+                    screenPush(context, const BasicInfoScreen());
+                  } catch (e) {
+                    print(e);
+                  }
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -123,10 +148,10 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
-         // ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to get image from camera.'),
-          );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to get image from camera.'),
+        );
         // );
         return;
       }
@@ -143,26 +168,28 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     }
   }
 
-  Future<String?> uploadImage(FileImage file) async {
-    // Create a storage reference from our app
+  Future<String> uploadImage(FileImage file) async {
     final fileName = file.file.path.split('/').last;
 
     try {
-      final Reference firebaseStorageRef =
-      FirebaseStorage.instance.ref().child('images/$fileName');
-      final UploadTask uploadTask = firebaseStorageRef.putFile(file.file);
-      await uploadTask;
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-      return downloadUrl;
+      final firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
+
+      final uploadTask = firebaseStorageRef.putFile(file.file);
+      final snapshot = await uploadTask.whenComplete(() {});
+
+      if (snapshot.state == TaskState.success) {
+        final downloadUrl = await firebaseStorageRef.getDownloadURL();
+        return downloadUrl;
+      } else {
+        throw Exception('Failed to upload image.');
+      }
+    } on FirebaseException catch (e) {
+      print(e);
+      throw Exception('Failed to upload image.');
     } catch (e) {
-      // print(e);
-      // Show an error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to save Image.'),
-        ),
-      );
-      return null;
+      print(e);
+      throw Exception('Failed to upload image.');
     }
   }
 }
