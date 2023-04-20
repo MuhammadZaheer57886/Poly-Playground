@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../utils/constants/app_colors.dart';
 import '../../payment/payment.dart';
 import '../../ui_components/simple_button.dart';
@@ -252,10 +250,8 @@ Future<String> uploadImage(FileImage file)  async {
   try {
     final firebaseStorageRef =
         FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
-
     final uploadTask = firebaseStorageRef.putFile(file.file);
     final snapshot = await uploadTask.whenComplete(() {});
-
     if (snapshot.state == TaskState.success) {
       final downloadUrl = await firebaseStorageRef.getDownloadURL();
       return downloadUrl;
@@ -263,8 +259,10 @@ Future<String> uploadImage(FileImage file)  async {
       throw Exception('Failed to upload image.');
     }
   } on FirebaseException catch (e) {
+    print(e);
     throw Exception('Failed to upload image.');
   } catch (e) {
+    print(e);
     throw Exception('Failed to upload image.');
   }
 }

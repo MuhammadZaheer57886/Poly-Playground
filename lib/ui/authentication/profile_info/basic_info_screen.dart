@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
@@ -144,6 +143,8 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
 
       // Navigate to the next screen
       screenPush(context, const BasicInfo2Screen());
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 }

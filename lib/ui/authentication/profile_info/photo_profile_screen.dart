@@ -175,8 +175,10 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
         throw Exception('Failed to upload image.');
       }
     } on FirebaseException catch (e) {
+      print(e);
       throw Exception('Failed to upload image.');
     } catch (e) {
+      print(e);
       throw Exception('Failed to upload image.');
     }
   }
