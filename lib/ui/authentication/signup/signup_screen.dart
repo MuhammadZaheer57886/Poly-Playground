@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +9,10 @@ import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/phoneUtils.dart';
 import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../phone/phone_number_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -24,6 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final TextEditingController controllerPhoneNum = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  // PhoneNumberScreen phoneNumScreen = PhoneNumberScreen();
   String? emailError;
   String? passError;
   String? conPassError;
@@ -188,7 +193,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(
           height: 25,
         ),
-        SimpleButton(title: "CREATE", onTap: () {})
+        SimpleButton(title: "CREATE", onTap: () {
+          PhoneUtils.onContinuePressed(context, controllerPhoneNum.text);
+        })
       ],
     );
   }
@@ -204,14 +211,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailError = "Please enter a valid email";
         passError = "Password must be at least 6 characters ";
       });
+      // Show error messages for 3 seconds.
+    Timer(const Duration(seconds: 4), () {
+      setState(() {
+        emailError = null;
+        passError = null;
+      });
+    });
       return;
     }
-    // if(!isValidConPass){
-    //   setState(() {
-    //     conPassError = "Password does not match";
-    //   });
-    //   return;
-    // }
     // showDialog(
     //     context: context,
     //     builder: (context) {

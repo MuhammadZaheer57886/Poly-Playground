@@ -29,10 +29,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     }else{
       showFailedToast(context, 'Verification code is incorrect');
     }
-    // TODO: Perform validation logic for verification code
-    // You can use the verificationId and verificationCode to verify the phone number
-
-    // TODO: Proceed with desired action (e.g. navigate to next screen, make API call, etc.)
   }
 
   @override
