@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../payment/payment.dart';
 import '../../ui_components/simple_button.dart';
@@ -199,18 +200,13 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
-        const SnackBar(
-          content: Text('Failed to get image from camera.'),
-        );
+        showFailedToast(context, 'No image selected.');
         return '';
       }
       return pickedFile.path;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to get image from camera.'),
-        ),
-      );
+      showFailedToast(context, 'Failed to get image from camera.');
+      return '';
     }
     return '';
   }
@@ -224,7 +220,10 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
         image3.isNotEmpty ? await uploadImage(FileImage(File(image3))) : '';
     final image4URL =
         image4.isNotEmpty ? await uploadImage(FileImage(File(image4))) : '';
-
+if(image1URL.isEmpty && image2URL.isEmpty && image3URL.isEmpty && image4URL.isEmpty){
+  showFailedToast(context, 'Please insert at least one image');
+  return;
+}
     FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -242,27 +241,28 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
       );
     });
   }
-}
 
-Future<String> uploadImage(FileImage file)  async {
-  final fileName = file.file.path.split('/').last;
+  Future<String> uploadImage(FileImage file) async {
+    final fileName = file.file.path.split('/').last;
 
-  try {
-    final firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
-    final uploadTask = firebaseStorageRef.putFile(file.file);
-    final snapshot = await uploadTask.whenComplete(() {});
-    if (snapshot.state == TaskState.success) {
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-      return downloadUrl;
-    } else {
-      throw Exception('Failed to upload image.');
+    try {
+      final firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
+      final uploadTask = firebaseStorageRef.putFile(file.file);
+      final snapshot = await uploadTask.whenComplete(() {});
+      if (snapshot.state == TaskState.success) {
+        final downloadUrl = await firebaseStorageRef.getDownloadURL();
+        return downloadUrl;
+      } else {
+        showFailedToast(context, 'Failed to upload image');
+        return '';
+      }
+    } on FirebaseException catch (e) {
+      print(e);
+      return '';
+    } catch (e) {
+      print(e);
+      return '';
     }
-  } on FirebaseException catch (e) {
-    print(e);
-    throw Exception('Failed to upload image.');
-  } catch (e) {
-    print(e);
-    throw Exception('Failed to upload image.');
   }
 }

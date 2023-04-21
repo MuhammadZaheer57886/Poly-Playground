@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final String imageAddress;
   final TextEditingController controller;
   final String? errorText;
+  final TextInputType? keyboardType;
   final bool obscuretext;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidateMode;
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.isDark = true,
     this.height,
     this.pl,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class CustomTextField extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             validator: validator,
+            keyboardType: keyboardType,
             autovalidateMode: autovalidateMode,
             obscureText: obscuretext,
             decoration: InputDecoration(

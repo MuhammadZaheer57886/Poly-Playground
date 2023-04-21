@@ -200,17 +200,20 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                   controller: controllerDay,
                   isDark: false,
                   radius: 15,
+                  keyboardType: TextInputType.number,
                 ),
                 CustomTextField(
                   titleText: "Month",
                   width: size.width * 0.25,
                   controller: controllerMonth,
+                  keyboardType: TextInputType.number,
                   isDark: false,
                   radius: 15,
                 ),
                 CustomTextField(
                   titleText: "Year",
                   width: size.width * 0.25,
+                  keyboardType: TextInputType.number,
                   controller: controllerYear,
                   isDark: false,
                   radius: 15,
@@ -234,6 +237,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
             CustomTextField(
                 titleText: "City",
                 width: size.width * 0.88,
+                keyboardType: TextInputType.text,
                 controller: controllerCity,
                 isDark: false,
                 radius: 15,
@@ -255,6 +259,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
             CustomTextField(
                 titleText: "Town",
                 width: size.width * 0.88,
+                keyboardType: TextInputType.text,
                 controller: controllerTown,
                 isDark: false,
                 radius: 15,
@@ -303,6 +308,9 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
           town = controllerTown.text;
         });
       }
+    }
+    else {
+      showFailedToast(context, "Please fill all fields");
     }
   }
   void updateInfo() {

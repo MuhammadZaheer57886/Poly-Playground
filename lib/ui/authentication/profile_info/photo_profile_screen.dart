@@ -6,6 +6,7 @@ import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import 'basic_info_screen.dart';
 
@@ -113,7 +114,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             SimpleButton(
               title: "CONTINUE",
               onTap: () async {
-                 String downloadUrl = await uploadImage(imageFile as FileImage);
+                String downloadUrl = await uploadImage(imageFile as FileImage);
                 if (downloadUrl.isNotEmpty) {
                   try {
                     await FirebaseFirestore.instance
@@ -122,8 +123,9 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
                         .update({
                       'photoUrl': downloadUrl,
                     });
-                      screenPush(context,const BasicInfoScreen());
+                    screenPush(context, const BasicInfoScreen());
                   } catch (e) {
+                    showFailedToast(context, e.toString());
                   }
                 }
               },
@@ -139,17 +141,13 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
-        const SnackBar(
-          content: Text('Failed to get image from camera.'),
-        );
-        // );
+        showFailedToast(context, 'Failed to get image from camera.');
         return;
       }
       setState(() {
         imageFile = FileImage(File(pickedFile.path));
       });
     } catch (e) {
-      // print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to get image from camera.'),
@@ -158,7 +156,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     }
   }
 
-  Future< String> uploadImage(FileImage file) async {
+  Future<String> uploadImage(FileImage file) async {
     final fileName = file.file.path.split('/').last;
 
     try {
@@ -172,14 +170,15 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
         final downloadUrl = await firebaseStorageRef.getDownloadURL();
         return downloadUrl;
       } else {
-        throw Exception('Failed to upload image.');
+        showFailedToast(context, 'Failed to upload image.');
+        return '';
       }
     } on FirebaseException catch (e) {
-      print(e);
-      throw Exception('Failed to upload image.');
+      showFailedToast(context, e.message!);
+      return '';
     } catch (e) {
-      print(e);
-      throw Exception('Failed to upload image.');
+      showFailedToast(context, e.toString());
+      return '';
     }
   }
 }

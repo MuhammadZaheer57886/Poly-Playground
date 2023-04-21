@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
@@ -70,6 +71,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
             CustomTextField(
                 controller: controllerFullName,
                 titleText: 'Full Name',
+                keyboardType: TextInputType.name,
                 width: size.width * 0.88,
                 radius: 15,
                 isDark: false,
@@ -80,6 +82,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
             CustomTextField(
                 controller: controllerJOB,
                 titleText: 'JOB',
+                keyboardType: TextInputType.text,
                 width: size.width * 0.88,
                 radius: 15,
                 isDark: false,
@@ -88,6 +91,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
               height: 20,
             ),
             CustomTextField(
+              keyboardType: TextInputType.multiline,
                 controller: controllerIntro,
                 titleText: 'INTRODUCTION YOURSELF',
                 width: size.width * 0.88,
@@ -127,6 +131,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
         controllerJOB.text.isEmpty ||
         controllerIntro.text.isEmpty
         ) {
+      showFailedToast(context, 'Please fill all the fields correctly');
       return;
     }
 
