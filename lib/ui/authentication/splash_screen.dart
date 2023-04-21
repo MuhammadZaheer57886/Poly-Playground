@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/provider/sign_in_provider.dart';
@@ -30,21 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ? screenPushRep(context, const WelcomeScreen())
           : screenPushRep(context, const PhotoProfileScreen());
     });
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) =>
-    //                 user != null ? const HomeScreen() : const WelcomeScreen()));
-
-    //     // if (user != null) {
-    //     //   print(user.uid);
-    //     // }
-    //   });
-
-    //   // Navigator.push(context, MaterialPageRoute(builder: (context) => islogin ? const HomeScreen() : const WelcomeScreen()));
-    // });
   }
 
   @override

@@ -1,8 +1,15 @@
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/authentication/phone/phone_verification.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 
+import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/phoneUtils.dart';
+import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
@@ -13,8 +20,7 @@ class PhoneNumberScreen extends StatefulWidget {
 }
 
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
-  final TextEditingController controllerEmail = TextEditingController();
-  final TextEditingController controllerPassword = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +72,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             ),
             CustomTextField(
                 titleText: "PHONE NUMBER",
+                keyboardType: TextInputType.phone,
                 imageAddress: "assets/phone.png",
-                controller: controllerEmail),
+                controller: phoneController
+                ),
             SizedBox(
               height: size.height * 0.04,
             ),
             InkWell(
               onTap: () {
-                screenPush(context, const PhoneVerificationScreen());
+                PhoneUtils.onContinuePressed(context, phoneController.text);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

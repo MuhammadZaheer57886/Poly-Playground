@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
@@ -8,9 +7,9 @@ import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-
 import '../home/home_screen.dart';
-import 'auth/auth_page.dart';
+import 'login/login_screen.dart';
+import 'signup/signup_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -66,28 +65,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   height: size.height * 0.04,
                 ),
                 loginButton(size, AppStrings.i.email, "assets/email.png", () {
-                  screenPush(
-                    context,
-                    StreamBuilder<User?>(
-                      stream: FirebaseAuth.instance.authStateChanges(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Center(
-                            child: Text("Something went wrong"),
-                          );
-                        } else if (snapshot.hasData) {
-                          return const HomeScreen();
-                        } else {
-                          return const AuthPage();
-                        }
-                      },
-                    ),
-                  );
+                  screenPushRep(
+                    context, const Loginwidget());
                 }),
                 const SizedBox(
                   height: 15,
@@ -114,40 +93,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
         ),
-        // bottomNavigationBar: Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 35.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       SizedBox(
-        //         child: Text(
-        //           AppStrings.i.doNotHaveAnAccount,
-        //           style: TextStyle(
-        //             color: AppColors.i.whiteColor,
-        //             fontWeight: FontWeight.w500,
-        //             fontSize: size.width * 0.035,
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         width: 5,
-        //       ),
-        //       InkWell(
-        //         onTap: () {
-        //           screenPush(context, const SignUpScreen());
-        //         },
-        //         child: Text(
-        //           AppStrings.i.signUp,
-        //           style: TextStyle(
-        //             color: AppColors.i.whiteColor,
-        //             fontWeight: FontWeight.w700,
-        //             fontSize: size.width * 0.037,
-        //           ),
-        //         ),
-        //       )
-        //     ],
-        //   ),
-        // )
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 35.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                child: Text(
+                  AppStrings.i.doNotHaveAnAccount,
+                  style: TextStyle(
+                    color: AppColors.i.whiteColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: size.width * 0.035,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              InkWell(
+                onTap: () {
+                  screenPush(context, const SignUpScreen());
+                },
+                child: Text(
+                  AppStrings.i.signUp,
+                  style: TextStyle(
+                    color: AppColors.i.whiteColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: size.width * 0.037,
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
         );
   }
 
