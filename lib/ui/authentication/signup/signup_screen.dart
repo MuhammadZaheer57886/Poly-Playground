@@ -232,8 +232,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         conPassError = "Password does not match";
       });
       return;
-    }else{
-      
+    }else{      
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postDetailstoFirestore()})

@@ -7,6 +7,7 @@ import 'package:poly_playground/utils/constants/app_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../home/home_screen.dart';
+import 'profile_info/photo_profile_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 2), () {
       sp.isSignedIn == false
           ? screenPushRep(context, const WelcomeScreen())
-          : screenPushRep(context, const HomeScreen());
+          : screenPushRep(context, const PhotoProfileScreen());
     });
   }
 

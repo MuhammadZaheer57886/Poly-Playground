@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
-
 import '../../../common/pop_message.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
