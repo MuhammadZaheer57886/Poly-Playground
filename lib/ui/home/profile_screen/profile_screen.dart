@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/model/user_model.dart';
 import 'package:provider/provider.dart';
-
+import '../../../common/store.dart';
 import '../../../provider/sign_in_provider.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../authentication/welcome_screen.dart';
@@ -15,16 +16,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future getData() async {
-    final sp = context.read<SignInProvider>();
-    sp.getDataFromSharedPreferences();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
+  UserDataModel userData = Store().userData;
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +80,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       CircleAvatar(
                         radius: 50,
                         backgroundColor: Colors.white,
-                        backgroundImage: NetworkImage('${sp.photoUrl}'),
+                        backgroundImage: userData.photoUrl.isNotEmpty
+                            ? NetworkImage(userData.photoUrl)
+                            : null,
                       ),
-                      // Container(
-                      //   width: size.width * 0.22,
-                      //   height: size.width * 0.22,
-                      //   decoration: const BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //       image: DecorationImage(
-                      //           image: NetworkImage('${sp}'),
-                      //           fit: BoxFit.fill)),
-                      // ),
                       const SizedBox(
                         width: 20,
                       ),
@@ -107,33 +92,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${sp.name}",
+                            userData.name,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
                           Text(
-                            "Date of birth",
+                            userData.date,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
                           Text(
-                            "[City][Country]",
+                            '${userData.city}, ${userData.town}',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
-                          // Text(
-                          //   "${sp.email}",
-                          //   style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontWeight: FontWeight.w500,
-                          //       fontSize: size.width * 0.037),
-                          // ),
                           const SizedBox(
                             width: 10,
                           ),
@@ -142,7 +120,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         width: size.width * 0.05,
                       ),
-
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(100, 30),
@@ -208,7 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    "[bio]",
+                    // "[bio]",
+                    userData.intro,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: size.width * 0.04,
@@ -240,8 +218,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      takePictureBox(context, size),
-                      takePictureBox(context, size),
+                      takePictureBox(context, size, userData.image1),
+                      takePictureBox(context, size, userData.image2),
                     ],
                   )
                 ],
@@ -253,7 +231,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget takePictureBox(BuildContext context, Size size) {
+  Widget takePictureBox(BuildContext context, Size size, String? imageUrl) {
+    DecorationImage? dImage;
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      dImage = DecorationImage(
+        image: NetworkImage(imageUrl),
+        fit: BoxFit.cover,
+      );
+    }
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -261,11 +246,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: size.width * 0.35,
           height: size.height * 0.24,
           decoration: BoxDecoration(
-              color: AppColors.i.brownColor,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: const [
-                BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: 2)
-              ]),
+            color: AppColors.i.brownColor,
+            borderRadius: BorderRadius.circular(18),
+            image: dImage,
+            boxShadow: const [
+              BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: 2)
+            ],
+          ),
         ),
       ],
     );
