@@ -110,4 +110,24 @@ class UserDataModel {
     user.town = map['town'];
     user.uid = map['uid'];
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'job': job,
+      'intro': intro,
+      'role': role,
+      'date': date,
+      'city': city,
+      'town': town,
+      'image1': image1,
+      'image2': image2,
+      'image3': image3,
+      'image4': image4,
+      'photoUrl': photoUrl,
+      'uid': uid,
+      'email': email,
+
+      // add any other fields you want to serialize to JSON
+    };
+  }
 }
