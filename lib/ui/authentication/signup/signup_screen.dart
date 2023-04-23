@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +10,6 @@ import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/phoneUtils.dart';
-import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {

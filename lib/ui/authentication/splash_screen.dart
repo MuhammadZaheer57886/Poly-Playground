@@ -19,22 +19,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void getUserData(String userId) async {
-    DocumentSnapshot userDoc =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    if (!userDoc.exists) {
-      return;
-    }
-    try {
-      UserDataModel.fromMap(Store().userData,userDoc.data() as Map<String, dynamic>);
-    } catch (e) {
-      Store().userData.email = userDoc['email'] as String;
-      Store().userData.uid = userDoc['uid'] as String;
-      return ;
-    }
-
-    return;
-  }
   @override
   void initState() {
 
@@ -43,22 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
         if (user == null) {
           Store().isLogedIn = false;
         } else {
+          Store().uid = user.uid;
           Store().isLogedIn = true;
-          getUserData(user.uid);
         }
       });
       Timer(const Duration(seconds: 2), () {
         if(Store().isLogedIn){
-          if(Store().userData.date.isEmpty){
-            screenPushRep(context, const PhotoProfileScreen());
-          }else{
-            screenPushRep(context, const HomeScreen());
-          }
+            screenPush(context, const HomeScreen());
         }
         else{
-          screenPushRep(context, const WelcomeScreen());
+          screenPush(context, const WelcomeScreen());
         }
-
       });
   }
 
