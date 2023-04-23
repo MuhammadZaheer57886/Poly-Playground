@@ -14,9 +14,9 @@ class CustomTextField extends StatelessWidget {
   final double? width;
   final double? radius;
   final bool isDark;
-
   final double? height;
   final double? pl;
+  final Color? color;
 
   const CustomTextField({
     Key? key,
@@ -33,6 +33,8 @@ class CustomTextField extends StatelessWidget {
     this.height,
     this.pl,
     this.keyboardType,
+    this.color,
+
   }) : super(key: key);
 
   @override
@@ -46,7 +48,7 @@ class CustomTextField extends StatelessWidget {
           width: width ?? size.width * 0.8,
           height: height ?? 50,
           decoration: BoxDecoration(
-            color: AppColors.i.whiteColor,
+            color: color ?? AppColors.i.whiteColor,
             // borderRadius: BorderRadius.circular(40),
             borderRadius: BorderRadius.circular(radius ?? 40),
           ),
