@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 
@@ -24,38 +25,41 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!userDoc.exists) {
       return;
     }
+    try {
+      UserDataModel.fromMap(Store().userData,userDoc.data() as Map<String, dynamic>);
+    } catch (e) {
+      Store().userData.email = userDoc['email'] as String;
+      Store().userData.uid = userDoc['uid'] as String;
+      return ;
+    }
 
-    UserDataModel.fromMap(Store().userData,userDoc.data() as Map<String, dynamic>);
     return;
   }
-  // bool islogin = false;
   @override
   void initState() {
 
     super.initState();
-    // Timer(const Duration(seconds: 2), () {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user == null) {
-          // screenPushRep(context, const WelcomeScreen());
           Store().isLogedIn = false;
         } else {
           Store().isLogedIn = true;
           getUserData(user.uid);
-          // screenPushRep(context, const HomeScreen());
-          // print("Splach"+Store().userData.name);
         }
       });
       Timer(Duration(seconds: 2), () {
-        Store().isLogedIn == false
-            ? screenPushRep(context, const WelcomeScreen())
-            : screenPushRep(context, const HomeScreen());
+        if(Store().isLogedIn){
+          if(Store().userData.date.isEmpty){
+            screenPushRep(context, const PhotoProfileScreen());
+          }else{
+            screenPushRep(context, const HomeScreen());
+          }
+        }
+        else{
+          screenPushRep(context, const WelcomeScreen());
+        }
+
       });
-
-    //   sp.isSignedIn == false
-    //       ? screenPushRep(context, const WelcomeScreen())
-    //       : screenPushRep(context, const PhotoProfileScreen());
-    // });
-
   }
 
   @override

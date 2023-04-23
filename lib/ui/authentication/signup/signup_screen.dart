@@ -6,13 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/phoneUtils.dart';
 import '../../home/home_screen.dart';
 import '../../ui_components/custom_text_field.dart';
-import '../phone/phone_number_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -260,7 +260,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
      
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+         MaterialPageRoute(builder: (context) => const PhotoProfileScreen()),
         (route) => false);
   }
 }
