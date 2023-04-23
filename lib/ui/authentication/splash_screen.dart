@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
           getUserData(user.uid);
         }
       });
-      Timer(Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 2), () {
         if(Store().isLogedIn){
           if(Store().userData.date.isEmpty){
             screenPushRep(context, const PhotoProfileScreen());
