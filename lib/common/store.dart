@@ -21,6 +21,15 @@ class Store {
     role: "",
     town: "",
     uid: "",
+    name: "",
+    dob: "",
+    orientation: "",
+    bio: "",
+    genderIdentity: "",
+    pronouns: "",
+    userName: "",
+    single: "",
+    open: "",
   );
   String uid = "";
   

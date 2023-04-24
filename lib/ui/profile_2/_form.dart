@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/utils/my_utils.dart';
+import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
 import '../home/home_screen.dart';
 import 'textfield_constrans.dart';
@@ -22,7 +23,7 @@ class _ProfileFormState extends State<ProfileForm> {
   TextEditingController genderIdentityController = TextEditingController();
   TextEditingController pronounceController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
-  TextEditingController aboutController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
   TextEditingController singleController = TextEditingController();
   TextEditingController openController = TextEditingController();
 
@@ -47,7 +48,7 @@ class _ProfileFormState extends State<ProfileForm> {
           const SizedBox(height: 10),
           TextFormFieldContainer(
             labelText: 'Date of Birth *',
-            hintText: 'Enter your date of birth',
+            hintText: 'MM/DD/YYYY',
             controller: dobController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -108,7 +109,7 @@ class _ProfileFormState extends State<ProfileForm> {
           TextFormFieldContainer(
             labelText: 'About Me',
             hintText: 'Enter information about yourself',
-            controller: aboutController,
+            controller: bioController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter information about yourself';
@@ -156,8 +157,12 @@ class _ProfileFormState extends State<ProfileForm> {
             children: [
               InkWell(
                 onTap: () {
-                  updateProfile2();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  if (updateProfile2()) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()));
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -191,28 +196,43 @@ class _ProfileFormState extends State<ProfileForm> {
     );
   }
 
-
-  void updateProfile2() {
+  bool updateProfile2() {
     if (!_formKey.currentState!.validate()) {
       showFailedToast(context, 'Please fill all the fields');
-      return;
+      return false;
     }
-    if(!isValidDate(dobController.text)) {
+    if (!isValidDate(dobController.text)) {
       showFailedToast(context, 'Date format should be in mm/dd/yyyy');
-      return;
+      return false;
     }
     if (singleController.text.toString().toLowerCase() != 'yes' &&
         singleController.text.toString().toLowerCase() != 'no') {
       showFailedToast(context, 'Please enter yes, no in single field');
-      return;
+      return false;
     }
     if (openController.text.toString().toLowerCase() != 'yes' &&
         openController.text.toString().toLowerCase() != 'no') {
       showFailedToast(context, 'Please enter yes, no in open field');
-      return;
+      return false;
     }
     _formKey.currentState!.save();
     screenPush(context, const HomeScreen());
-    // updateUserInFirestore(userData)
+    UserDataModel userData = Store().userData;
+    userData.name = nameController.text;
+    userData.dob = dobController.text;
+    userData.orientation = orientationController.text;
+    userData.genderIdentity = genderIdentityController.text;
+    userData.pronouns = pronounceController.text;
+    userData.userName = userNameController.text;
+    userData.bio = bioController.text;
+    userData.single = singleController.text;
+    userData.open = openController.text;
+
+    if (updateUserInFirestore(userData)) {
+      showSuccessToast(context, 'Profile created successfully');
+      return true;
+    }
+    showFailedToast(context, 'Failed to create profile');
+    return false;
   }
 }

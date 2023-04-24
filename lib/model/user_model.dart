@@ -37,6 +37,17 @@ class UserDataModel {
   String town;
   String uid;
 
+  String name;
+  String dob;
+  String orientation;
+  String genderIdentity;
+  String pronouns;
+  String userName;
+  String bio;
+  String single;
+  String open;
+
+
   UserDataModel({
     required this.city,
     required this.date,
@@ -52,6 +63,15 @@ class UserDataModel {
     required this.role,
     required this.town,
     required this.uid,
+    required this.name,
+    required this.dob,
+    required this.orientation,
+    required this.genderIdentity,
+    required this.pronouns,
+    required this.userName,
+    required this.bio,
+    required this.single,
+    required this.open,
   });
 
   static void fromMap(UserDataModel user, Map<String, dynamic> map) {
@@ -69,7 +89,16 @@ class UserDataModel {
     user.role = map['role'];
     user.town = map['town'];
     user.uid = map['uid'];
-  }
+    user.name = map['name'];
+    user.dob = map['dob'];
+    user.orientation = map['orientation'];
+    user.genderIdentity = map['genderIdentity'];
+    user.pronouns = map['pronouns'];
+    user.userName = map['userName'];
+    user.bio = map['bio'];
+    user.single = map['single'];
+    user.open = map['open'];
+      }
 
   Map<String, dynamic> toJson() {
     return {
@@ -87,7 +116,15 @@ class UserDataModel {
       'photoUrl': photoUrl,
       'uid': uid,
       'email': email,
-
+      'name': name,
+      'dob': dob,
+      'orientation' : orientation,
+      'genderIdentity' : genderIdentity,
+      'pronouns' : pronouns,
+      'userName' : userName,
+      'bio' : bio,
+      'single' : single,
+      'open' : open,
       // add any other fields you want to serialize to JSON
     };
   }

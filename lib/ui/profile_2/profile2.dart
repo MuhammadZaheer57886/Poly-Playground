@@ -66,7 +66,6 @@ class _Profile2State extends State<Profile2> {
                 addPhotos(size, context),
                 SizedBox(height: size.height * 0.05),
                 const ProfileForm(),
-                
               ],
             ),
           ),
