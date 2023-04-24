@@ -304,9 +304,8 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
       showFailedToast(context, "Please fill all fields");
       return false;
     }
-    final date =
-        setDate(controllerDay.text, controllerMonth.text, controllerYear.text);
-    if (date.isEmpty) {
+    final date = '${controllerMonth.text}/${controllerDay.text}/${controllerYear.text}';
+    if (!isValidDate(date)) {
       showFailedToast(context, 'invalid date');
       return false;
     }

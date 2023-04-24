@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/utils/my_utils.dart';
@@ -191,21 +191,12 @@ class _ProfileFormState extends State<ProfileForm> {
     );
   }
 
-  bool isValidDate(String date) {
-    try {
-      DateFormat.yMd().parseStrict(date);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
 
   void updateProfile2() {
     if (!_formKey.currentState!.validate()) {
       showFailedToast(context, 'Please fill all the fields');
       return;
     }
-    // _formKey.currentState!.save();
     if(!isValidDate(dobController.text)) {
       showFailedToast(context, 'Date format should be in mm/dd/yyyy');
       return;
@@ -220,7 +211,7 @@ class _ProfileFormState extends State<ProfileForm> {
       showFailedToast(context, 'Please enter yes, no in open field');
       return;
     }
-    print('success');
+    _formKey.currentState!.save();
     screenPush(context, const HomeScreen());
     // updateUserInFirestore(userData)
   }

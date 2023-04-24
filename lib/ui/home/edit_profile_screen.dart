@@ -1,13 +1,11 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
 import '../../common/pop_message.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/my_utils.dart';
 import '../ui_components/simple_button.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -92,9 +90,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           color: Colors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: profileImage.isEmpty ? NetworkImage(
-                              userData.photoUrl,
-                            ) : FileImage(File(profileImage)) as ImageProvider,
+                            image: profileImage.isEmpty
+                                ? NetworkImage(
+                                    userData.photoUrl,
+                                  )
+                                : FileImage(File(profileImage))
+                                    as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -370,9 +371,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SimpleButton(title: "SAVE", onTap: () {
-                    updateProfile();
-                  }),
+                  SimpleButton(
+                      title: "SAVE",
+                      onTap: () {
+                        updateProfile();
+                      }),
                 ],
               ),
               const SizedBox(
@@ -405,7 +408,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       onTap: () {
         selected = true;
         onTap();
-
       },
       child: Stack(
         alignment: Alignment.center,
@@ -449,20 +451,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Future<String> getImageFromUser() async {
-    final picker = ImagePicker();
-    try {
-      final pickedFile = await picker.pickImage(source: ImageSource.camera);
-      if (pickedFile == null) {
-        showFailedToast(context, 'No image selected.');
-        return '';
-      }
-      return pickedFile.path;
-    } catch (e) {
-      showFailedToast(context, 'Failed to get image from camera.');
-      return '';
-    }
-  }
+  // Future<String> getImageFromUser() async {
+  //   final picker = ImagePicker();
+  //   try {
+  //     final pickedFile = await picker.pickImage(source: ImageSource.camera);
+  //     if (pickedFile == null) {
+  //       showFailedToast(context, 'No image selected.');
+  //       return '';
+  //     }
+  //     return pickedFile.path;
+  //   } catch (e) {
+  //     showFailedToast(context, 'Failed to get image from camera.');
+  //     return '';
+  //   }
+  // }
 
   void editeProfileImage() {
     getImageFromUser().then((value) {
@@ -472,7 +474,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
       }
     });
-
   }
 
   void setImage1() {
@@ -494,68 +495,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     });
   }
-  Future<String> uploadImage(FileImage file) async {
-    final fileName = file.file.path.split('/').last;
 
-    try {
-      final firebaseStorageRef =
-      FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
-      final uploadTask = firebaseStorageRef.putFile(file.file);
-      final snapshot = await uploadTask.whenComplete(() {});
-      if (snapshot.state == TaskState.success) {
-        final downloadUrl = await firebaseStorageRef.getDownloadURL();
-        return downloadUrl;
-      } else {
-        showFailedToast(context, 'Failed to upload image');
-        return '';
-      }
-    } on FirebaseException {
-      return '';
-    } catch (e) {
-      return '';
-    }
-  }
 
   void updateProfile() async {
-    if( controllerFullName.text.isEmpty && controllerJob.text.isEmpty && controllerIntro.text.isEmpty && controllerCity.text.isEmpty && controllerTown.text.isEmpty && profileImage.isEmpty && image1.isEmpty && image2.isEmpty){
+    if (controllerFullName.text.isEmpty &&
+        controllerJob.text.isEmpty &&
+        controllerIntro.text.isEmpty &&
+        controllerCity.text.isEmpty &&
+        controllerTown.text.isEmpty &&
+        profileImage.isEmpty &&
+        image1.isEmpty &&
+        image2.isEmpty) {
       showFailedToast(context, 'No Informayion Updated');
       Navigator.pop(context);
       return;
     }
 
-
-    final date = '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
+    final date =
+        '${controllerMonth.text}/${controllerDay.text}/${controllerYear.text}';
 
     final idDate = isValidDate(date);
-    userData.photoUrl = profileImage.isEmpty ? userData.photoUrl : await uploadImage(FileImage(File(profileImage)));
-    userData.fullName = controllerFullName.text.isEmpty ? userData.fullName : controllerFullName.text;
-    userData.job = controllerJob.text.isEmpty ? userData.job : controllerJob.text;
-    userData.intro = controllerIntro.text.isEmpty ? userData.intro : controllerIntro.text;
+    userData.photoUrl = profileImage.isEmpty
+        ? userData.photoUrl
+        : await uploadImage(profileImage);
+    userData.fullName = controllerFullName.text.isEmpty
+        ? userData.fullName
+        : controllerFullName.text;
+    userData.job =
+        controllerJob.text.isEmpty ? userData.job : controllerJob.text;
+    userData.intro =
+        controllerIntro.text.isEmpty ? userData.intro : controllerIntro.text;
 
     userData.role = role;
     userData.date = idDate ? date : userData.date;
-    userData.city = controllerCity.text.isEmpty ? userData.city : controllerCity.text;
-    userData.town = controllerTown.text.isEmpty ? userData.town : controllerTown.text;
-    userData.image1 = image1.isEmpty ? userData.image1 : await uploadImage(FileImage(File(image1)));
-    userData.image2 = image2.isEmpty ? userData.image2 : await uploadImage(FileImage(File(image2)));
-
-    FirebaseFirestore.instance.collection('users').doc(userData.uid).update(userData.toJson()).then((value) {
+    userData.city =
+        controllerCity.text.isEmpty ? userData.city : controllerCity.text;
+    userData.town =
+        controllerTown.text.isEmpty ? userData.town : controllerTown.text;
+    userData.image1 =
+        image1.isEmpty ? userData.image1 : await uploadImage(image1);
+    userData.image2 =
+        image2.isEmpty ? userData.image2 : await uploadImage(image2);
+    if (updateUserInFirestore(userData)) {
       showSuccessToast(context, 'Profile updated successfully');
       Store().userData = userData;
       Navigator.pop(context);
-    }).catchError((error) {
+    } else {
       showFailedToast(context, 'Failed to update profile');
-    });
-  }
-
-  bool isValidDate(String dateStr) {
-    DateTime? date = DateTime.tryParse(dateStr);
-    if (date == null) {
-      return false;
     }
-    // Check that the year is not before 1900 or after the current year
-    final now = DateTime.now();
-    return date.year >= 1900 && date.year <= now.year;
   }
-
 }
