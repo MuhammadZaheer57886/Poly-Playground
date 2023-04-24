@@ -19,111 +19,115 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
   String image1 = Store().userData.image1;
   String image2 = Store().userData.image2;
   String image3 = Store().userData.image3;
-  String image4 = Store().userData.image1;
+  String image4 = Store().userData.image4;
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    if (isLoading) {
-      return Scaffold(
+    // if (isLoading) {
+    //   return  Container(
+    //       color: Colors.transparent,
+    //       child: const Center(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //   );
+    // }
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.i.darkBrownColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+          ),
+        ),
         body: Container(
-          color: Colors.transparent,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
-    }
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.i.darkBrownColor,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
+          padding: const EdgeInsets.only(left: 25, right: 25),
+          width: size.width,
+          height: size.height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                AppColors.i.darkBrownColor,
+                AppColors.i.darkBrownColor.withOpacity(0.4),
+                AppColors.i.darkBrownColor.withOpacity(0.4),
+              ])),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: size.height * 0.05,
+              ),
+              Text(
+                "Your Pictures",
+                style: TextStyle(
+                  color: AppColors.i.blackColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: size.width * 0.05,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Please insert at least one of your photos...",
+                style: TextStyle(
+                  color: AppColors.i.blackColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: size.width * 0.035,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  takePictureBox(context, size, setFirstImage, image1),
+                  takePictureBox(context, size, setSecImage, image2),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  takePictureBox(context, size, setThirdImage, image3),
+                  takePictureBox(context, size, setFourthImage, image4),
+                ],
+              ),
+              SizedBox(
+                height: size.height * 0.25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SimpleButton(title: "CONTINUE", onTap: () => updateUser()),
+                ],
+              )
+            ],
           ),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        width: size.width,
-        height: size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              AppColors.i.darkBrownColor,
-              AppColors.i.darkBrownColor.withOpacity(0.4),
-              AppColors.i.darkBrownColor.withOpacity(0.4),
-            ])),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: size.height * 0.05,
-            ),
-            Text(
-              "Your Pictures",
-              style: TextStyle(
-                color: AppColors.i.blackColor,
-                fontWeight: FontWeight.w700,
-                fontSize: size.width * 0.05,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Please insert at least one of your photos...",
-              style: TextStyle(
-                color: AppColors.i.blackColor,
-                fontWeight: FontWeight.w500,
-                fontSize: size.width * 0.035,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                takePictureBox(context, size, setFirstImage, image1),
-                takePictureBox(context, size, setSecImage, image2),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                takePictureBox(context, size, setThirdImage, image3),
-                takePictureBox(context, size, setFourthImage, image4),
-              ],
-            ),
-            SizedBox(
-              height: size.height * 0.25,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SimpleButton(
-                    title: "CONTINUE",
-                    onTap: () => updateUser()),
-
-
-              ],
-            )
-          ],
-        ),
+      // if (isLoading) showDialog(context: context, builder: (context)=>const Center(child:CircularProgressIndicator())),
+      if (isLoading) FutureBuilder(
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            return Container(
+                color: Colors.white24,
+                child: const  Center(child: CircularProgressIndicator()));
+        },
       ),
-    );
+    ]);
   }
 
   Widget takePictureBox(

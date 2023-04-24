@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
@@ -22,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     DocumentSnapshot userDoc =
     await FirebaseFirestore.instance.collection('users').doc(userId).get();
     if (!userDoc.exists) {
+      screenPush(context, const WelcomeScreen());
       return false;
     }
     try {
@@ -57,13 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    // if(isLoading){
-    //   return const Scaffold(
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    //   }
+    if(isLoading){
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      }
     return Scaffold(
       body: Container(
         width: size.width,

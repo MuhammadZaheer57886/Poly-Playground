@@ -19,7 +19,7 @@ class BasicInfo2Screen extends StatefulWidget {
 }
 
 class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
-  String role = "";
+  String role = Store().userData.role;
   final TextEditingController controllerDay = TextEditingController(
       text: Store().userData.date.isEmpty
           ? ''
@@ -116,7 +116,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                     SizedBox(
                       width: size.width * 0.25,
                       child: Text(
-                        "Unicorn",
+                        "Griffin",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
