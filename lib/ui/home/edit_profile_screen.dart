@@ -93,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: profileImage.isEmpty ? NetworkImage(
-                              userData.getPhotoUrl,
+                              userData.photoUrl,
                             ) : FileImage(File(profileImage)) as ImageProvider,
                             fit: BoxFit.cover,
                           ),
@@ -136,7 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
-              textField(size, userData.name, controllerFullName),
+              textField(size, userData.fullName, controllerFullName),
               const SizedBox(
                 height: 10,
               ),
@@ -440,8 +440,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       image: selected
                           ? FileImage(File(image)) as ImageProvider<Object>
                           : NetworkImage(image),
-                      // image: FileImage(File(image)),
-                      // image: NetworkImage(image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -511,11 +509,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         showFailedToast(context, 'Failed to upload image');
         return '';
       }
-    } on FirebaseException catch (e) {
-      print(e);
+    } on FirebaseException {
       return '';
     } catch (e) {
-      print(e);
       return '';
     }
   }
@@ -532,7 +528,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final idDate = isValidDate(date);
     userData.photoUrl = profileImage.isEmpty ? userData.photoUrl : await uploadImage(FileImage(File(profileImage)));
-    userData.name = controllerFullName.text.isEmpty ? userData.name : controllerFullName.text;
+    userData.fullName = controllerFullName.text.isEmpty ? userData.fullName : controllerFullName.text;
     userData.job = controllerJob.text.isEmpty ? userData.job : controllerJob.text;
     userData.intro = controllerIntro.text.isEmpty ? userData.intro : controllerIntro.text;
 

@@ -15,7 +15,7 @@ class BasicInfoScreen extends StatefulWidget {
 }
 
 class _BasicInfoScreenState extends State<BasicInfoScreen> {
-  final TextEditingController controllerFullName = TextEditingController(text: Store().userData.name);
+  final TextEditingController controllerFullName = TextEditingController(text: Store().userData.fullName);
   final TextEditingController controllerJOB = TextEditingController(text: Store().userData.job);
   final TextEditingController controllerIntro = TextEditingController(text: Store().userData.intro);
   @override
@@ -127,7 +127,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
       showFailedToast(context, 'Please fill all the fields correctly');
       return;
     }
-    Store().userData.name = controllerFullName.text;
+    Store().userData.fullName = controllerFullName.text;
     Store().userData.job = controllerJOB.text;
     Store().userData.intro = controllerIntro.text;
     screenPush(context,const BasicInfo2Screen());

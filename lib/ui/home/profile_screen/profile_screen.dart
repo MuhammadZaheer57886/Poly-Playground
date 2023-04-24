@@ -92,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userData.name,
+                            userData.fullName,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,

@@ -8,7 +8,7 @@ class Store {
   bool isLogedIn = false;
   UserDataModel userData = UserDataModel(
     city: "",
-    name: "",
+    fullName: "",
     date: "",
     email: "",
     image1: "",
