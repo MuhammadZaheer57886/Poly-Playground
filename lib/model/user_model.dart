@@ -127,3 +127,38 @@ class UserDataModel {
     };
   }
 }
+class MessageModel {
+  final String senderId;
+  final String receiverId;
+  final String message;
+  final bool isRead;
+  final DateTime timestamp;
+
+  MessageModel({
+    required this.senderId,
+    required this.receiverId,
+    required this.message,
+    required this.isRead,
+    required this.timestamp,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'message': message,
+      'isRead': isRead,
+      'timestamp': timestamp.millisecondsSinceEpoch,
+    };
+  }
+
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
+      senderId: map['senderId'],
+      receiverId: map['receiverId'],
+      message: map['message'],
+      isRead: map['isRead'],
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+    );
+  }
+}
