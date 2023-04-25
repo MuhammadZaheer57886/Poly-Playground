@@ -23,5 +23,6 @@ class Store {
     uid: "",
   );
   String uid = "";
+  DealModel? deal;
   
 }

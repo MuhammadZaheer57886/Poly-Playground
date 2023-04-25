@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/payment/payment.dart';
 
 import '../../utils/constants/app_colors.dart';
 import '_form.dart';
@@ -22,7 +24,7 @@ class _Profile2State extends State<Profile2> {
           elevation: 0.0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              screenPushRep(context, const Payment());
             },
             icon: const Icon(
               Icons.arrow_back_ios,

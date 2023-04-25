@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
-import 'package:poly_playground/ui/authentication/phone/phone_number_screen.dart';
-import 'package:poly_playground/ui/home/home_screen.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../profile_info/photo_profile_screen.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {
   final String verificationId;
@@ -25,7 +24,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     
     if(widget.verificationId==controllerVerify.text)
     {
-      screenPush(context, const HomeScreen());
+      screenPush(context, const PhotoProfileScreen());
     }else{
       showFailedToast(context, 'Verification code is incorrect');
     }

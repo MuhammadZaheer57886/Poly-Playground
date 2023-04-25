@@ -131,3 +131,18 @@ class UserDataModel {
     };
   }
 }
+
+class DealModel {
+  String duration;
+  String price;
+  String discount;
+  bool selected=false;
+
+  DealModel({
+    required this.duration,
+    required this.price,
+    required this.discount,
+    required this.selected,
+  });
+
+}
