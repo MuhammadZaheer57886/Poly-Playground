@@ -1,10 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 
 import '../../../common/pop_message.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/my_utils.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
 import 'add_picture_screen.dart';
@@ -17,15 +19,23 @@ class BasicInfo2Screen extends StatefulWidget {
 }
 
 class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
-  String role = "";
-  String date = "";
-  String city = "";
-  String town = "";
-  final TextEditingController controllerDay = TextEditingController();
-  final TextEditingController controllerMonth = TextEditingController();
-  final TextEditingController controllerYear = TextEditingController();
-  final TextEditingController controllerCity = TextEditingController();
-  final TextEditingController controllerTown = TextEditingController();
+  String role = Store().userData.role;
+  final TextEditingController controllerDay = TextEditingController(
+      text: Store().userData.date.isEmpty
+          ? ''
+          : Store().userData.date.split('/')[0]);
+  final TextEditingController controllerMonth = TextEditingController(
+      text: Store().userData.date.isEmpty
+          ? ''
+          : Store().userData.date.split('/')[1]);
+  final TextEditingController controllerYear = TextEditingController(
+      text: Store().userData.date.isEmpty
+          ? ''
+          : Store().userData.date.split('/')[2]);
+  final TextEditingController controllerCity =
+      TextEditingController(text: Store().userData.city);
+  final TextEditingController controllerTown =
+      TextEditingController(text: Store().userData.town);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +116,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                     SizedBox(
                       width: size.width * 0.25,
                       child: Text(
-                        "Unicorn",
+                        "Griffin",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -273,9 +283,9 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                 SimpleButton(
                     title: "CONTINUE",
                     onTap: () {
-                      setDate();
-                      updateInfo();
-                      // screenPush(context, const AddPictureScreen());
+                      if (updateInfo()) {
+                        screenPush(context, const AddPictureScreen());
+                      }
                     }),
               ],
             )
@@ -285,47 +295,25 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
     );
   }
 
-  void setDate() {
-    if (controllerDay.text.isNotEmpty &&
-        controllerMonth.text.isNotEmpty &&
-        controllerYear.text.isNotEmpty &&
-        controllerCity.text.isNotEmpty &&
-        controllerTown.text.isNotEmpty) {
-      if (int.parse(controllerDay.text) > 31 ||
-          int.parse(controllerDay.text) < 1) {
-        showFailedToast(context, "Please enter valid day");
-      } else if (int.parse(controllerMonth.text) > 12 ||
-          int.parse(controllerMonth.text) < 1) {
-        showFailedToast(context, "Please enter valid month");
-      } else if (int.parse(controllerYear.text) > 2021 ||
-          int.parse(controllerYear.text) < 1900) {
-        showFailedToast(context, "Please enter valid year");
-      } else {
-        setState(() {
-          date =
-              "${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}";
-          city = controllerCity.text;
-          town = controllerTown.text;
-        });
-      }
-    }
-    else {
+  bool updateInfo() {
+    if (controllerDay.text.isEmpty ||
+        controllerMonth.text.isEmpty ||
+        controllerYear.text.isEmpty ||
+        controllerCity.text.isEmpty ||
+        controllerTown.text.isEmpty) {
       showFailedToast(context, "Please fill all fields");
+      return false;
     }
-  }
-  void updateInfo() {
-    if (date.isNotEmpty && city.isNotEmpty && town.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "date": date,
-        "city": city,
-        "town": town,
-        "role" : role ,
-      }).then((value) {
-        screenPush(context, const AddPictureScreen());
-      });
+    final date =
+        setDate(controllerDay.text, controllerMonth.text, controllerYear.text);
+    if (date.isEmpty) {
+      showFailedToast(context, 'invalid date');
+      return false;
     }
+    Store().userData.role = role;
+    Store().userData.date = date;
+    Store().userData.city = controllerCity.text;
+    Store().userData.town = controllerTown.text;
+    return true;
   }
 }

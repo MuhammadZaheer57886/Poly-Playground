@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
+import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
+import '../../common/store.dart';
+import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../chat/chat_screen.dart';
 
@@ -12,9 +17,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<bool> getUserData(String userId) async {
+    DocumentSnapshot userDoc =
+    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (!userDoc.exists) {
+      screenPush(context, const WelcomeScreen());
+      return false;
+    }
+    try {
+      UserDataModel.fromMap(Store().userData,userDoc.data() as Map<String, dynamic>);
+    } catch (e) {
+      Store().userData.email = userDoc['email'] as String;
+      Store().userData.uid = userDoc['uid'] as String;
+      return false ;
+    }
+    return true;
+  }
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    if (!Store().isLogedIn) {
+      screenPush(context, const WelcomeScreen());
+      return;
+    }
+    getUserData(Store().uid).then((value) => {
+    if(value){
+    setState(() {
+    isLoading = false;
+    })
+    } else{
+        screenPush(context, const PhotoProfileScreen()),
+    setState(() {
+      isLoading = false;
+    })
+  }});
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    if(isLoading){
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      }
     return Scaffold(
       body: Container(
         width: size.width,
@@ -74,13 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
                         }, icon: Image.asset("assets/menu.png")
-                        
+
                         ),
-                        
+
                     IconButton(
                         onPressed: () {},
                         icon: Image.asset("assets/search.png")),
-                    
+
                     InkWell(
                       onTap: () {},
                       child: Text(
