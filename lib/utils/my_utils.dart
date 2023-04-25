@@ -23,7 +23,7 @@ Future<String> uploadImage(String path) async {
 
 Future<String> getImageFromUser() async {
   final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
   if (pickedFile == null) {
     return '';
   } else {
