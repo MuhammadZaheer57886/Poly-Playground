@@ -36,7 +36,6 @@ class UserDataModel {
   String role;
   String town;
   String uid;
-
   String name;
   String dob;
   String orientation;
@@ -47,31 +46,30 @@ class UserDataModel {
   String single;
   String open;
 
-
   UserDataModel({
-    required this.city,
-    required this.date,
-    required this.email,
-    required this.image1,
-    required this.image2,
-    required this.image3,
-    required this.image4,
-    required this.intro,
-    required this.job,
-    required this.fullName,
-    required this.photoUrl,
-    required this.role,
-    required this.town,
-    required this.uid,
-    required this.name,
-    required this.dob,
-    required this.orientation,
-    required this.genderIdentity,
-    required this.pronouns,
-    required this.userName,
-    required this.bio,
-    required this.single,
-    required this.open,
+    this.city = '',
+    this.date = '',
+    this.email = '',
+    this.image1 = '',
+    this.image2 = '',
+    this.image3 = '',
+    this.image4 = '',
+    this.intro = '',
+    this.job = '',
+    this.fullName = '',
+    this.photoUrl = '',
+    this.role = '',
+    this.town = '',
+    this.uid = '',
+    this.name = '',
+    this.dob = '',
+    this.orientation = '',
+    this.genderIdentity = '',
+    this.pronouns = '',
+    this.userName = '',
+    this.bio = '',
+    this.single = '',
+    this.open = '',
   });
 
   static void fromMap(UserDataModel user, Map<String, dynamic> map) {
@@ -98,7 +96,7 @@ class UserDataModel {
     user.bio = map['bio'];
     user.single = map['single'];
     user.open = map['open'];
-      }
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -118,13 +116,13 @@ class UserDataModel {
       'email': email,
       'name': name,
       'dob': dob,
-      'orientation' : orientation,
-      'genderIdentity' : genderIdentity,
-      'pronouns' : pronouns,
-      'userName' : userName,
-      'bio' : bio,
-      'single' : single,
-      'open' : open,
+      'orientation': orientation,
+      'genderIdentity': genderIdentity,
+      'pronouns': pronouns,
+      'userName': userName,
+      'bio': bio,
+      'single': single,
+      'open': open,
       // add any other fields you want to serialize to JSON
     };
   }

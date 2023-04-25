@@ -7,6 +7,7 @@ import '../../../provider/sign_in_provider.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../authentication/welcome_screen.dart';
 import '../edit_profile_screen.dart';
+import '../settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              screenPush(context, const EditProfileScreen());
+              screenPush(context, const SettingsScreen());
             },
             icon: Image.asset("assets/dotted_menu.png"),
           )
@@ -117,24 +118,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: size.width * 0.05,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 30),
-                          backgroundColor: AppColors.i.darkBrownColor,
-                        ),
-                        onPressed: () {
-                          sp.signOutGoogle();
-                          screenPushRep(context, const WelcomeScreen());
-                        },
-                        child: const Text(
-                          "Sign Out",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w700),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   width: size.width * 0.05,
+                      // ),
+                      // ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(
+                      //     minimumSize: const Size(100, 30),
+                      //     backgroundColor: AppColors.i.darkBrownColor,
+                      //   ),
+                      //   onPressed: () {
+                      //     sp.signOutGoogle();
+                      //     screenPushRep(context, const WelcomeScreen());
+                      //   },
+                      //   child: const Text(
+                      //     "Sign Out",
+                      //     style: TextStyle(
+                      //         color: Colors.white, fontWeight: FontWeight.w700),
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(
@@ -186,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(
                     // "[bio]",
-                    userData.intro,
+                    userData.bio,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: size.width * 0.04,

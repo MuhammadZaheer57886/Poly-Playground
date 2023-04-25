@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-
+import 'package:poly_playground/utils/my_utils.dart';
+import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
+import 'edit_profile_screen.dart';
+import 'home_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -12,6 +16,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool isDarkMode = false;
+
+  get fibaseAuth => null;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Tony Ke",
+                        Store().userData.name,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: size.width * 0.035,
@@ -83,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       Text(
-                        "tonyke@gmail.com",
+                        Store().userData.email,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: size.width * 0.035,
@@ -132,7 +138,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               height: size.height * 0.1,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                screenPush(context, const EditProfileScreen());
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: size.width,
@@ -187,10 +195,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(
               height: size.height*0.09,
             ),
-            SimpleButton(title: "Log Out", onTap: () {})
+            SimpleButton(title: "Log Out", onTap: ()  async {
+              await logOut() ? screenPush(context, const HomeScreen()) : '';
+
+
+            })
           ],
         ),
       ),
     );
   }
+
+
 }

@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 import 'package:intl/intl.dart';
+
 Future<String> uploadImage(String path) async {
-  if (path == '' || path == null) {
+  if (path == '') {
     return '';
   }
   final fileName = path.split('/').last;
@@ -42,6 +44,7 @@ bool updateUserInFirestore(UserDataModel userData) {
   }
   return true;
 }
+
 bool isValidDate(String date) {
   try {
     DateFormat.yMd().parseStrict(date);
@@ -49,4 +52,11 @@ bool isValidDate(String date) {
   } catch (e) {
     return false;
   }
+}
+
+Future<bool> logOut() async {
+  await FirebaseAuth.instance.signOut();
+  Store().userData = UserDataModel();
+  Store().isLogedIn = false;
+  return true;
 }
