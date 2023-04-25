@@ -8,5 +8,6 @@ class Store {
   bool isLogedIn = false;
   UserDataModel userData = UserDataModel();
   String uid = "";
+  DealModel? deal;
   
 }
