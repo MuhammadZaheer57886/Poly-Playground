@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
@@ -17,8 +16,7 @@ class PhotoProfileScreen extends StatefulWidget {
 }
 
 class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
-  // FileImage? imageFile;
-  String imageUrl = Store().userData.photoUrl;
+  String imageUrl = '';
 
   @override
   Widget build(BuildContext context) {
@@ -77,15 +75,6 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
                         fit: BoxFit.cover,
                       )
                     : null,
-                // color: imageFile != null
-                //     ? Colors.transparent
-                //     : const Color(0xffB40303),
-                // image: imageFile != null
-                //     ? DecorationImage(
-                //         image: imageFile!,
-                //         fit: BoxFit.cover,
-                //       )
-                //     : null,
               ),
             ),
             //
@@ -121,14 +110,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             ),
             SimpleButton(
               title: "CONTINUE",
-              onTap: () {
-                if(imageUrl.isEmpty) {
-                  showFailedToast(context, 'Please insert your photo.');
-                  return;
-                }
-                Store().userData.photoUrl = imageUrl;
-                screenPush(context, const BasicInfoScreen());
-              },
+              onTap: () => setProfile(),
             ),
           ],
         ),
@@ -136,17 +118,31 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     );
   }
 
+
   void getImage() {
     getImageFromUser().then((value) {
-      if(value.isEmpty) {
+      if (value.isEmpty) {
         showFailedToast(context, 'Please insert your photo.');
         return;
-      };
+      }
       setState(() {
         imageUrl = value;
       });
     });
   }
 
-
+  void setProfile() {
+    uploadImage(imageUrl).then((value) {
+      if (value.isEmpty) {
+        showFailedToast(context, 'Please insert your photo.');
+        return;
+      }
+      Store().userData.photoUrl = value;
+      if(updateUserInFirestore(Store().userData)){
+        screenPush(context, const BasicInfoScreen());
+        return;
+      }
+      showFailedToast(context, 'Something went wrong please try again ');
+    });
+  }
 }

@@ -313,6 +313,10 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
     Store().userData.date = date;
     Store().userData.city = controllerCity.text;
     Store().userData.town = controllerTown.text;
-    return true;
+    if(updateUserInFirestore(Store().userData)){
+      return true;
+    }
+    showFailedToast(context, 'Something went wrong please try again ');
+    return false;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
@@ -130,6 +131,11 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     Store().userData.fullName = controllerFullName.text;
     Store().userData.job = controllerJOB.text;
     Store().userData.intro = controllerIntro.text;
+    if(updateUserInFirestore(Store().userData)){
+      showSuccessToast(context, 'Profile updated successfully');
     screenPush(context,const BasicInfo2Screen());
+    return;
+    }
+    showFailedToast(context, 'Something went wrong please try again ');
   }
 }

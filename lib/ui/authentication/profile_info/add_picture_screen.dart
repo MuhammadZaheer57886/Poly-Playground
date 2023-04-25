@@ -216,10 +216,9 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
       setState(() {
         isLoading = false;
       });
-      showFailedToast(context, "Pleas insert atleast on image");
+      showFailedToast(context, "Pleas insert at least one image");
     }
     try {
-      userData.photoUrl = await uploadImage(userData.photoUrl);
       userData.image1 = await uploadImage(userData.image1);
       userData.image2 = await uploadImage(userData.image2);
       userData.image3 = await uploadImage(userData.image3);
@@ -236,7 +235,6 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
       setState(() {
         isLoading = false;
       });
-      showSuccessToast(context, "Welcome");
       screenPush(context, const Payment());
       return;
     }
