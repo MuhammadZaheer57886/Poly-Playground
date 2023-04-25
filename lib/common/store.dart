@@ -6,22 +6,7 @@ class Store {
 
   Store._();
   bool isLogedIn = false;
-  UserDataModel userData = UserDataModel(
-    city: "",
-    name: "",
-    date: "",
-    email: "",
-    image1: "",
-    image2: "",
-    image3: "",
-    image4: "",
-    intro: "",
-    job: "",
-    photoUrl: "",
-    role: "",
-    town: "",
-    uid: "",
-  );
+  UserDataModel userData = UserDataModel();
   String uid = "";
   
 }

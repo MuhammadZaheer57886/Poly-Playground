@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/utils/my_utils.dart';
+import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
@@ -16,10 +16,9 @@ class BasicInfoScreen extends StatefulWidget {
 }
 
 class _BasicInfoScreenState extends State<BasicInfoScreen> {
-  final TextEditingController controllerFullName = TextEditingController();
-  final TextEditingController controllerJOB = TextEditingController();
-  final TextEditingController controllerIntro = TextEditingController();
-
+  final TextEditingController controllerFullName = TextEditingController(text: Store().userData.fullName);
+  final TextEditingController controllerJOB = TextEditingController(text: Store().userData.job);
+  final TextEditingController controllerIntro = TextEditingController(text: Store().userData.intro);
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -120,11 +119,6 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
       ),
     );
   }
-@override
-  void initState() {
-    // TODO: implement initState
-      super.initState();
-  }
   void updateBasicInfo() async {
     // Check if any of the fields are empty
     if (controllerFullName.text.isEmpty ||
@@ -134,22 +128,14 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
       showFailedToast(context, 'Please fill all the fields correctly');
       return;
     }
-
-    try {
-      // Update the user's basic info in the Firebase Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        'job': controllerJOB.text,
-        'name': controllerFullName.text,
-        'intro': controllerIntro.text,
-      });
-
-      // Navigate to the next screen
-      screenPush(context, const BasicInfo2Screen());
-    } catch (e) {
-      print(e);
+    Store().userData.fullName = controllerFullName.text;
+    Store().userData.job = controllerJOB.text;
+    Store().userData.intro = controllerIntro.text;
+    if(updateUserInFirestore(Store().userData)){
+      showSuccessToast(context, 'Profile updated successfully');
+    screenPush(context,const BasicInfo2Screen());
+    return;
     }
+    showFailedToast(context, 'Something went wrong please try again ');
   }
 }

@@ -1,13 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../../common/pop_message.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/my_utils.dart';
 import 'basic_info_screen.dart';
 
 class PhotoProfileScreen extends StatefulWidget {
@@ -18,9 +16,8 @@ class PhotoProfileScreen extends StatefulWidget {
 }
 
 class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
-  FileImage? imageFile;
+  String imageUrl = '';
 
-  @override
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -69,12 +66,12 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
               height: size.width * 0.4,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: imageFile != null
+                color: imageUrl.isNotEmpty
                     ? Colors.transparent
                     : const Color(0xffB40303),
-                image: imageFile != null
+                image: imageUrl.isNotEmpty
                     ? DecorationImage(
-                        image: imageFile!,
+                        image: FileImage(File(imageUrl)),
                         fit: BoxFit.cover,
                       )
                     : null,
@@ -86,7 +83,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             ),
             GestureDetector(
               onTap: () {
-                getImageFromUser();
+                getImage();
               },
               child: Container(
                 alignment: Alignment.center,
@@ -113,22 +110,7 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
             ),
             SimpleButton(
               title: "CONTINUE",
-              onTap: () async {
-                String downloadUrl = await uploadImage(imageFile as FileImage);
-                if (downloadUrl.isNotEmpty) {
-                  try {
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .update({
-                      'photoUrl': downloadUrl,
-                    });
-                    screenPush(context, const BasicInfoScreen());
-                  } catch (e) {
-                    showFailedToast(context, e.toString());
-                  }
-                }
-              },
+              onTap: () => setProfile(),
             ),
           ],
         ),
@@ -136,49 +118,31 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
     );
   }
 
-  Future getImageFromUser() async {
-    final picker = ImagePicker();
-    try {
-      final pickedFile = await picker.pickImage(source: ImageSource.camera);
-      if (pickedFile == null) {
-        showFailedToast(context, 'Failed to get image from camera.');
+
+  void getImage() {
+    getImageFromUser().then((value) {
+      if (value.isEmpty) {
+        showFailedToast(context, 'Please insert your photo.');
         return;
       }
       setState(() {
-        imageFile = FileImage(File(pickedFile.path));
+        imageUrl = value;
       });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to get image from camera.'),
-        ),
-      );
-    }
+    });
   }
 
-  Future<String> uploadImage(FileImage file) async {
-    final fileName = file.file.path.split('/').last;
-
-    try {
-      final firebaseStorageRef =
-          FirebaseStorage.instance.ref().child('users/profileImages/$fileName');
-
-      final uploadTask = firebaseStorageRef.putFile(file.file);
-      final snapshot = await uploadTask.whenComplete(() {});
-
-      if (snapshot.state == TaskState.success) {
-        final downloadUrl = await firebaseStorageRef.getDownloadURL();
-        return downloadUrl;
-      } else {
-        showFailedToast(context, 'Failed to upload image.');
-        return '';
+  void setProfile() {
+    uploadImage(imageUrl).then((value) {
+      if (value.isEmpty) {
+        showFailedToast(context, 'Please insert your photo.');
+        return;
       }
-    } on FirebaseException catch (e) {
-      showFailedToast(context, e.message!);
-      return '';
-    } catch (e) {
-      showFailedToast(context, e.toString());
-      return '';
-    }
+      Store().userData.photoUrl = value;
+      if(updateUserInFirestore(Store().userData)){
+        screenPush(context, const BasicInfoScreen());
+        return;
+      }
+      showFailedToast(context, 'Something went wrong please try again ');
+    });
   }
 }

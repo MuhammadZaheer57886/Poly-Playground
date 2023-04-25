@@ -8,6 +8,7 @@ class TextFormFieldContainer extends StatelessWidget {
   final double height;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
+  final TextEditingController? controller;
 
   const TextFormFieldContainer({super.key, 
     required this.labelText,
@@ -17,6 +18,8 @@ class TextFormFieldContainer extends StatelessWidget {
     this.height = 55,
     this.validator,
     this.onSaved,
+    this.controller,
+
   });
 
   @override
@@ -31,6 +34,7 @@ class TextFormFieldContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,
           labelText: labelText,
