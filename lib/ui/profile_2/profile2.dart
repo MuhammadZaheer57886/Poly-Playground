@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:poly_playground/utils/my_utils.dart';
+
+import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
 import '_form.dart';
 
@@ -11,6 +15,12 @@ class Profile2 extends StatefulWidget {
 }
 
 class _Profile2State extends State<Profile2> {
+  String image1 = '';
+  String image2 = '';
+  String image3 = '';
+  String image4 = '';
+  String profileImage = '';
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -63,7 +73,8 @@ class _Profile2State extends State<Profile2> {
                       color: Colors.white),
                 ),
                 SizedBox(height: size.height * 0.05),
-                addPhotos(size, context),
+                addPhotos(
+                    size, context, Store().userData.photoUrl, profileImage),
                 SizedBox(height: size.height * 0.05),
                 const ProfileForm(),
               ],
@@ -74,7 +85,8 @@ class _Profile2State extends State<Profile2> {
     );
   }
 
-  Row addPhotos(Size size, BuildContext context) {
+  Row addPhotos(
+      Size size, BuildContext context, String imageUrl, String imagePath) {
     return Row(
       children: [
         Column(
@@ -87,27 +99,32 @@ class _Profile2State extends State<Profile2> {
                   width: size.width * 0.4,
                   height: size.height * 0.22,
                   decoration: BoxDecoration(
-                      color: AppColors.i.brownColor,
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: size.width * 0.09,
-                  height: size.width * 0.09,
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.grey,
+                    color: AppColors.i.brownColor,
+                    borderRadius: BorderRadius.circular(15),
+                    image: imageUrl.isNotEmpty || imagePath.isNotEmpty
+                        ? DecorationImage(
+                            image: imagePath.isEmpty
+                                ? NetworkImage(Store().userData.photoUrl)
+                                : FileImage(File(imagePath)) as ImageProvider,
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
                 ),
-                const SizedBox(
-                  height: 100,
-                  child: Text('Add profile image *',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white)),
+                Positioned(
+                  right: 0.05,
+                  top: 0.05,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: size.width * 0.09,
+                    height: size.width * 0.09,
+                    decoration: const BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: const Icon(
+                      Icons.mode_edit,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -116,35 +133,94 @@ class _Profile2State extends State<Profile2> {
         const SizedBox(width: 14),
         Column(
           children: [
-            takePictureBox(context, size),
+            GestureDetector(
+                onTap:()=> setImage1(),
+                child: takePictureBox(
+                    context, size, Store().userData.image1, image1)),
             const SizedBox(height: 20),
-            takePictureBox(context, size),
+            GestureDetector(
+                onTap:()=> setImage2(),
+                child: takePictureBox(
+                    context, size, Store().userData.image2, image2)),
           ],
         ),
         const SizedBox(width: 14),
         Column(
           children: [
-            takePictureBox(context, size),
+            GestureDetector(
+                onTap:()=> setImage3(),
+                child: takePictureBox(
+                    context, size, Store().userData.image3, image3)),
             const SizedBox(height: 20),
-            takePictureBox(context, size),
+            GestureDetector(
+                onTap:()=> setImage4(),
+                child: takePictureBox(
+                    context, size, Store().userData.image4, image4)),
           ],
         ),
       ],
     );
   }
 
-  Widget takePictureBox(BuildContext context, Size size) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: size.width * 0.2,
-          height: size.height * 0.10,
-          decoration: BoxDecoration(
-              color: AppColors.i.brownColor,
-              borderRadius: BorderRadius.circular(15)),
-        ),
-      ],
+  Widget takePictureBox(
+      BuildContext context, Size size, String imageUrl, String imagePath) {
+    return Container(
+      width: size.width * 0.2,
+      height: size.height * 0.10,
+      decoration: BoxDecoration(
+          color: AppColors.i.brownColor,
+          image: imageUrl.isNotEmpty || imagePath.isNotEmpty
+              ? DecorationImage(
+                  image: imagePath.isEmpty
+                      ? NetworkImage(imageUrl)
+                      : FileImage(File(imagePath)) as ImageProvider,
+                  fit: BoxFit.cover,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(15)),
     );
+  }
+
+  void setImage1() {
+    getImageFromUser().then((value) {
+      setState(() {
+        image1 = value;
+      });
+      uploadImage(value).then((val) {
+        Store().userData.image1 = val;
+      });
+    });
+  }
+  void setImage2() {
+    getImageFromUser().then((value) {
+      setState(() {
+        image2 = value;
+      });
+      uploadImage(value).then((val) {
+        Store().userData.image2 = val;
+
+      });
+    });
+  }
+  void setImage3() {
+    getImageFromUser().then((value) {
+      setState(() {
+        image3 = value;
+      });
+      uploadImage(value).then((val) {
+        Store().userData.image2 = val;
+      });
+    });
+  }
+  void setImage4() {
+
+    getImageFromUser().then((value) {
+      setState(() {
+        image4 = value;
+      });
+      uploadImage(value).then((val) {
+        Store().userData.image2 = val;
+      });
+    });
   }
 }
