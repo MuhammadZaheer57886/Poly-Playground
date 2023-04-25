@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 
 import '../../common/store.dart';
-import '../../model/user_model.dart';
 import '../home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -1,24 +1,26 @@
-class UserModel{
+class UserModel {
   String? uid;
   String? email;
 
   UserModel({this.uid, this.email});
 
   // data from cloud firestore
-  factory UserModel.fromMap(map){
+  factory UserModel.fromMap(map) {
     return UserModel(
       uid: map['uid'],
       email: map['email'],
     );
   }
+
   // sending data to cloud firestore
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
     };
   }
 }
+
 class UserDataModel {
   String city;
   String date;
@@ -29,11 +31,22 @@ class UserDataModel {
   String image4;
   String intro;
   String job;
-  String name;
+  String fullName;
   String photoUrl;
   String role;
   String town;
   String uid;
+
+  String name;
+  String dob;
+  String orientation;
+  String genderIdentity;
+  String pronouns;
+  String userName;
+  String bio;
+  String single;
+  String open;
+
 
   UserDataModel({
     required this.city,
@@ -45,56 +58,23 @@ class UserDataModel {
     required this.image4,
     required this.intro,
     required this.job,
-    required this.name,
+    required this.fullName,
     required this.photoUrl,
     required this.role,
     required this.town,
     required this.uid,
+    required this.name,
+    required this.dob,
+    required this.orientation,
+    required this.genderIdentity,
+    required this.pronouns,
+    required this.userName,
+    required this.bio,
+    required this.single,
+    required this.open,
   });
 
-  String get getCity => city;
-  set setCity(String value) => city = value;
-
-  String get getDate => date;
-  set setDate(String value) => date = value;
-
-  String get getEmail => email;
-  set setEmail(String value) => email = value;
-
-  String get getImage1 => image1;
-  set setImage1(String value) => image1 = value;
-
-  String get getImage2 => image2;
-  set setImage2(String value) => image2 = value;
-
-  String get getImage3 => image3;
-  set setImage3(String value) => image3 = value;
-
-  String get getImage4 => image4;
-  set setImage4(String value) => image4 = value;
-
-  String get getIntro => intro;
-  set setIntro(String value) => intro = value;
-
-  String get getJob => job;
-  set setJob(String value) => job = value;
-
-  String get getName => name;
-  set setName(String value) => name = value;
-
-  String get getPhotoUrl => photoUrl;
-  set setPhotoUrl(String value) => photoUrl = value;
-
-  String get getRole => role;
-  set setRole(String value) => role = value;
-
-  String get getTown => town;
-  set setTown(String value) => town = value;
-
-  String get getUid => uid;
-  set setUid(String value) => uid = value;
-
-  static void fromMap(UserDataModel user,Map<String, dynamic> map) {
+  static void fromMap(UserDataModel user, Map<String, dynamic> map) {
     user.city = map['city'];
     user.date = map['date'];
     user.email = map['email'];
@@ -104,15 +84,25 @@ class UserDataModel {
     user.image4 = map['image4'];
     user.intro = map['intro'];
     user.job = map['job'];
-    user.name = map['name'];
+    user.fullName = map['fullName'];
     user.photoUrl = map['photoUrl'];
     user.role = map['role'];
     user.town = map['town'];
     user.uid = map['uid'];
-  }
+    user.name = map['name'];
+    user.dob = map['dob'];
+    user.orientation = map['orientation'];
+    user.genderIdentity = map['genderIdentity'];
+    user.pronouns = map['pronouns'];
+    user.userName = map['userName'];
+    user.bio = map['bio'];
+    user.single = map['single'];
+    user.open = map['open'];
+      }
+
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'fullName': fullName,
       'job': job,
       'intro': intro,
       'role': role,
@@ -126,7 +116,15 @@ class UserDataModel {
       'photoUrl': photoUrl,
       'uid': uid,
       'email': email,
-
+      'name': name,
+      'dob': dob,
+      'orientation' : orientation,
+      'genderIdentity' : genderIdentity,
+      'pronouns' : pronouns,
+      'userName' : userName,
+      'bio' : bio,
+      'single' : single,
+      'open' : open,
       // add any other fields you want to serialize to JSON
     };
   }

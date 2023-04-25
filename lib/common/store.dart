@@ -8,7 +8,7 @@ class Store {
   bool isLogedIn = false;
   UserDataModel userData = UserDataModel(
     city: "",
-    name: "",
+    fullName: "",
     date: "",
     email: "",
     image1: "",
@@ -21,6 +21,15 @@ class Store {
     role: "",
     town: "",
     uid: "",
+    name: "",
+    dob: "",
+    orientation: "",
+    bio: "",
+    genderIdentity: "",
+    pronouns: "",
+    userName: "",
+    single: "",
+    open: "",
   );
   String uid = "";
   

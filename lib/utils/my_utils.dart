@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
-
+import 'package:intl/intl.dart';
 Future<String> uploadImage(String path) async {
   if (path == '' || path == null) {
     return '';
@@ -23,25 +23,12 @@ Future<String> uploadImage(String path) async {
 
 Future<String> getImageFromUser() async {
   final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
   if (pickedFile == null) {
     return '';
   } else {
     return pickedFile.path;
   }
-}
-
-String setDate(String day, String month, String year) {
-  if (int.parse(day) > 31 || int.parse(day) < 1) {
-    return '';
-  }
-  if (int.parse(month) > 12 || int.parse(month) < 1) {
-    return '';
-  }
-  if (int.parse(year) > 2021 || int.parse(year) < 1900) {
-    return '';
-  }
-  return '$day/$month/$year';
 }
 
 bool updateUserInFirestore(UserDataModel userData) {
@@ -54,4 +41,12 @@ bool updateUserInFirestore(UserDataModel userData) {
     return false;
   }
   return true;
+}
+bool isValidDate(String date) {
+  try {
+    DateFormat.yMd().parseStrict(date);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
