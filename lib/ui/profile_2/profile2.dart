@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:poly_playground/ui/payment/payment.dart';
 
+import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/my_utils.dart';
 import '_form.dart';
 
 class Profile2 extends StatefulWidget {
