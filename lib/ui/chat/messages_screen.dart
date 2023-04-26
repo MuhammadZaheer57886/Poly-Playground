@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/pop_message.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
-
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
 
@@ -18,8 +18,22 @@ class _MessageScreen extends State<MessageScreen> {
   String prevMessageDate = '';
   String messageDate = '';
 
-  final List<MessageModel> _messages = [];
+  late  List<MessageModel> _messages = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchMessagesFromFirestore();
+  }
+
+  void _fetchMessagesFromFirestore() {
+    getMessagesFromFirestore('Bi3yqQn6jTZCDAF2m7UwQyY3USp2')
+        .then((messages) {
+      setState(() {
+        _messages = messages;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,8 +185,8 @@ class _MessageScreen extends State<MessageScreen> {
               Icons.send,
               color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
             ),
-            onPressed: () {
-              if (sendMessage(messageController.text)) {
+            onPressed: () async {
+              if (await sendMessage(messageController.text)) {
                 messageController.clear();
               } else {
                 showFailedToast(context,'Message cannot be empty');
@@ -184,24 +198,26 @@ class _MessageScreen extends State<MessageScreen> {
     );
   }
 
-  bool sendMessage(String data) {
+  Future<bool> sendMessage(String data) async {
     if (data.isEmpty) {
       return false;
     }
     MessageModel message = MessageModel(
       message: data,
       senderId: Store().uid,
-      receiverId: 'id',
-      timestamp: DateTime.now(),
+      receiverId: 'Bi3yqQn6jTZCDAF2m7UwQyY3USp2',
+      timestamp: DateTime.now().toString(),
       isRead: false,
     );
+    setMessagetoFirestore(message);
     setState(() {
       _messages.add(message);
     });
     return true;
   }
 
-  String getMessageTime(DateTime messageTime) {
+  String getMessageTime( String date) {
+    DateTime messageTime = DateTime.parse(date);
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     DateTime yesterday = today.subtract(const Duration(days: 1));
@@ -218,7 +234,7 @@ class _MessageScreen extends State<MessageScreen> {
       int numDays = today.difference(messageTime).inDays;
       return '$numDays Days Ago';
     } else {
-      DateFormat formatter = DateFormat('MMMM d, yyyy');
+      DateFormat formatter = DateFormat('MMMM dd, yyyy');
       return formatter.format(messageTime);
     }
   }
@@ -235,7 +251,7 @@ class _MessageScreen extends State<MessageScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(messageDate),
-        message.senderId != Store().userData.uid.toString()
+        message.senderId == Store().uid
             ? _buildSentMessage(message)
             : _buildReceivedMessage(message),
       ],

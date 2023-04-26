@@ -7,6 +7,8 @@ import '../common/store.dart';
 import '../model/user_model.dart';
 import 'package:intl/intl.dart';
 
+final firestore = FirebaseFirestore.instance;
+
 Future<String> uploadImage(String path) async {
   if (path == '') {
     return '';
@@ -35,14 +37,50 @@ Future<String> getImageFromUser() async {
 
 bool updateUserInFirestore(UserDataModel userData) {
   try {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(Store().uid)
-        .update(userData.toJson());
+    firestore.collection("users").doc(Store().uid).update(userData.toJson());
   } catch (e) {
     return false;
   }
   return true;
+}
+
+Future<bool> setMessagetoFirestore(MessageModel message) async {
+  try {
+    final v = await firestore
+        .collection("chats")
+        .doc(Store().uid)
+        .collection(message.receiverId)
+        .add(message.toMap());
+    await firestore
+        .collection("chats")
+        .doc(message.receiverId)
+        .collection(Store().uid)
+        .doc(v.id)
+        .set(message.toMap());
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+
+Future<List<MessageModel>> getMessagesFromFirestore(String receiverId) async {
+  List<MessageModel> messages = [];
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection("chats")
+        .doc(Store().uid)
+        .collection(receiverId)
+        .get();
+
+    querySnapshot.docs.forEach((doc) {
+      messages.add(MessageModel.fromMap(doc.data()));
+    });
+  } catch (e) {
+    messages = [];
+  }
+  return messages;
 }
 
 bool isValidDate(String date) {

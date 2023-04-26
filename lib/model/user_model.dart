@@ -132,7 +132,7 @@ class MessageModel {
   final String receiverId;
   final String message;
   final bool isRead;
-  final DateTime timestamp;
+  final String timestamp;
 
   MessageModel({
     required this.senderId,
@@ -148,7 +148,7 @@ class MessageModel {
       'receiverId': receiverId,
       'message': message,
       'isRead': isRead,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp.toString(),
     };
   }
 
@@ -158,7 +158,7 @@ class MessageModel {
       receiverId: map['receiverId'],
       message: map['message'],
       isRead: map['isRead'],
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+      timestamp:map['timestamp'],
     );
   }
 }
