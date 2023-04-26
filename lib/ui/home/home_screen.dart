@@ -7,6 +7,7 @@ import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/my_utils.dart';
 import '../chat/chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,23 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<bool> getUserData(String userId) async {
-    DocumentSnapshot userDoc =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    if (!userDoc.exists) {
-      screenPush(context, const WelcomeScreen());
-      return false;
-    }
-    try {
-      UserDataModel.fromMap(Store().userData,userDoc.data() as Map<String, dynamic>);
-    } catch (e) {
-      Store().userData.email = userDoc['email'] as String;
-      Store().userData.uid = userDoc['uid'] as String;
-      return false ;
-    }
-    return true;
-  }
   bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -42,28 +28,33 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     getUserData(Store().uid).then((value) => {
-    if(value){
-    setState(() {
-    isLoading = false;
-    })
-    } else{
-        screenPush(context, const PhotoProfileScreen()),
-    setState(() {
-      isLoading = false;
-    })
-  }});
+          if (value)
+            {
+              setState(() {
+                isLoading = false;
+              }),
+              getAllFriends(),
+            }
+          else
+            {
+              screenPush(context, const PhotoProfileScreen()),
+              setState(() {
+                isLoading = false;
+              })
+            }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    if(isLoading){
+    if (isLoading) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
       );
-      }
+    }
     return Scaffold(
       body: Container(
         width: size.width,
@@ -122,14 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
-                        }, icon: Image.asset("assets/menu.png")
-
-                        ),
-
+                        },
+                        icon: Image.asset("assets/menu.png")),
                     IconButton(
                         onPressed: () {},
                         icon: Image.asset("assets/search.png")),
-
                     InkWell(
                       onTap: () {},
                       child: Text(
@@ -198,5 +186,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> getUserData(String userId) async {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (!userDoc.exists) {
+      screenPush(context, const WelcomeScreen());
+      return false;
+    }
+    try {
+      Store().userData =
+          UserDataModel.fromMap(userDoc.data() as Map<String, dynamic>);
+    } catch (e) {
+      Store().userData.email = userDoc['email'] as String;
+      Store().userData.uid = userDoc['uid'] as String;
+      return false;
+    }
+    return true;
+  }
+
+  void getAllFriends() async {
+    final friends = getFriends();
+    Store().friends = await friends;
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/utils/my_utils.dart';
-import '../../common/pop_message.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
-import 'package:intl/intl.dart';
 
 class MessageScreen extends StatefulWidget {
-  const MessageScreen({Key? key}) : super(key: key);
+  final String receiverId;
+
+  const MessageScreen({Key? key, required this.receiverId}) : super(key: key);
 
   @override
   State<MessageScreen> createState() => _MessageScreen();
@@ -18,82 +18,85 @@ class _MessageScreen extends State<MessageScreen> {
   bool show = false;
   String prevMessageDate = '';
   String messageDate = '';
-  String reciverId = 'Bi3yqQn6jTZCDAF2m7UwQyY3USp2';
+  late FriendModel friend;
 
   // late  List<MessageModel> _messages = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final f =
+        Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
+    friend = f;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Container(
-          height: size.height,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                      ),
+      body: SizedBox(
+        height: size.height,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back,
                     ),
-                    Container(
-                      child: Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 20,
-                            backgroundImage:
-                                NetworkImage('https://i.pravatar.cc/150?img=11'),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-
-                          Text(
-                              "Jone Doe",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: size.width * 0.06)),
-                        ],
-                      ),
-                    ),
-                     SizedBox(
-                      width: size.width * 0.2,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: StreamBuilder<List<MessageModel>>(
-                    stream: listenForNewMessages(reciverId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<MessageModel> messages = snapshot.data!;
-                        return ListView.builder(
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) =>
-                              messageView(messages[index]),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
                   ),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(friend.photoUrl),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(friend.fullName,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800,
+                              fontSize: size.width * 0.06)),
+                    ],
+                  ),
+                  SizedBox(
+                    width: size.width * 0.2,
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: StreamBuilder<List<MessageModel>>(
+                  stream: listenForNewMessages(friend.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<MessageModel> messages = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) =>
+                            messageView(messages[index]),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
-                _buildMessageComposer(),
-              ],
-            ),
+              ),
+              _buildMessageComposer(),
+            ],
           ),
         ),
-      );
-
+      ),
+    );
   }
 
   Widget _buildSentMessage(MessageModel message) {
@@ -199,8 +202,6 @@ class _MessageScreen extends State<MessageScreen> {
             onPressed: () async {
               if (await sendMessage(messageController.text)) {
                 messageController.clear();
-              } else {
-                showFailedToast(context, 'Message cannot be empty');
               }
             },
           ),
@@ -216,7 +217,7 @@ class _MessageScreen extends State<MessageScreen> {
     MessageModel message = MessageModel(
       message: data,
       senderId: Store().uid,
-      receiverId: reciverId,
+      receiverId: friend.uid,
       timestamp: DateTime.now().toString(),
       isRead: false,
     );
@@ -225,29 +226,6 @@ class _MessageScreen extends State<MessageScreen> {
       show = false;
     });
     return true;
-  }
-
-  String getMessageTime(String date) {
-    DateTime messageTime = DateTime.parse(date);
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    DateTime yesterday = today.subtract(const Duration(days: 1));
-    DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
-    DateTime weekAgo = today.subtract(const Duration(days: 7));
-
-    if (messageTime.isAfter(today)) {
-      return 'Today';
-    } else if (messageTime.isAfter(yesterday)) {
-      return 'Yesterday';
-    } else if (messageTime.isAfter(twoDaysAgo)) {
-      return '2 Days Ago';
-    } else if (messageTime.isAfter(weekAgo)) {
-      int numDays = today.difference(messageTime).inDays;
-      return '$numDays Days Ago';
-    } else {
-      DateFormat formatter = DateFormat('MMMM dd, yyyy');
-      return formatter.format(messageTime);
-    }
   }
 
   Widget messageView(MessageModel message) {

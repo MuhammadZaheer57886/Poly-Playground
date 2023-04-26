@@ -110,3 +110,77 @@ Future<bool> logOut() async {
   Store().isLogedIn = false;
   return true;
 }
+
+Future<bool> deleteAccount() async {
+  try {
+    await FirebaseAuth.instance.currentUser!.delete();
+    await firestore.collection("users").doc(Store().uid).delete();
+    Store().userData = UserDataModel();
+    Store().isLogedIn = false;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<MessageModel?> getLastMessage(String receiverId) async {
+  try {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(Store().uid)
+        .collection(receiverId)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+    return MessageModel.fromMap(querySnapshot.docs.first.data());
+  } catch (e) {
+
+    return null;
+  }
+}
+
+Future<List<FriendModel>> getFriends() async {
+  List<FriendModel> friends = [];
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+    await FirebaseFirestore.instance.collection("users").get();
+    querySnapshot.docs.forEach((doc) {
+      // print(doc.data());
+      friends.add(FriendModel.fromMap(doc.data()));
+    });
+  } catch (e) {
+    friends = [];
+  }
+  return friends;
+}
+
+ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
+  return ChatModel(
+    fullName: friend.fullName,
+    photoUrl: friend.photoUrl,
+    lastMessage: lastMessage,
+    uid: friend.uid,
+  );
+}
+String getMessageTime(String date) {
+  DateTime messageTime = DateTime.parse(date);
+  DateTime now = DateTime.now();
+  DateTime today = DateTime(now.year, now.month, now.day);
+  DateTime yesterday = today.subtract(const Duration(days: 1));
+  DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
+  DateTime weekAgo = today.subtract(const Duration(days: 7));
+
+  if (messageTime.isAfter(today)) {
+    return 'Today';
+  } else if (messageTime.isAfter(yesterday)) {
+    return 'Yesterday';
+  } else if (messageTime.isAfter(twoDaysAgo)) {
+    return '2 Days Ago';
+  } else if (messageTime.isAfter(weekAgo)) {
+    int numDays = today.difference(messageTime).inDays;
+    return '$numDays Days Ago';
+  } else {
+    DateFormat formatter = DateFormat('MMMM dd, yyyy');
+    return formatter.format(messageTime);
+  }
+}

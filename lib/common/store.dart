@@ -1,3 +1,5 @@
+import 'package:poly_playground/utils/my_utils.dart';
+
 import '../model/user_model.dart';
 
 class Store {
@@ -8,5 +10,6 @@ class Store {
   bool isLogedIn = false;
   UserDataModel userData = UserDataModel();
   String uid = "";
+  List<FriendModel> friends = [];
   
 }

@@ -72,7 +72,8 @@ class UserDataModel {
     this.open = '',
   });
 
-  static void fromMap(UserDataModel user, Map<String, dynamic> map) {
+  static UserDataModel fromMap(Map<String, dynamic> map) {
+    UserDataModel user = UserDataModel();
     user.city = map['city'];
     user.date = map['date'];
     user.email = map['email'];
@@ -96,9 +97,10 @@ class UserDataModel {
     user.bio = map['bio'];
     user.single = map['single'];
     user.open = map['open'];
+    return user;
   }
 
-  Map<String, dynamic> toJson() {
+   Map<String, dynamic> toJson() {
     return {
       'fullName': fullName,
       'job': job,
@@ -160,5 +162,59 @@ class MessageModel {
       isRead: map['isRead'],
       timestamp:map['timestamp'],
     );
+  }
+}
+class FriendModel {
+  String fullName;
+  String photoUrl;
+  String uid;
+  FriendModel({
+    required this.fullName ,
+    required this.photoUrl ,
+    required this.uid,
+  });
+   factory FriendModel.fromMap(Map<String, dynamic> map) {
+      return FriendModel(
+        fullName: map['fullName'],
+        photoUrl: map['photoUrl'],
+        uid: map['uid'],
+      );
+    }
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'uid': uid,
+    };
+  }
+}
+
+class ChatModel {
+  String fullName;
+  String photoUrl;
+  String uid;
+  MessageModel lastMessage;
+  ChatModel({
+    required this.fullName ,
+    required this.photoUrl ,
+    required this.uid,
+    required this.lastMessage,
+  });
+   factory ChatModel.fromMap(Map<String, dynamic> map) {
+      return ChatModel(
+        fullName: map['fullName'],
+        photoUrl: map['photoUrl'],
+        uid: map['uid'],
+        // lastMessage: map['lastMessage'],
+        lastMessage: MessageModel.fromMap(map['lastMessage']),
+      );
+    }
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'uid': uid,
+      'lastMessage': lastMessage.toMap(),
+    };
   }
 }

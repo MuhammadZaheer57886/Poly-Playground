@@ -9,7 +9,6 @@ import 'home_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
-
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -17,7 +16,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool isDarkMode = false;
 
-  get fibaseAuth => null;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: AppColors.i.darkBrownColor,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
@@ -59,44 +59,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             Container(
               width: size.width,
+              height: size.height * 0.07,
               decoration: const BoxDecoration(color: Colors.white),
               child: Row(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.all(6),
-                    width: size.width * 0.1,
-                    height: size.width * 0.1,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                          image: AssetImage("assets/temp/5.png"),
-                          fit: BoxFit.cover),
-                    ),
+                  CircleAvatar(
+                    radius: 21,
+                    backgroundImage: NetworkImage(Store().userData.photoUrl),
                   ),
                   const SizedBox(
-                    width: 5,
+                    width: 20,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        Store().userData.name,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w700,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          Store().userData.name,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.035,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      Text(
-                        Store().userData.email,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    ],
+                        Text(
+                          Store().userData.email,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.035,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
