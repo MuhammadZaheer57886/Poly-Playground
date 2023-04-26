@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,14 +64,25 @@ Future<bool> setMessagetoFirestore(MessageModel message) async {
   return true;
 }
 
-
+Stream<List<MessageModel>> listenForNewMessages(String receiverId)  {
+  return  FirebaseFirestore
+      .instance
+      .collection("chats")
+      .doc(Store().uid)
+      .collection(receiverId)
+      .orderBy("timestamp")
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => MessageModel.fromMap(doc.data())).toList());
+}
 Future<List<MessageModel>> getMessagesFromFirestore(String receiverId) async {
   List<MessageModel> messages = [];
   try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+    await FirebaseFirestore
         .instance
         .collection("chats")
-        .doc(Store().uid)
+        .doc(Store()
+        .uid)
         .collection(receiverId)
         .get();
 

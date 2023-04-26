@@ -5,6 +5,7 @@ import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
+
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
 
@@ -17,72 +18,82 @@ class _MessageScreen extends State<MessageScreen> {
   bool show = false;
   String prevMessageDate = '';
   String messageDate = '';
+  String reciverId = 'Bi3yqQn6jTZCDAF2m7UwQyY3USp2';
 
-  late  List<MessageModel> _messages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchMessagesFromFirestore();
-  }
-
-  void _fetchMessagesFromFirestore() {
-    getMessagesFromFirestore('Bi3yqQn6jTZCDAF2m7UwQyY3USp2')
-        .then((messages) {
-      setState(() {
-        _messages = messages;
-      });
-    });
-  }
+  // late  List<MessageModel> _messages = [];
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        body: Container(
+          height: size.height,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage('https://i.pravatar.cc/150?img=11'),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+
+                          Text(
+                              "Jone Doe",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: size.width * 0.06)),
+                        ],
+                      ),
+                    ),
+                     SizedBox(
+                      width: size.width * 0.2,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: StreamBuilder<List<MessageModel>>(
+                    stream: listenForNewMessages(reciverId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<MessageModel> messages = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) =>
+                              messageView(messages[index]),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+                _buildMessageComposer(),
+              ],
+            ),
           ),
-          onPressed: () => Navigator.pop(context),
         ),
-        title: Row(
-          children: const [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=11'),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              'Jane Doe',
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return messageView(_messages[index]);
-              },
-            ),
-          ),
-          _buildMessageComposer(),
-        ],
-      ),
-    );
+      );
+
   }
 
   Widget _buildSentMessage(MessageModel message) {
@@ -163,13 +174,13 @@ class _MessageScreen extends State<MessageScreen> {
           Expanded(
             child: TextField(
               onChanged: (value) {
-                if(value.isNotEmpty) {
+                if (value.isNotEmpty) {
                   setState(() {
-                     show = true;
+                    show = true;
                   });
-                }else {
+                } else {
                   setState(() {
-                     show = false;
+                    show = false;
                   });
                 }
               },
@@ -189,7 +200,7 @@ class _MessageScreen extends State<MessageScreen> {
               if (await sendMessage(messageController.text)) {
                 messageController.clear();
               } else {
-                showFailedToast(context,'Message cannot be empty');
+                showFailedToast(context, 'Message cannot be empty');
               }
             },
           ),
@@ -205,18 +216,18 @@ class _MessageScreen extends State<MessageScreen> {
     MessageModel message = MessageModel(
       message: data,
       senderId: Store().uid,
-      receiverId: 'Bi3yqQn6jTZCDAF2m7UwQyY3USp2',
+      receiverId: reciverId,
       timestamp: DateTime.now().toString(),
       isRead: false,
     );
     setMessagetoFirestore(message);
     setState(() {
-      _messages.add(message);
+      show = false;
     });
     return true;
   }
 
-  String getMessageTime( String date) {
+  String getMessageTime(String date) {
     DateTime messageTime = DateTime.parse(date);
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
@@ -246,7 +257,6 @@ class _MessageScreen extends State<MessageScreen> {
     } else {
       messageDate = '';
     }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

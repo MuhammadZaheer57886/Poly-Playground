@@ -17,127 +17,131 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        width: size.width,
-        height: size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              AppColors.i.darkBrownColor,
-              AppColors.i.darkBrownColor.withOpacity(0.4),
-            ])),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                height: 40,
-                width: size.width,
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          screenPush(context, const ProfileScreen());
-                        },
-                        icon: Image.asset("assets/profile.png")),
-                    IconButton(
-                        onPressed: () {}, icon: Image.asset("assets/home.png")),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Image.asset("assets/video.png")),
-                    IconButton(
-                        onPressed: () {}, icon: Image.asset("assets/love.png")),
-                    IconButton(
-                        onPressed: () {
-                          screenPush(context, const ChatScreen());
-                        },
-                        icon: Image.asset("assets/chat.png")),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
+    return  Scaffold(
+
+        body: Container(
+          width: size.width,
+          height: size.height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                AppColors.i.darkBrownColor,
+                AppColors.i.darkBrownColor.withOpacity(0.4),
+              ])),
+          child: SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  //  SizedBox(
+                  //   height: size.height * 0.04,
+                  // ),
+                  Container(
+                    height: 40,
+                    width: size.width,
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                width: size.width,
-                height: size.height * 0.83,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              screenPush(context, const ProfileScreen());
                             },
-                            child: Container(
-                              width: size.width * 0.14,
-                              height: size.height * 0.07,
-                              alignment: Alignment.centerRight,
-                              decoration: BoxDecoration(
-                                color: AppColors.i.darkBrownColor,
-                                borderRadius:
-                                    BorderRadius.circular(size.width * 0.075),
+                            icon: Image.asset("assets/profile.png")),
+                        IconButton(
+                            onPressed: () {}, icon: Image.asset("assets/home.png")),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Image.asset("assets/video.png")),
+                        IconButton(
+                            onPressed: () {}, icon: Image.asset("assets/love.png")),
+                        IconButton(
+                            onPressed: () {
+                              screenPush(context, const ChatScreen());
+                            },
+                            icon: Image.asset("assets/chat.png")),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)),
+                    width: size.width,
+                    height: size.height * 0.83,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.1,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  width: size.width * 0.14,
+                                  height: size.height * 0.07,
+                                  alignment: Alignment.centerRight,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.i.darkBrownColor,
+                                    borderRadius:
+                                        BorderRadius.circular(size.width * 0.075),
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Text("Chats",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: size.width * 0.06)),
+                              SizedBox(
+                                width: size.width * 0.05,
+                              ),
+                              Container(
+                                width: size.width * 0.06,
+                                height: size.height * 0.03,
+                                decoration: BoxDecoration(
+                                  color: AppColors.i.redColor,
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.075),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: size.width * 0.01,
-                          ),
-                          Text("Chats",
+                        ),
+                        SingleChildScrollView(
+                            child: Column(
+                          children: [
+                            chatCard(size, "John", "Hello", "12:00",
+                                "assets/profile.png"),
+
+                            Text(
+                              "You have no messages!",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: size.width * 0.06)),
-                          SizedBox(
-                            width: size.width * 0.05,
-                          ),
-                          Container(
-                            width: size.width * 0.06,
-                            height: size.height * 0.03,
-                            decoration: BoxDecoration(
-                              color: AppColors.i.redColor,
-                              borderRadius:
-                                  BorderRadius.circular(size.width * 0.075),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: size.width * 0.05),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SingleChildScrollView(
-                        child: Column(
-                      children: [
-                        chatCard(size, "John", "Hello", "12:00",
-                            "assets/profile.png"),
-
-                        Text(
-                          "You have no messages!",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: size.width * 0.05),
-                        ),
+                          ],
+                        )),
                       ],
-                    )),
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
           ),
         ),
-      ),
     );
   }
 
