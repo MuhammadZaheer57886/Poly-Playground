@@ -135,6 +135,7 @@ class MessageModel {
   final String message;
   final bool isRead;
   final String timestamp;
+  final String type;
 
   MessageModel({
     required this.senderId,
@@ -142,6 +143,7 @@ class MessageModel {
     required this.message,
     required this.isRead,
     required this.timestamp,
+    required this.type,
   });
 
   Map<String, dynamic> toMap() {
@@ -151,6 +153,7 @@ class MessageModel {
       'message': message,
       'isRead': isRead,
       'timestamp': timestamp.toString(),
+      'type': type,
     };
   }
 
@@ -161,6 +164,7 @@ class MessageModel {
       message: map['message'],
       isRead: map['isRead'],
       timestamp:map['timestamp'],
+      type: map['type'],
     );
   }
 }

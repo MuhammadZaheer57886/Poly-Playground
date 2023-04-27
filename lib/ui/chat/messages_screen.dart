@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
 import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -20,14 +21,11 @@ class _MessageScreen extends State<MessageScreen> {
   String messageDate = '';
   late FriendModel friend;
 
-  // late  List<MessageModel> _messages = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    final f =
-        Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
-    friend = f;
+    friend = Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
   }
 
   @override
@@ -39,35 +37,40 @@ class _MessageScreen extends State<MessageScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.arrow_back,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.i.greyColor.withOpacity(0.2),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(friend.photoUrl),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(friend.fullName,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800,
-                              fontSize: size.width * 0.06)),
-                    ],
-                  ),
-                  SizedBox(
-                    width: size.width * 0.2,
-                  )
-                ],
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(friend.photoUrl),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(friend.fullName,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: size.width * 0.06)),
+                      ],
+                    ),
+                    SizedBox(
+                      width: size.width * 0.2,
+                    )
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -175,7 +178,15 @@ class _MessageScreen extends State<MessageScreen> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
+            child: CustomTextField(
+              controller: messageController,
+              // hintText: 'Type a message...',
+              titleText: 'Type a message...',
+              color: AppColors.i.greyColor.withOpacity(0.2),
+              radius: 15,
+              pl: 20,
+              isDark: false,
+
               onChanged: (value) {
                 if (value.isNotEmpty) {
                   setState(() {
@@ -187,23 +198,24 @@ class _MessageScreen extends State<MessageScreen> {
                   });
                 }
               },
-              controller: messageController,
-              decoration: const InputDecoration(
-                hintText: 'Type a message...',
-                border: InputBorder.none,
-              ),
             ),
           ),
-          IconButton(
-            icon: Icon(
-              Icons.send,
-              color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
+          Padding(
+
+            padding: const EdgeInsets.only(bottom: 10),
+            child: IconButton(
+              icon: Icon(
+                Icons.send,
+                size: 30,
+
+                color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
+              ),
+              onPressed: () async {
+                if (await sendMessage(messageController.text)) {
+                  messageController.clear();
+                }
+              },
             ),
-            onPressed: () async {
-              if (await sendMessage(messageController.text)) {
-                messageController.clear();
-              }
-            },
           ),
         ],
       ),
@@ -218,8 +230,9 @@ class _MessageScreen extends State<MessageScreen> {
       message: data,
       senderId: Store().uid,
       receiverId: friend.uid,
-      timestamp: DateTime.now().toString(),
+      timestamp: formatDate(DateTime.now()).toString(),
       isRead: false,
+      type: 'text',
     );
     setMessagetoFirestore(message);
     setState(() {

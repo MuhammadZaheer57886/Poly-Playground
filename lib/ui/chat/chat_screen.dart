@@ -24,7 +24,6 @@ class _ChatScreenState extends State<ChatScreen> {
     // TODO: implement initState
     super.initState();
     updaeChatList();
-    print(Store().friends.length);
   }
 
   @override
@@ -43,117 +42,122 @@ class _ChatScreenState extends State<ChatScreen> {
               AppColors.i.darkBrownColor.withOpacity(0.4),
             ])),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                height: 40,
-                width: size.width,
-                color: AppColors.i.whiteColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          screenPush(context, const ProfileScreen());
-                        },
-                        icon: Image.asset("assets/profile.png")),
-                    IconButton(
-                        onPressed: () {
-                          screenPush(context, const HomeScreen());
-                        },
-                        icon: Image.asset("assets/home.png")),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Image.asset("assets/video.png")),
-                    IconButton(
-                        onPressed: () {}, icon: Image.asset("assets/love.png")),
-                    IconButton(
-                        onPressed: () {
-                          screenPush(context, const ChatScreen());
-                        },
-                        icon: Image.asset("assets/chat.png")),
-                  ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 0.05,
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                width: size.width,
-                height: size.height * 0.83,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: size.width * 0.14,
-                              height: size.height * 0.07,
-                              alignment: Alignment.centerRight,
+                Container(
+                  height: 40,
+                  width: size.width,
+                  color: AppColors.i.whiteColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            screenPush(context, const ProfileScreen());
+                          },
+                          icon: Image.asset("assets/profile.png")),
+                      IconButton(
+                          onPressed: () {
+                            screenPush(context, const HomeScreen());
+                          },
+                          icon: Image.asset("assets/home.png")),
+                      IconButton(
+                          onPressed: () {},
+                          icon: Image.asset("assets/video.png")),
+                      IconButton(
+                          onPressed: () {}, icon: Image.asset("assets/love.png")),
+                      IconButton(
+                          onPressed: () {
+                            screenPush(context, const ChatScreen());
+                          },
+                          icon: Image.asset("assets/chat.png")),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                  width: size.width,
+                  height: size.height * 0.83,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: size.width * 0.14,
+                                height: size.height * 0.07,
+                                alignment: Alignment.centerRight,
+                                decoration: BoxDecoration(
+                                  color: AppColors.i.darkBrownColor,
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.075),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.01,
+                            ),
+                            Text("Chats",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: size.width * 0.06)),
+                            SizedBox(
+                              width: size.width * 0.05,
+                            ),
+                            Container(
+                              width: size.width * 0.06,
+                              height: size.height * 0.03,
                               decoration: BoxDecoration(
-                                color: AppColors.i.darkBrownColor,
+                                color: AppColors.i.redColor,
                                 borderRadius:
                                     BorderRadius.circular(size.width * 0.075),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.01,
-                          ),
-                          Text("Chats",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: size.width * 0.06)),
-                          SizedBox(
-                            width: size.width * 0.05,
-                          ),
-                          Container(
-                            width: size.width * 0.06,
-                            height: size.height * 0.03,
-                            decoration: BoxDecoration(
-                              color: AppColors.i.redColor,
-                              borderRadius:
-                                  BorderRadius.circular(size.width * 0.075),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SingleChildScrollView(
-                      child: chats.isNotEmpty
-                          ? ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: chats.length,
-                              itemBuilder: (context, index) {
-                                return chatCard(size, chats[index]);
-                              })
-                          : Center(
-                              child: Text(
-                                "You have no messages!",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: size.width * 0.05),
+                      SingleChildScrollView(
+                        child: chats.isNotEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: chats.length,
+                                itemBuilder: (context, index) {
+                                  return chatCard(size, chats[index]);
+                                })
+                            : Center(
+                                child: Text(
+                                  "You have no messages!",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: size.width * 0.05),
+                                ),
                               ),
-                            ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -161,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.only(bottom: 20, right: 10),
         child: FloatingActionButton(
           onPressed: () {
-            _showModalBottomSheet(context); // code to add a new message
+            _showModalBottomSheet(context,size); // code to add a new message
           },
           backgroundColor: AppColors.i.darkBrownColor.withOpacity(0.8),
           child: const Icon(Icons.add),
@@ -177,12 +181,12 @@ class _ChatScreenState extends State<ChatScreen> {
         screenPush(context, MessageScreen(receiverId: lastChat.uid));
       },
       child: Container(
-        margin: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         decoration: BoxDecoration(
             color: AppColors.i.darkBrownColor.withOpacity(0.8),
             borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+          padding: const EdgeInsets.only(left: 8, right: 15, top: 5 , bottom: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -212,13 +216,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
-              Text(
-                DateFormat('HH:mm')
-                    .format(DateTime.parse(lastChat.lastMessage.timestamp)),
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: size.width * 0.04),
+              Column(
+                children: [
+                  Text(
+                    DateFormat('h:mm a')
+                        .format(DateFormat("MMM dd, yyyy h:mm a").parse(lastChat.lastMessage.timestamp)),
+                    style: TextStyle(
+                        color: AppColors.i.whiteColor.withOpacity(0.8),
+                        fontWeight: FontWeight.w400,
+                        fontSize: size.width * 0.04),
+                  ),
+                  const SizedBox(
+                    height: 23,
+                  ),
+                ],
               ),
             ],
           ),
@@ -238,13 +249,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showModalBottomSheet(BuildContext context,Size size) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.5,
-          decoration: BoxDecoration(
+          height: size.height * 0.5,
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
@@ -257,34 +268,34 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: Store().friends.length,
                 itemBuilder: (context, index) {
                   return Container(
-                      margin: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.all(10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CircleAvatar(
-                            radius: MediaQuery.of(context).size.width * 0.07,
+                            radius: size.width * 0.07,
                             backgroundImage:
                                 NetworkImage(Store().friends[index].photoUrl),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
                           ),
                           Text(
                             Store().friends[index].fullName,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05),
+                                fontSize:size.width * 0.05),
                           ),
-                          // IconButton(
-                          //     onPressed: () {
-                          //       screenPush(
-                          //           context,
-                          //           MessageScreen(
-                          //               receiverId:
-                          //                   Store().friends[index].uid));
-                          //     },
-                          //     icon: Icon(Icons.message)),
+                          SizedBox(
+                            width: size.width * 0.05,
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                screenPush(
+                                    context,
+                                    MessageScreen(
+                                        receiverId:
+                                            Store().friends[index].uid));
+                              },
+                              icon: const Icon(Icons.message)),
                         ],
                       ));
                 }),

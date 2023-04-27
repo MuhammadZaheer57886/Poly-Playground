@@ -163,7 +163,7 @@ ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
   );
 }
 String getMessageTime(String date) {
-  DateTime messageTime = DateTime.parse(date);
+  DateTime messageTime = DateFormat("MMM d, yyyy h:mm a").parse(date);
   DateTime now = DateTime.now();
   DateTime today = DateTime(now.year, now.month, now.day);
   DateTime yesterday = today.subtract(const Duration(days: 1));
@@ -183,4 +183,11 @@ String getMessageTime(String date) {
     DateFormat formatter = DateFormat('MMMM dd, yyyy');
     return formatter.format(messageTime);
   }
+}
+
+
+
+String formatDate(DateTime date) {
+  final formatter = DateFormat('MMM dd, yyyy hh:mm a');
+  return formatter.format(date);
 }
