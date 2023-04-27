@@ -24,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
     // TODO: implement initState
     super.initState();
     updaeChatList();
+    print(Store().friends.length);
   }
 
   @override
@@ -59,7 +60,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                         icon: Image.asset("assets/profile.png")),
                     IconButton(
-                        onPressed: () {screenPush(context, const HomeScreen());}, icon: Image.asset("assets/home.png")),
+                        onPressed: () {
+                          screenPush(context, const HomeScreen());
+                        },
+                        icon: Image.asset("assets/home.png")),
                     IconButton(
                         onPressed: () {},
                         icon: Image.asset("assets/video.png")),
@@ -153,13 +157,24 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 20, right: 10),
+        child: FloatingActionButton(
+          onPressed: () {
+            _showModalBottomSheet(context); // code to add a new message
+          },
+          backgroundColor: AppColors.i.darkBrownColor.withOpacity(0.8),
+          child: const Icon(Icons.add),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   Widget chatCard(Size size, ChatModel lastChat) {
     return GestureDetector(
       onTap: () {
-        screenPush(context,  MessageScreen(receiverId: lastChat.uid));
+        screenPush(context, MessageScreen(receiverId: lastChat.uid));
       },
       child: Container(
         margin: const EdgeInsets.all(12),
@@ -212,9 +227,8 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-
   void updaeChatList() async {
-    for (var friend in Store().friends)  {
+    for (var friend in Store().friends) {
       final lastMessage = await getLastMessage(friend.uid);
       if (lastMessage != null) {
         setState(() {
@@ -222,5 +236,61 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }
     }
+  }
+
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: Store().friends.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                      margin: const EdgeInsets.all(12),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.07,
+                            backgroundImage:
+                                NetworkImage(Store().friends[index].photoUrl),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                          ),
+                          Text(
+                            Store().friends[index].fullName,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.05),
+                          ),
+                          // IconButton(
+                          //     onPressed: () {
+                          //       screenPush(
+                          //           context,
+                          //           MessageScreen(
+                          //               receiverId:
+                          //                   Store().friends[index].uid));
+                          //     },
+                          //     icon: Icon(Icons.message)),
+                        ],
+                      ));
+                }),
+          ),
+        );
+      },
+    );
   }
 }
