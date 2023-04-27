@@ -11,4 +11,5 @@ class AppColors {
   get blackColor => Colors.black;
 
   get lightBrownColor => null;
+  get yellowColor => Colors.yellow;
 }

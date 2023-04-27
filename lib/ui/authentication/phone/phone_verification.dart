@@ -19,12 +19,12 @@ class PhoneVerificationScreen extends StatefulWidget {
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   final TextEditingController controllerVerify = TextEditingController();
 
-  void _onContinuePressed() {
+  void _onContinuePressed() async {
     // Retrieve verification code from controller
     
     if(widget.verificationId==controllerVerify.text)
     {
-      screenPush(context, const PhotoProfileScreen());
+         screenPush(context, const PhotoProfileScreen());
     }else{
       showFailedToast(context, 'Verification code is incorrect');
     }

@@ -33,17 +33,7 @@ Future<String> getImageFromUser() async {
   }
 }
 
-bool updateUserInFirestore(UserDataModel userData) {
-  try {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(Store().uid)
-        .update(userData.toJson());
-  } catch (e) {
-    return false;
-  }
-  return true;
-}
+
 
 bool isValidDate(String date) {
   try {
@@ -52,11 +42,4 @@ bool isValidDate(String date) {
   } catch (e) {
     return false;
   }
-}
-
-Future<bool> logOut() async {
-  await FirebaseAuth.instance.signOut();
-  Store().userData = UserDataModel();
-  Store().isLogedIn = false;
-  return true;
 }

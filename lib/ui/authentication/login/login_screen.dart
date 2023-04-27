@@ -46,7 +46,6 @@ class LloginwidgetState extends State<Loginwidget> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: Container(
         width: size.width,
         height: size.height,
@@ -120,7 +119,7 @@ class LloginwidgetState extends State<Loginwidget> {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.12, vertical: 17),
+                            horizontal: size.width * 0.1, vertical: 17),
                         decoration: BoxDecoration(
                           color: AppColors.i.darkBrownColor,
                           borderRadius: BorderRadius.circular(40),
@@ -154,7 +153,7 @@ class LloginwidgetState extends State<Loginwidget> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),

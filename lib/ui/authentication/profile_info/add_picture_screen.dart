@@ -4,6 +4,7 @@ import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/firebase_utils.dart';
 import '../../../utils/my_utils.dart';
 import '../../payment/payment.dart';
 import '../../ui_components/simple_button.dart';
@@ -112,7 +113,16 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SimpleButton(title: "CONTINUE", onTap: () => updateUser()),
+                  SimpleButton(title: "CONTINUE", onTap: () async {
+
+                    final V = await updateUser();
+                    if ( V) {
+                      screenPush(context, const Payment());
+
+                    } else {
+                      showFailedToast(context, 'something went wrong');
+                    }
+                  }),
                 ],
               )
             ],
@@ -191,7 +201,7 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
   void setThirdImage() async {
     final img = await getImageFromUser();
     setState(() {
-      image1 = img;
+      image3 = img;
     });
     Store().userData.image3 = img;
   }
@@ -204,7 +214,7 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
     Store().userData.image4 = img;
   }
 
-  void updateUser() async {
+  Future<bool> updateUser() async {
     setState(() {
       isLoading = true;
     });
@@ -217,6 +227,7 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
         isLoading = false;
       });
       showFailedToast(context, "Pleas insert at least one image");
+      return false;
     }
     try {
       userData.image1 = await uploadImage(userData.image1);
@@ -228,18 +239,18 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
       setState(() {
         isLoading = false;
       });
-      return;
+      return false;
     }
     final v = updateUserInFirestore(userData);
     if (v) {
       setState(() {
         isLoading = false;
       });
-      screenPush(context, const Payment());
-      return;
+      return true;
     }
     setState(() {
       isLoading = false;
     });
+    return false;
   }
 }

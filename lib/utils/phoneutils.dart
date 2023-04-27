@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 import '../common/nav_function.dart';
 import '../common/pop_message.dart';
+import '../common/store.dart';
 import '../ui/authentication/phone/phone_verification.dart';
 
 class PhoneUtils{
@@ -30,6 +31,7 @@ String generateVerificationCode() {
     try {
       // Generate a verification code
       String verificationCode = generateVerificationCode();
+      Store().userData.phone = phoneNumber;
       // Navigate to phone verification screen and pass verification code
       screenPush(context, PhoneVerificationScreen(
             verificationId: verificationCode,

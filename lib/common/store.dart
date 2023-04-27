@@ -9,5 +9,7 @@ class Store {
   UserDataModel userData = UserDataModel();
   String uid = "";
   DealModel? deal;
+  bool isDarkMode = false;
+
   
 }

@@ -166,20 +166,40 @@ class _Profile2State extends State<Profile2> {
 
   Widget takePictureBox(
       BuildContext context, Size size, String imageUrl, String imagePath) {
-    return Container(
-      width: size.width * 0.2,
-      height: size.height * 0.10,
-      decoration: BoxDecoration(
-          color: AppColors.i.brownColor,
-          image: imageUrl.isNotEmpty || imagePath.isNotEmpty
-              ? DecorationImage(
-                  image: imagePath.isEmpty
-                      ? NetworkImage(imageUrl)
-                      : FileImage(File(imagePath)) as ImageProvider,
-                  fit: BoxFit.cover,
-                )
-              : null,
-          borderRadius: BorderRadius.circular(15)),
+    return Stack(
+      children: [
+        Container(
+          width: size.width * 0.2,
+          height: size.height * 0.10,
+          decoration: BoxDecoration(
+              color: AppColors.i.brownColor,
+              image: imageUrl.isNotEmpty || imagePath.isNotEmpty
+                  ? DecorationImage(
+                      image: imagePath.isEmpty
+                          ? NetworkImage(imageUrl)
+                          : FileImage(File(imagePath)) as ImageProvider,
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              borderRadius: BorderRadius.circular(15)),
+        ),
+        Positioned(
+          right: 0.02,
+          top: 0.02,
+          child: Container(
+            alignment: Alignment.center,
+            width: size.width * 0.06,
+            height: size.width * 0.06,
+            decoration: const BoxDecoration(
+                color: Colors.white, shape: BoxShape.circle),
+            child: const Icon(
+              Icons.mode_edit,
+              color: Colors.grey,
+              size:  15,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
