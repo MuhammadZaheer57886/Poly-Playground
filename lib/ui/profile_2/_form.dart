@@ -5,6 +5,7 @@ import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/firebase_utils.dart';
 import '../home/home_screen.dart';
 import 'textfield_constrans.dart';
 
@@ -31,12 +32,14 @@ class _ProfileFormState extends State<ProfileForm> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Form(
+      autovalidateMode: AutovalidateMode.disabled,
       key: _formKey,
       child: Column(
         children: [
+
+
           TextFormFieldContainer(
-            labelText: 'Name *',
-            hintText: 'Enter your name',
+            hintText: 'Name',
             controller: nameController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -47,8 +50,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Date of Birth *',
-            hintText: 'MM/DD/YYYY',
+            hintText: 'Date of Birth',
             controller: dobController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -59,7 +61,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Orientation *',
+            // labelText: 'Orientation *',
             hintText: 'Enter your orientation',
             controller: orientationController,
             validator: (value) {
@@ -71,7 +73,6 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Gender Identity *',
             hintText: 'Enter your gender identity',
             controller: genderIdentityController,
             validator: (value) {
@@ -83,7 +84,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Pronouns',
+            // labelText: 'Pronouns',
             hintText: 'Enter your pronouns',
             controller: pronounceController,
             validator: (value) {
@@ -95,7 +96,6 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Solo Profile User Name *',
             hintText: 'Enter your solo profile user name',
             controller: userNameController,
             validator: (value) {
@@ -107,7 +107,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'About Me',
+            // labelText: 'About Me',
             hintText: 'Enter information about yourself',
             controller: bioController,
             validator: (value) {
@@ -119,7 +119,6 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Single',
             hintText: 'Enter your single status',
             controller: singleController,
             validator: (value) {
@@ -132,7 +131,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const SizedBox(height: 10),
           TextFormFieldContainer(
-            labelText: 'Open',
+            // labelText: 'Open',
             hintText: 'Enter your open status',
             controller: openController,
             validator: (value) {
@@ -144,14 +143,6 @@ class _ProfileFormState extends State<ProfileForm> {
             },
           ),
           const SizedBox(height: 25),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     if (_formKey.currentState!.validate()) {
-          //       _formKey.currentState!.save();
-          //     }
-          //   },
-          //   child: const Text('Submit'),
-          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

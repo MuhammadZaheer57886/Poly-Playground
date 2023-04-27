@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/pop_message.dart';
-import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
+import '../../../common/nav_function.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/firebase_utils.dart';
 import '../../../utils/phoneUtils.dart';
 import '../../ui_components/custom_text_field.dart';
 
@@ -199,8 +199,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
  signUpFun(String email, String password,String confirmPass)async {
-    // final isValid = _formkey.currentState!.validate();
-    // if (!isValid) return;
     bool isValid = EmailValidator.validate(email);
     bool isValidPass = password.length >= 6;
     bool isValidConPass = confirmPass == password;
@@ -218,13 +216,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
       return;
     }
-    // showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return const Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     });
     if (!isValidConPass) {
         setState(() {
         conPassError = "Password does not match";
@@ -235,30 +226,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postDetailstoFirestore()})
           .catchError((e) {
-        showFailedToast(context, e.message!);
+        showFailedToast(context, "Something went wrong!");
       });
     }
   }
 
-  postDetailstoFirestore() async {
+  postDetailstoFirestore()  {
+    // await signUp();
     // calling our firebase 
-    FirebaseFirestore firebaseFirestore  = FirebaseFirestore.instance;
-    User? user = FirebaseAuth.instance.currentUser;
-
-    //calling our user model
-    UserModel userModel = UserModel();
-    //setting values to our user model
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
-
-    //sending valiues to firestore
-    await firebaseFirestore.collection('users').doc(user.uid).set(userModel.toMap());
-    
-    showSuccessToast(context, 'Account created successfully');
-     
-    Navigator.pushAndRemoveUntil(
-        context,
-         MaterialPageRoute(builder: (context) => const PhotoProfileScreen()),
-        (route) => false);
+    setUserFirestore().then((value) {
+      if (value.isEmpty) {
+        showFailedToast(context, "Something went wrong!");
+        return;
+      }
+      showSuccessToast(context, 'Account created successfully');
+      screenPushBackUntil(context, const PhotoProfileScreen());
+    });
   }
+
 }

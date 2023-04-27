@@ -5,16 +5,15 @@ import '../../utils/constants/app_colors.dart';
 import '../profile_2/profile2.dart';
 import 'monthly_deals.dart';
 
-// import '../../utils/constants/app_colors.dart';
 
 class Payment extends StatelessWidget {
   const Payment({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text(
           "Manage Subscription",
@@ -26,15 +25,6 @@ class Payment extends StatelessWidget {
         ),
         backgroundColor: AppColors.i.darkBrownColor,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-        ),
         actions: [
           TextButton(onPressed: ()=>screenPushRep(context, const Profile2()), child: const Text("Skip")),
         ],
@@ -136,8 +126,6 @@ class Payment extends StatelessWidget {
                 ),
                 //Deals
                 const MonthlyDeals(),
-
-                
               ],
             ),
           ),

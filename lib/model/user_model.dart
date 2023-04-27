@@ -1,26 +1,3 @@
-class UserModel {
-  String? uid;
-  String? email;
-
-  UserModel({this.uid, this.email});
-
-  // data from cloud firestore
-  factory UserModel.fromMap(map) {
-    return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-    );
-  }
-
-  // sending data to cloud firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'email': email,
-    };
-  }
-}
-
 class UserDataModel {
   String city;
   String date;
@@ -45,8 +22,10 @@ class UserDataModel {
   String bio;
   String single;
   String open;
+  String phone;
 
   UserDataModel({
+    this.phone = '',
     this.city = '',
     this.date = '',
     this.email = '',
@@ -72,7 +51,8 @@ class UserDataModel {
     this.open = '',
   });
 
-  static void fromMap(UserDataModel user, Map<String, dynamic> map) {
+  static UserDataModel fromMap( Map<String, dynamic> map) {
+    UserDataModel user = UserDataModel();
     user.city = map['city'];
     user.date = map['date'];
     user.email = map['email'];
@@ -96,9 +76,11 @@ class UserDataModel {
     user.bio = map['bio'];
     user.single = map['single'];
     user.open = map['open'];
+    user.phone = map['phone'];
+    return user;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
       'job': job,
@@ -123,6 +105,7 @@ class UserDataModel {
       'bio': bio,
       'single': single,
       'open': open,
+      'phone': phone,
       // add any other fields you want to serialize to JSON
     };
   }

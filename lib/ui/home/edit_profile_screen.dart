@@ -5,6 +5,7 @@ import '../../common/pop_message.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/firebase_utils.dart';
 import '../../utils/my_utils.dart';
 import '../ui_components/simple_button.dart';
 
@@ -99,7 +100,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        // image: AssetImage("assets/temp/5.png"))),
                       ),
                       Positioned(
                         top: 5,
@@ -191,7 +191,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         width: size.width * 0.25,
                         child: Text(
-                          "Unicorn",
+                          "Griffin",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -496,7 +496,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-
   void updateProfile() async {
     if (controllerFullName.text.isEmpty &&
         controllerJob.text.isEmpty &&
@@ -505,7 +504,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         controllerTown.text.isEmpty &&
         profileImage.isEmpty &&
         image1.isEmpty &&
-        image2.isEmpty) {
+        image2.isEmpty &&
+        role.isEmpty) {
       showFailedToast(context, 'No Informayion Updated');
       Navigator.pop(context);
       return;

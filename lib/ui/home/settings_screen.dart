@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/firebase_utils.dart';
+import '../authentication/login/forgotpassword.dart';
 import 'edit_profile_screen.dart';
 import 'home_screen.dart';
 
@@ -15,9 +17,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool isDarkMode = false;
+  // bool isDarkMode = false;
 
-  get fibaseAuth => null;
+  // get fibaseAuth => null;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: AppColors.i.darkBrownColor,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
@@ -55,152 +59,166 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              decoration: const BoxDecoration(color: Colors.white),
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(6),
-                    width: size.width * 0.1,
-                    height: size.width * 0.1,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                          image: AssetImage("assets/temp/5.png"),
-                          fit: BoxFit.cover),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.09,
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Row(
+                  children: [
+                    // Container(
+                    //   margin: const EdgeInsets.all(6),
+                    //   width: size.width * 0.1,
+                    //   height: size.width * 0.1,
+                    //   decoration: const BoxDecoration(
+                    //     color: Colors.white,
+                    //     image: DecorationImage(
+                    //         image: AssetImage("assets/temp/5.png"),
+                    //         fit: BoxFit.cover),
+                    //   ),
+                    // ),
+                    CircleAvatar(
+
+                      radius: size.width * 0.08,
+                      backgroundImage: NetworkImage(Store().userData.photoUrl),
                     ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Store().userData.fullName.toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.05,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          Store().userData.email,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.035,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 1,
+              ),
+              Container(
+                width: size.width,
+                height: size.height * 0.07,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Switch to Dark Mode",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: size.width * 0.04),
+                    ),
+                    const Spacer(),
+                    Switch(
+                        activeColor: Colors.black12,
+                        value: Store().isDarkMode,
+                        onChanged: (value) {
+                          setState(() {
+                            Store().isDarkMode = !value;
+                          });
+                        }),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.1,
+              ),
+              InkWell(
+                onTap: () {
+                  screenPush(context, const EditProfileScreen());
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  height: size.height * 0.08,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  child: Row(
                     children: [
                       Text(
-                        Store().userData.name,
+                        "Edit Profile",
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w700,
+                          fontSize: size.width * 0.05,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
-                        Store().userData.email,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
+                      const Spacer(),
+                      const Icon(Icons.arrow_forward_ios_rounded)
                     ],
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 1,
-            ),
-            Container(
-              width: size.width,
-              height: size.height * 0.07,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 15,
                   ),
-                  Text(
-                    "Switch to Dark Mode",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.width * 0.04),
+                ),
+              ),
+              const SizedBox(
+                height: 1,
+              ),
+              InkWell(
+                onTap: () {
+                  screenPush(context, const ForgotPasswordPage());
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  height: size.height * 0.08,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                  const Spacer(),
-                  Switch(
-                      activeColor: Colors.black12,
-                      value: isDarkMode,
-                      onChanged: (value) {
-                        setState(() {
-                          isDarkMode = value;
-                        });
-                      }),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: size.height * 0.1,
-            ),
-            InkWell(
-              onTap: () {
-                screenPush(context, const EditProfileScreen());
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                width: size.width,
-                height: size.height * 0.08,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.w500,
+                  child: Row(
+                    children: [
+                      Text(
+                        "Change Password",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: size.width * 0.05,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.arrow_forward_ios_rounded)
-                  ],
+                      const Spacer(),
+                      const Icon(Icons.arrow_forward_ios_rounded)
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 1,
-            ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                width: size.width,
-                height: size.height * 0.08,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      "Change Password",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.arrow_forward_ios_rounded)
-                  ],
-                ),
+              SizedBox(
+                height: size.height*0.09,
               ),
-            ),
-            SizedBox(
-              height: size.height*0.09,
-            ),
-            SimpleButton(title: "Log Out", onTap: ()  async {
-              await logOut() ? screenPush(context, const HomeScreen()) : '';
-
-
-            })
-          ],
+              SimpleButton(title: "Log Out", onTap: ()  async {
+                // await logOut() ? screenPush(context, const HomeScreen()) : '';
+                final v = await logOut();
+                if(v){
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    screenPushBackUntil(context, const WelcomeScreen());
+                  });
+                }
+              })
+            ],
+          ),
         ),
       ),
     );

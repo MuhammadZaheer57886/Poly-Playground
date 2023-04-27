@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/utils/my_utils.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
+import '../../../utils/firebase_utils.dart';
 import '../../ui_components/custom_text_field.dart';
 import '../../ui_components/simple_button.dart';
 import 'basic_info2.dart';
@@ -23,20 +23,6 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: AppColors.i.darkBrownColor,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-        ),
-      ),
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
         width: size.width,
@@ -50,71 +36,73 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
               AppColors.i.darkBrownColor.withOpacity(0.4),
               AppColors.i.darkBrownColor.withOpacity(0.4),
             ])),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: size.height * 0.05,
-            ),
-            Text(
-              "Base",
-              style: TextStyle(
-                color: AppColors.i.whiteColor,
-                fontWeight: FontWeight.w500,
-                fontSize: size.width * 0.05,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: size.height * 0.2,
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextField(
-                controller: controllerFullName,
-                titleText: 'Full Name',
-                keyboardType: TextInputType.name,
-                width: size.width * 0.88,
-                radius: 15,
-                isDark: false,
-                pl: 20),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextField(
-                controller: controllerJOB,
-                titleText: 'JOB',
-                keyboardType: TextInputType.text,
-                width: size.width * 0.88,
-                radius: 15,
-                isDark: false,
-                pl: 20),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextField(
-              keyboardType: TextInputType.multiline,
-                controller: controllerIntro,
-                titleText: 'INTRODUCTION YOURSELF',
-                width: size.width * 0.88,
-                radius: 15,
-                isDark: false,
-                height: 150,
-                pl: 20),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: size.height * 0.2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SimpleButton(
-                    title: "CONTINUE",
-                    onTap: () {
-                      updateBasicInfo();
-                    }),
-              ],
-            )
-          ],
+              Text(
+                "Base",
+                style: TextStyle(
+                  color: AppColors.i.whiteColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: size.width * 0.05,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                  controller: controllerFullName,
+                  titleText: 'Full Name',
+                  keyboardType: TextInputType.name,
+                  width: size.width * 0.88,
+                  radius: 15,
+                  isDark: false,
+                  pl: 20),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                  controller: controllerJOB,
+                  titleText: 'JOB',
+                  keyboardType: TextInputType.text,
+                  width: size.width * 0.88,
+                  radius: 15,
+                  isDark: false,
+                  pl: 20),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                keyboardType: TextInputType.multiline,
+                  controller: controllerIntro,
+                  titleText: 'INTRODUCTION YOURSELF',
+                  width: size.width * 0.88,
+                  radius: 15,
+                  isDark: false,
+                  height: 150,
+                  pl: 20),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: size.height * 0.1,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SimpleButton(
+                      title: "CONTINUE",
+                      onTap: () {
+                        updateBasicInfo();
+                      }),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -125,7 +113,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
         controllerJOB.text.isEmpty ||
         controllerIntro.text.isEmpty
         ) {
-      showFailedToast(context, 'Please fill all the fields correctly');
+      showFailedToast(context, 'Please fill all the fields ');
       return;
     }
     Store().userData.fullName = controllerFullName.text;
