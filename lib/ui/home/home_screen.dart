@@ -3,6 +3,7 @@ import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
+import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
@@ -110,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                         onPressed: () {}, icon: Image.asset("assets/home.png")),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          screenPush(context, const CallListScreen());
+                        },
                         icon: Image.asset("assets/video.png")),
                     IconButton(
                         onPressed: () {}, icon: Image.asset("assets/love.png")),

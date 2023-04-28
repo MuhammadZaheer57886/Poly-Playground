@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
-import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/firebase_utils.dart';
 import '../../utils/my_utils.dart';
+import '../chat/chat_user_list.dart';
 import '../home/profile_screen/profile_screen.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class CallListScreen extends StatefulWidget {
+  const CallListScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<CallListScreen> createState() => _CallListScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  List<ChatModel> chats = [];
+class _CallListScreenState extends State<CallListScreen> {
+  List<CallHistoryModel> calls = [];
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           icon: Image.asset("assets/home.png")),
                       IconButton(
                           onPressed: () {
-                            screenPush(context, const CallListScreen());
+                            screenPush(context, widget);
                           },
                           icon: Image.asset("assets/video.png")),
                       IconButton(
@@ -101,55 +101,55 @@ class _ChatScreenState extends State<ChatScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: size.width * 0.14,
-                                height: size.height * 0.07,
-                                alignment: Alignment.centerRight,
-                                decoration: BoxDecoration(
-                                  color: AppColors.i.darkBrownColor,
-                                  borderRadius:
-                                  BorderRadius.circular(size.width * 0.075),
-                                ),
-                              ),
-                            ),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     Navigator.pop(context);
+                            //   },
+                            //   child: Container(
+                            //     width: size.width * 0.14,
+                            //     height: size.height * 0.07,
+                            //     alignment: Alignment.centerRight,
+                            //     decoration: BoxDecoration(
+                            //       color: AppColors.i.darkBrownColor,
+                            //       borderRadius:
+                            //       BorderRadius.circular(size.width * 0.075),
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
                               width: size.width * 0.01,
                             ),
-                            Text("Chats",
+                            Text("Calls",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w800,
-                                    fontSize: size.width * 0.06)),
+                                    fontSize: size.width * 0.09)),
                             SizedBox(
                               width: size.width * 0.05,
                             ),
-                            Container(
-                              width: size.width * 0.06,
-                              height: size.height * 0.03,
-                              decoration: BoxDecoration(
-                                color: AppColors.i.redColor,
-                                borderRadius:
-                                BorderRadius.circular(size.width * 0.075),
-                              ),
-                            ),
+                            // Container(
+                            //   width: size.width * 0.06,
+                            //   height: size.height * 0.03,
+                            //   decoration: BoxDecoration(
+                            //     color: AppColors.i.redColor,
+                            //     borderRadius:
+                            //     BorderRadius.circular(size.width * 0.075),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
                       Expanded(
-                        child: chats.isNotEmpty
+                        child: calls.isNotEmpty
                             ? ListView.builder(
                             shrinkWrap: true,
-                            itemCount: chats.length,
+                            itemCount: calls.length,
                             itemBuilder: (context, index) {
-                              return chatCard(size, chats[index]);
+                              return callHistoyCart(size, calls[index]);
                             })
                             : Center(
                           child: Text(
-                            "You have no messages!",
+                            "You have no Calls!",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
@@ -179,10 +179,10 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget chatCard(Size size, ChatModel lastChat) {
+  Widget callHistoyCart(Size size, CallHistoryModel lastCall) {
     return GestureDetector(
       onTap: () {
-        screenPush(context, MessageScreen(receiverId: lastChat.uid));
+        // screenPush(context, MessageScreen(receiverId: lastChat.uid));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -196,7 +196,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               CircleAvatar(
                 radius: size.width * 0.07,
-                backgroundImage: NetworkImage(lastChat.photoUrl),
+                backgroundImage: NetworkImage(lastCall.photoUrl),
               ),
               SizedBox(
                 width: size.width * 0.5,
@@ -204,18 +204,26 @@ class _ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      lastChat.fullName,
+                      lastCall.fullName,
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
                           fontSize: size.width * 0.05),
                     ),
-                    Text(
-                      lastChat.lastMessage.message,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: size.width * 0.04),
+                    Row(
+                      children: [
+                        const Icon(
+                           Icons.call_received_sharp
+                          , color: Colors.black),
+                        const SizedBox(width: 10),
+                        Text(
+                          'call duration',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: size.width * 0.04),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -224,7 +232,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Text(
                     DateFormat('h:mm a')
-                        .format(DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(lastChat.lastMessage.timestamp)),
+                        .format(DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(lastCall.lastCall.timestamp)),
                     style: TextStyle(
                         color: AppColors.i.whiteColor.withOpacity(0.8),
                         fontWeight: FontWeight.w400,
@@ -244,10 +252,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void updaeChatList() async {
     for (var friend in Store().friends) {
-      final lastMessage = await getLastMessage(friend.uid);
-      if (lastMessage != null) {
+      final lastCall = await getLastCall(friend.uid);
+      if (lastCall != null) {
         setState(() {
-          chats.add(createChatModel(friend, lastMessage));
+          calls.add(createCallModel(friend, lastCall));
         });
       }
     }

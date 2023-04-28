@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.poly_playground">
+    package="com.example.poly_playground"
+    xmlns:tools="http://schemas.android.com/tools">
    <application
+        tools:replace="android:label"  
         android:label="Poly Playground"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

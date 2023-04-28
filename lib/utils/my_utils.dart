@@ -49,6 +49,17 @@ ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
     uid: friend.uid,
   );
 }
+
+CallHistoryModel createCallModel(FriendModel friend, CallModel lastCall) {
+  return CallHistoryModel(
+    fullName: friend.fullName,
+    photoUrl: friend.photoUrl,
+    lastCall: lastCall,
+    uid: friend.uid,
+  );
+}
+
+
 String formatDate() {
   final formatter = DateFormat('MMM dd, yyyy h:mm:ss.SSS a');
   return formatter.format(DateTime.now());

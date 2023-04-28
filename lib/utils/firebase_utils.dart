@@ -69,28 +69,25 @@ Future<MessageModel?> getLastMessage(String receiverId) async {
 
     return null;
   }
+  }
 
-  // try{
-  //   final messagesRef = FirebaseFirestore.instance
-  //       .collection('chats').doc(Store().uid).get();
-  //       // .collectionGroup();
-  //   print(messagesRef);
-  //   // messagesRef.get().then((querySnapshot) {
-  //   //   querySnapshot.docs.forEach((doc) {
-  //   //     final senderId = doc.get('senderId');
-  //   //     final messageText = doc.get('messageText');
-  //   //     print('$senderId: $messageText');
-  //   //   });
-  //   // });
-  //
-  // }
-  // catch(e){
-  //   return null;
-  // }
-  //
-  //
-  // return null;
+  Future<CallModel?> getLastCall(String receiverId) async {
+  try {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('calls')
+        .doc(Store().uid)
+        .collection(receiverId)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+    return CallModel.fromMap(querySnapshot.docs.first.data());
+  } catch (e) {
+
+    return null;
+  }
 }
+
+
 Stream<List<MessageModel>> listenForNewMessages(String receiverId)  {
   return  FirebaseFirestore
       .instance

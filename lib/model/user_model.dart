@@ -204,7 +204,6 @@ class ChatModel {
       fullName: map['fullName'],
       photoUrl: map['photoUrl'],
       uid: map['uid'],
-      // lastMessage: map['lastMessage'],
       lastMessage: MessageModel.fromMap(map['lastMessage']),
     );
   }
@@ -214,6 +213,74 @@ class ChatModel {
       'photoUrl': photoUrl,
       'uid': uid,
       'lastMessage': lastMessage.toMap(),
+    };
+  }
+}
+
+class CallModel {
+  final String senderId;
+  final String receiverId;
+  final bool ringing;
+  final String timestamp;
+  final String type;
+  final String duration;
+
+  CallModel({
+    required this.senderId,
+    required this.receiverId,
+    required this.ringing,
+    required this.timestamp,
+    required this.type,
+    required this.duration,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'ringing': ringing,
+      'timestamp': timestamp.toString(),
+      'type': type,
+      'duration': duration,
+    };
+  }
+
+  factory CallModel.fromMap(Map<String, dynamic> map) {
+    return CallModel(
+      senderId: map['senderId'],
+      receiverId: map['receiverId'],
+      ringing: map['ringing'],
+      timestamp:map['timestamp'],
+      type: map['type'],
+      duration: map['duration'],
+    );
+  }
+}
+class CallHistoryModel {
+  String fullName;
+  String photoUrl;
+  String uid;
+  CallModel lastCall;
+  CallHistoryModel({
+    required this.fullName ,
+    required this.photoUrl ,
+    required this.uid,
+    required this.lastCall,
+  });
+  factory CallHistoryModel.fromMap(Map<String, dynamic> map) {
+    return CallHistoryModel(
+      fullName: map['fullName'],
+      photoUrl: map['photoUrl'],
+      uid: map['uid'],
+      lastCall: CallModel.fromMap(map['lastCall']),
+    );
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'uid': uid,
+      'lastCall': lastCall.toMap(),
     };
   }
 }
