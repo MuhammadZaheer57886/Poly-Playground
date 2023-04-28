@@ -125,3 +125,95 @@ class DealModel {
   });
 
 }
+class MessageModel {
+  final String senderId;
+  final String receiverId;
+  final String message;
+  final bool isRead;
+  final String timestamp;
+  final String type;
+
+  MessageModel({
+    required this.senderId,
+    required this.receiverId,
+    required this.message,
+    required this.isRead,
+    required this.timestamp,
+    required this.type,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'message': message,
+      'isRead': isRead,
+      'timestamp': timestamp.toString(),
+      'type': type,
+    };
+  }
+
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
+      senderId: map['senderId'],
+      receiverId: map['receiverId'],
+      message: map['message'],
+      isRead: map['isRead'],
+      timestamp:map['timestamp'],
+      type: map['type'],
+    );
+  }
+}
+class FriendModel {
+  String fullName;
+  String photoUrl;
+  String uid;
+  FriendModel({
+    required this.fullName ,
+    required this.photoUrl ,
+    required this.uid,
+  });
+  factory FriendModel.fromMap(Map<String, dynamic> map) {
+    return FriendModel(
+      fullName: map['fullName'],
+      photoUrl: map['photoUrl'],
+      uid: map['uid'],
+    );
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'uid': uid,
+    };
+  }
+}
+class ChatModel {
+  String fullName;
+  String photoUrl;
+  String uid;
+  MessageModel lastMessage;
+  ChatModel({
+    required this.fullName ,
+    required this.photoUrl ,
+    required this.uid,
+    required this.lastMessage,
+  });
+  factory ChatModel.fromMap(Map<String, dynamic> map) {
+    return ChatModel(
+      fullName: map['fullName'],
+      photoUrl: map['photoUrl'],
+      uid: map['uid'],
+      // lastMessage: map['lastMessage'],
+      lastMessage: MessageModel.fromMap(map['lastMessage']),
+    );
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'uid': uid,
+      'lastMessage': lastMessage.toMap(),
+    };
+  }
+}

@@ -4,6 +4,7 @@ import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/firebase_utils.dart';
 
 class MessageScreen extends StatefulWidget {
   final String receiverId;
