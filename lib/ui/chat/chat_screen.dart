@@ -6,16 +6,16 @@ import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
 
-class MessageScreen extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final String receiverId;
 
-  const MessageScreen({Key? key, required this.receiverId}) : super(key: key);
+  const ChatScreen({Key? key, required this.receiverId}) : super(key: key);
 
   @override
-  State<MessageScreen> createState() => _MessageScreen();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _MessageScreen extends State<MessageScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageController = TextEditingController();
   bool show = false;
   String prevMessageDate = '';
@@ -62,7 +62,7 @@ class _MessageScreen extends State<MessageScreen> {
                         ),
                         Text(friend.fullName,
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w800,
                                 fontSize: size.width * 0.06)),
                       ],
@@ -235,7 +235,7 @@ class _MessageScreen extends State<MessageScreen> {
       isRead: false,
       type: 'text',
     );
-    setMessagetoFirestore(message);
+    setMessageToFirestore(message);
     setState(() {
       show = false;
     });

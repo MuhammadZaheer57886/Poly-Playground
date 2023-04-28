@@ -11,5 +11,14 @@ class Store {
   DealModel? deal;
   bool isDarkMode = false;
   List<FriendModel> friends = [];
+
+  void clear() {
+    isLogedIn = false;
+    userData = UserDataModel();
+    uid = "";
+    deal = null;
+    isDarkMode = false;
+    friends = [];
+  }
   
 }
