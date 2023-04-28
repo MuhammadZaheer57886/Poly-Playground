@@ -6,7 +6,7 @@ import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
-import '../chat/chat_screen.dart';
+import '../chat/chat_user_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,6 +25,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   bool isLoading = true;
   @override
+  // void initState() {
+  //   super.initState();
+  //   if (!Store().isLogedIn) {
+  //     screenPush(context, const WelcomeScreen());
+  //     return;
+  //   }
+  //   getUserData(Store().uid).then((value) => {
+  //   if(value){
+  //   setState(() {
+  //   isLoading = false;
+  //   })
+  //   } else{
+  //       screenPushBackUntil(context, const PhotoProfileScreen()),
+  //   setState(() {
+  //     isLoading = false;
+  //   })
+  // }});
+  // }
   void initState() {
     super.initState();
     if (!Store().isLogedIn) {
@@ -32,16 +50,21 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     getUserData(Store().uid).then((value) => {
-    if(value){
-    setState(() {
-    isLoading = false;
-    })
-    } else{
-        screenPushBackUntil(context, const PhotoProfileScreen()),
-    setState(() {
-      isLoading = false;
-    })
-  }});
+      if (value)
+        {
+          setState(() {
+            isLoading = false;
+          }),
+          getAllFriends(),
+        }
+      else
+        {
+          screenPush(context, const PhotoProfileScreen()),
+          setState(() {
+            isLoading = false;
+          })
+        }
+    });
   }
 
   @override
@@ -193,5 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+  void getAllFriends() async {
+    Store().friends = await getFriends();;
   }
 }

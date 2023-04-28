@@ -17,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   final double? height;
   final double? pl;
   final Color? color;
+  final Function(dynamic value)? onChanged;
 
   const CustomTextField({
     Key? key,
@@ -34,6 +35,8 @@ class CustomTextField extends StatelessWidget {
     this.pl,
     this.keyboardType,
     this.color,
+    this.onChanged,
+
 
   }) : super(key: key);
 
@@ -53,6 +56,7 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius ?? 40),
           ),
           child: TextFormField(
+            onChanged: onChanged,
             controller: controller,
             validator: validator,
             keyboardType: keyboardType,

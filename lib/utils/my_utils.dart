@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import '../common/store.dart';
 import '../model/user_model.dart';
 import 'package:intl/intl.dart';
 
@@ -41,5 +38,40 @@ bool isValidDate(String date) {
     return true;
   } catch (e) {
     return false;
+  }
+}
+
+ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
+  return ChatModel(
+    fullName: friend.fullName,
+    photoUrl: friend.photoUrl,
+    lastMessage: lastMessage,
+    uid: friend.uid,
+  );
+}
+String formatDate() {
+  final formatter = DateFormat('MMM dd, yyyy h:mm:ss.SSS a');
+  return formatter.format(DateTime.now());
+}
+String getMessageTime(String date) {
+  DateTime messageTime = DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(date);
+  DateTime now = DateTime.now();
+  DateTime today = DateTime(now.year, now.month, now.day);
+  DateTime yesterday = today.subtract(const Duration(days: 1));
+  DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
+  DateTime weekAgo = today.subtract(const Duration(days: 7));
+
+  if (messageTime.isAfter(today)) {
+    return 'Today';
+  } else if (messageTime.isAfter(yesterday)) {
+    return 'Yesterday';
+  } else if (messageTime.isAfter(twoDaysAgo)) {
+    return '2 Days Ago';
+  } else if (messageTime.isAfter(weekAgo)) {
+    int numDays = today.difference(messageTime).inDays;
+    return '$numDays Days Ago';
+  } else {
+    DateFormat formatter = DateFormat('MMMM dd, yyyy');
+    return formatter.format(messageTime);
   }
 }

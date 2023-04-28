@@ -12,4 +12,10 @@ class AppColors {
 
   get lightBrownColor => null;
   get yellowColor => Colors.yellow;
+
+  get redColor => Colors.red;
+
+  get greyColor => Colors.grey;
+
+  get blueColor => Colors.blue;
 }

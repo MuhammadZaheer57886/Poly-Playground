@@ -10,6 +10,6 @@ class Store {
   String uid = "";
   DealModel? deal;
   bool isDarkMode = false;
-
+  List<FriendModel> friends = [];
   
 }
