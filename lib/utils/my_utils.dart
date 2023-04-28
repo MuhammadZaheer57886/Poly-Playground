@@ -137,6 +137,27 @@ Future<MessageModel?> getLastMessage(String receiverId) async {
 
     return null;
   }
+
+  // try{
+  //   final messagesRef = FirebaseFirestore.instance
+  //       .collection('chats').doc(Store().uid).get();
+  //       // .collectionGroup();
+  //   print(messagesRef);
+  //   // messagesRef.get().then((querySnapshot) {
+  //   //   querySnapshot.docs.forEach((doc) {
+  //   //     final senderId = doc.get('senderId');
+  //   //     final messageText = doc.get('messageText');
+  //   //     print('$senderId: $messageText');
+  //   //   });
+  //   // });
+  //
+  // }
+  // catch(e){
+  //   return null;
+  // }
+  //
+  //
+  // return null;
 }
 
 Future<List<FriendModel>> getFriends() async {

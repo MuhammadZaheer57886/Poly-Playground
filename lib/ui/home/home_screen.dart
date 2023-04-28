@@ -8,7 +8,8 @@ import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/my_utils.dart';
-import '../chat/chat_screen.dart';
+// import '../chat/chat_screen.dart';
+import '../chat/chat_user_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
