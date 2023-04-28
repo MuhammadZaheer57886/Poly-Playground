@@ -209,6 +209,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void getAllFriends() async {
     final friends = getFriends();
     Store().friends = await friends;
-    print(Store().friends);
+    // print(Store().friends);
   }
 }

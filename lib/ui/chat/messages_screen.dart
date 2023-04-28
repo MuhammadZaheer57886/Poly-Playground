@@ -147,7 +147,7 @@ class _MessageScreen extends State<MessageScreen> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(Store().userData.photoUrl),
+            backgroundImage: NetworkImage(friend.photoUrl),
           ),
           Container(
             constraints: BoxConstraints(
@@ -230,7 +230,7 @@ class _MessageScreen extends State<MessageScreen> {
       message: data,
       senderId: Store().uid,
       receiverId: friend.uid,
-      timestamp: formatDate(DateTime.now()).toString(),
+      timestamp: formatDate().toString(),
       isRead: false,
       type: 'text',
     );

@@ -135,24 +135,22 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                       ),
-                      SingleChildScrollView(
-                        child: chats.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: chats.length,
-                                itemBuilder: (context, index) {
-                                  return chatCard(size, chats[index]);
-                                })
-                            : Center(
-                                child: Text(
-                                  "You have no messages!",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: size.width * 0.05),
-                                ),
+                      chats.isNotEmpty
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: chats.length,
+                              itemBuilder: (context, index) {
+                                return chatCard(size, chats[index]);
+                              })
+                          : Center(
+                              child: Text(
+                                "You have no messages!",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: size.width * 0.05),
                               ),
-                      ),
+                            ),
                     ],
                   ),
                 ),
@@ -220,7 +218,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Text(
                     DateFormat('h:mm a')
-                        .format(DateFormat("MMM dd, yyyy h:mm a").parse(lastChat.lastMessage.timestamp)),
+                        .format(DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(lastChat.lastMessage.timestamp)),
                     style: TextStyle(
                         color: AppColors.i.whiteColor.withOpacity(0.8),
                         fontWeight: FontWeight.w400,
@@ -262,9 +260,9 @@ class _ChatScreenState extends State<ChatScreen> {
               topRight: Radius.circular(20.0),
             ),
           ),
-          child: SingleChildScrollView(
+          child: Expanded(
             child: ListView.builder(
-                shrinkWrap: true,
+                // shrinkWrap: true,
                 itemCount: Store().friends.length,
                 itemBuilder: (context, index) {
                   return Container(
