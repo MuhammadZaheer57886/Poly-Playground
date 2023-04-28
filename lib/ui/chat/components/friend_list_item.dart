@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
 
 import '../../../common/nav_function.dart';
-import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../chat_screen.dart';
 
@@ -32,7 +31,6 @@ late Icon icon;
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      // color: AppColors.i.greyColor.withOpacity(0.2),
         decoration: BoxDecoration(
           color: AppColors.i.greyColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20),
@@ -42,21 +40,29 @@ late Icon icon;
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
-              radius: size.width * 0.07,
-              backgroundImage: NetworkImage(
-                  friend.photoUrl),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: size.width * 0.07,
+                  backgroundImage: NetworkImage(
+                      friend.photoUrl),
+                ),
+                SizedBox(
+                  width: size.width * 0.10,
+                ),
+                Text(
+                    friend.fullName.length < 15
+                        ? friend.fullName
+                        :friend.fullName.substring(0, 12) + '...',
+                  style: TextStyle(
+                      color: AppColors.i.blackColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: size.width * 0.05),
+                ),
+              ],
             ),
-            Text(
-              friend.fullName,
-              style: TextStyle(
-                  color: AppColors.i.blackColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: size.width * 0.05),
-            ),
-            SizedBox(
-              width: size.width * 0.05,
-            ),
+
+
             IconButton(
                 onPressed: () {
                   screenPush(
@@ -65,7 +71,7 @@ late Icon icon;
                           receiverId:
                           friend.uid));
                 },
-                icon: icon,
+                icon: icon,),
 
           ],
         ));

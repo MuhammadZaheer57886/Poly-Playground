@@ -181,7 +181,7 @@ class _ChatUserList extends State<ChatUserList> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
-        isLoading ? Center(child: CircularProgressIndicator()) : Container(),
+        isLoading ?const Center(child: CircularProgressIndicator()) : Container(),
       ],
     );
   }
@@ -189,6 +189,7 @@ class _ChatUserList extends State<ChatUserList> {
   Widget chatCard(Size size, ChatModel lastChat) {
     return GestureDetector(
       onTap: () {
+
         screenPush(context, ChatScreen(receiverId: lastChat.uid));
       },
       child: Container(
@@ -254,13 +255,7 @@ class _ChatUserList extends State<ChatUserList> {
     setState(() {
       isLoading = true;
     });
-    final List<ChatModel> chatList = [];
-    for (var friend in Store().friends) {
-      final lastMessage = await getLastMessage(friend.uid);
-      if (lastMessage != null) {
-        chatList.add(createChatModel(friend, lastMessage));
-      }
-    }
+    final List<ChatModel> chatList = await getLastMessages();
     if (chatList.isNotEmpty) {
       setState(() {
         chats = chatList;

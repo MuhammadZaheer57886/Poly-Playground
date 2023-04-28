@@ -99,17 +99,44 @@ Future<List<FriendModel>> getFriends() async {
   return friends;
 }
 
-Future<MessageModel?> getLastMessage(String receiverId) async {
-  try {
+Future<List<ChatModel>> getLastMessages() async {
+    List<ChatModel> chats = [];
+  try{
     final querySnapshot = await FirebaseFirestore.instance
-        .collection('chats')
+        .collection('users')
         .doc(Store().uid)
-        .collection(receiverId)
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-    return MessageModel.fromMap(querySnapshot.docs.first.data());
-  } catch (e) {
-    return null;
+        .collection('chats').get();
+    for(var doc in querySnapshot.docs) {
+      chats.add(ChatModel.fromMap(doc.data()));
+    }
+    }catch(e){
+      chats = [];
   }
+  return chats;
+
+}
+Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
+  try {
+    await firestore
+        .collection("users")
+        .doc(Store().uid)
+        .collection("chats")
+        .doc(chat.uid)
+        .update(chat.toMap());
+    return true;
+  }catch(e){
+    try{
+      await firestore
+          .collection("users")
+          .doc(Store().uid)
+          .collection("chats")
+          .doc(chat.uid)
+          .set(chat.toMap());
+      return true;
+    }
+    catch(e){
+      return false;
+    }
+  }
+
 }

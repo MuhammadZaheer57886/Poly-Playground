@@ -10,6 +10,7 @@ class Store {
   String uid = "";
   DealModel? deal;
   bool isDarkMode = false;
+  FriendModel? friend;
   List<FriendModel> friends = [];
 
   void clear() {
@@ -18,6 +19,7 @@ class Store {
     uid = "";
     deal = null;
     isDarkMode = false;
+    friend = null;
     friends = [];
   }
   
