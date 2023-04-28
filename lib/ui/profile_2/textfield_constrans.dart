@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class TextFormFieldContainer extends StatelessWidget {
-  final String labelText;
   final String hintText;
   final EdgeInsets padding;
   final double width;
@@ -11,7 +10,6 @@ class TextFormFieldContainer extends StatelessWidget {
   final TextEditingController? controller;
 
   const TextFormFieldContainer({super.key, 
-    required this.labelText,
     required this.hintText,
     this.padding = const EdgeInsets.only(left: 20),
     this.width = double.infinity,
@@ -37,7 +35,6 @@ class TextFormFieldContainer extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,
-          labelText: labelText,
           hintText: hintText,
           hintStyle: const TextStyle(
             color: Colors.grey,

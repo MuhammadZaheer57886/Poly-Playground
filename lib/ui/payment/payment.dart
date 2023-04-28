@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
 
 import '../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_strings.dart';
 import '../profile_2/profile2.dart';
-import 'continue_button.dart';
 import 'monthly_deals.dart';
 
-// import '../../utils/constants/app_colors.dart';
 
 class Payment extends StatelessWidget {
   const Payment({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text(
           "Manage Subscription",
@@ -27,15 +25,9 @@ class Payment extends StatelessWidget {
         ),
         backgroundColor: AppColors.i.darkBrownColor,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-        ),
+        actions: [
+          TextButton(onPressed: ()=>screenPushRep(context, const Profile2()), child: const Text("Skip")),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
@@ -134,33 +126,6 @@ class Payment extends StatelessWidget {
                 ),
                 //Deals
                 const MonthlyDeals(),
-
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: size.width * 0.8,
-                  child: Text(
-                    AppStrings.i.paymentComment,
-                    style: TextStyle(
-                      color: AppColors.i.whiteColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: size.width * 0.03,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: size.height * 0.03),
-                const ContinueButton(),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(context,  MaterialPageRoute(builder: (context) => const Profile2()));
-                  },
-                  child: const Text(
-                    'Skip',
-                    style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
-                  ),
-                ),
               ],
             ),
           ),

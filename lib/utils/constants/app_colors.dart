@@ -11,10 +11,5 @@ class AppColors {
   get blackColor => Colors.black;
 
   get lightBrownColor => null;
-
-  get redColor => Colors.red;
-
-  get greyColor => Colors.grey;
-
-  get blueColor => Colors.blue;
+  get yellowColor => Colors.yellow;
 }

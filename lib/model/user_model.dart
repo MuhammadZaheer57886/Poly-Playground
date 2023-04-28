@@ -1,26 +1,3 @@
-class UserModel {
-  String? uid;
-  String? email;
-
-  UserModel({this.uid, this.email});
-
-  // data from cloud firestore
-  factory UserModel.fromMap(map) {
-    return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-    );
-  }
-
-  // sending data to cloud firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'email': email,
-    };
-  }
-}
-
 class UserDataModel {
   String city;
   String date;
@@ -45,8 +22,10 @@ class UserDataModel {
   String bio;
   String single;
   String open;
+  String phone;
 
   UserDataModel({
+    this.phone = '',
     this.city = '',
     this.date = '',
     this.email = '',
@@ -72,7 +51,7 @@ class UserDataModel {
     this.open = '',
   });
 
-  static UserDataModel fromMap(Map<String, dynamic> map) {
+  static UserDataModel fromMap( Map<String, dynamic> map) {
     UserDataModel user = UserDataModel();
     user.city = map['city'];
     user.date = map['date'];
@@ -97,10 +76,11 @@ class UserDataModel {
     user.bio = map['bio'];
     user.single = map['single'];
     user.open = map['open'];
+    user.phone = map['phone'];
     return user;
   }
 
-   Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
       'job': job,
@@ -125,100 +105,23 @@ class UserDataModel {
       'bio': bio,
       'single': single,
       'open': open,
+      'phone': phone,
       // add any other fields you want to serialize to JSON
     };
   }
 }
-class MessageModel {
-  final String senderId;
-  final String receiverId;
-  final String message;
-  final bool isRead;
-  final String timestamp;
-  final String type;
 
-  MessageModel({
-    required this.senderId,
-    required this.receiverId,
-    required this.message,
-    required this.isRead,
-    required this.timestamp,
-    required this.type,
+class DealModel {
+  String duration;
+  String price;
+  String discount;
+  bool selected=false;
+
+  DealModel({
+    required this.duration,
+    required this.price,
+    required this.discount,
+    required this.selected,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'senderId': senderId,
-      'receiverId': receiverId,
-      'message': message,
-      'isRead': isRead,
-      'timestamp': timestamp.toString(),
-      'type': type,
-    };
-  }
-
-  factory MessageModel.fromMap(Map<String, dynamic> map) {
-    return MessageModel(
-      senderId: map['senderId'],
-      receiverId: map['receiverId'],
-      message: map['message'],
-      isRead: map['isRead'],
-      timestamp:map['timestamp'],
-      type: map['type'],
-    );
-  }
-}
-class FriendModel {
-  String fullName;
-  String photoUrl;
-  String uid;
-  FriendModel({
-    required this.fullName ,
-    required this.photoUrl ,
-    required this.uid,
-  });
-   factory FriendModel.fromMap(Map<String, dynamic> map) {
-      return FriendModel(
-        fullName: map['fullName'],
-        photoUrl: map['photoUrl'],
-        uid: map['uid'],
-      );
-    }
-  Map<String, dynamic> toMap() {
-    return {
-      'fullName': fullName,
-      'photoUrl': photoUrl,
-      'uid': uid,
-    };
-  }
-}
-
-class ChatModel {
-  String fullName;
-  String photoUrl;
-  String uid;
-  MessageModel lastMessage;
-  ChatModel({
-    required this.fullName ,
-    required this.photoUrl ,
-    required this.uid,
-    required this.lastMessage,
-  });
-   factory ChatModel.fromMap(Map<String, dynamic> map) {
-      return ChatModel(
-        fullName: map['fullName'],
-        photoUrl: map['photoUrl'],
-        uid: map['uid'],
-        // lastMessage: map['lastMessage'],
-        lastMessage: MessageModel.fromMap(map['lastMessage']),
-      );
-    }
-  Map<String, dynamic> toMap() {
-    return {
-      'fullName': fullName,
-      'photoUrl': photoUrl,
-      'uid': uid,
-      'lastMessage': lastMessage.toMap(),
-    };
-  }
 }

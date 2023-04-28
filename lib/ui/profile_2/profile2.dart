@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:poly_playground/utils/my_utils.dart';
+import 'package:poly_playground/ui/payment/payment.dart';
 
+import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/my_utils.dart';
 import '_form.dart';
 
 class Profile2 extends StatefulWidget {
@@ -32,7 +34,7 @@ class _Profile2State extends State<Profile2> {
           elevation: 0.0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              screenPushRep(context, const Payment());
             },
             icon: const Icon(
               Icons.arrow_back_ios,
@@ -164,20 +166,40 @@ class _Profile2State extends State<Profile2> {
 
   Widget takePictureBox(
       BuildContext context, Size size, String imageUrl, String imagePath) {
-    return Container(
-      width: size.width * 0.2,
-      height: size.height * 0.10,
-      decoration: BoxDecoration(
-          color: AppColors.i.brownColor,
-          image: imageUrl.isNotEmpty || imagePath.isNotEmpty
-              ? DecorationImage(
-                  image: imagePath.isEmpty
-                      ? NetworkImage(imageUrl)
-                      : FileImage(File(imagePath)) as ImageProvider,
-                  fit: BoxFit.cover,
-                )
-              : null,
-          borderRadius: BorderRadius.circular(15)),
+    return Stack(
+      children: [
+        Container(
+          width: size.width * 0.2,
+          height: size.height * 0.10,
+          decoration: BoxDecoration(
+              color: AppColors.i.brownColor,
+              image: imageUrl.isNotEmpty || imagePath.isNotEmpty
+                  ? DecorationImage(
+                      image: imagePath.isEmpty
+                          ? NetworkImage(imageUrl)
+                          : FileImage(File(imagePath)) as ImageProvider,
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              borderRadius: BorderRadius.circular(15)),
+        ),
+        Positioned(
+          right: 0.02,
+          top: 0.02,
+          child: Container(
+            alignment: Alignment.center,
+            width: size.width * 0.06,
+            height: size.width * 0.06,
+            decoration: const BoxDecoration(
+                color: Colors.white, shape: BoxShape.circle),
+            child: const Icon(
+              Icons.mode_edit,
+              color: Colors.grey,
+              size:  15,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
