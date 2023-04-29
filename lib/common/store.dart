@@ -10,6 +10,17 @@ class Store {
   String uid = "";
   DealModel? deal;
   bool isDarkMode = false;
+  FriendModel? friend;
   List<FriendModel> friends = [];
+
+  void clear() {
+    isLogedIn = false;
+    userData = UserDataModel();
+    uid = "";
+    deal = null;
+    isDarkMode = false;
+    friend = null;
+    friends = [];
+  }
   
 }

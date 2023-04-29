@@ -1,19 +1,21 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
-FirebaseFirestore firestore  = FirebaseFirestore.instance;
+
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
 Future<String> setUserFirestore() async {
   User? user = firebaseAuth.currentUser;
   Store().userData.email = user!.email!;
   Store().userData.uid = user.uid;
-  Store().uid= user.uid;
+  Store().uid = user.uid;
   try {
-    await firestore.collection('users').doc(Store().uid).set(
-        Store().userData.toMap());
+    await firestore
+        .collection('users')
+        .doc(Store().uid)
+        .set(Store().userData.toMap());
     return Store().uid;
   } catch (e) {
     return '';
@@ -22,10 +24,7 @@ Future<String> setUserFirestore() async {
 
 bool updateUserInFirestore(UserDataModel userData) {
   try {
-      firestore
-        .collection("users")
-        .doc(Store().uid)
-        .update(userData.toMap());
+    firestore.collection("users").doc(Store().uid).update(userData.toMap());
   } catch (e) {
     return false;
   }
@@ -34,74 +33,40 @@ bool updateUserInFirestore(UserDataModel userData) {
 
 Future<bool> getUserDataFromFireStore(String userId) async {
   DocumentSnapshot userDoc =
-  await firestore.collection('users').doc(userId).get();
+      await firestore.collection('users').doc(userId).get();
   if (!userDoc.exists) {
     return false;
   }
-  Store().userData = UserDataModel.fromMap(userDoc.data() as Map<String, dynamic>);
+  Store().userData =
+      UserDataModel.fromMap(userDoc.data() as Map<String, dynamic>);
   return true;
 }
 
 Future<bool> logOut() async {
-  try{
+  try {
     await firebaseAuth.signOut();
     Store().userData = UserDataModel();
     Store().isLogedIn = false;
   } catch (e) {
     return false;
   }
-  // await firebaseAuth.signOut();
-  // Store().userData = UserDataModel();
-  // Store().isLogedIn = false;
+  Store().clear();
   return true;
 }
-Future<MessageModel?> getLastMessage(String receiverId) async {
-  try {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(Store().uid)
-        .collection(receiverId)
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-    return MessageModel.fromMap(querySnapshot.docs.first.data());
-  } catch (e) {
 
-    return null;
-  }
-
-  // try{
-  //   final messagesRef = FirebaseFirestore.instance
-  //       .collection('chats').doc(Store().uid).get();
-  //       // .collectionGroup();
-  //   print(messagesRef);
-  //   // messagesRef.get().then((querySnapshot) {
-  //   //   querySnapshot.docs.forEach((doc) {
-  //   //     final senderId = doc.get('senderId');
-  //   //     final messageText = doc.get('messageText');
-  //   //     print('$senderId: $messageText');
-  //   //   });
-  //   // });
-  //
-  // }
-  // catch(e){
-  //   return null;
-  // }
-  //
-  //
-  // return null;
-}
-Stream<List<MessageModel>> listenForNewMessages(String receiverId)  {
-  return  FirebaseFirestore
-      .instance
+Stream<List<MessageModel>> listenForNewMessages(String receiverId) {
+  return FirebaseFirestore.instance
       .collection("chats")
       .doc(Store().uid)
       .collection(receiverId)
       .orderBy("timestamp")
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => MessageModel.fromMap(doc.data())).toList());
+      .map((snapshot) => snapshot.docs
+          .map((doc) => MessageModel.fromMap(doc.data()))
+          .toList());
 }
-Future<bool> setMessagetoFirestore(MessageModel message) async {
+
+Future<bool> setMessageToFirestore(MessageModel message) async {
   try {
     final v = await firestore
         .collection("chats")
@@ -124,13 +89,54 @@ Future<List<FriendModel>> getFriends() async {
   List<FriendModel> friends = [];
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await FirebaseFirestore.instance.collection("users").get();
-    querySnapshot.docs.forEach((doc) {
-      // print(doc.data());
+        await FirebaseFirestore.instance.collection("users").get();
+    for (var doc in querySnapshot.docs) {
       friends.add(FriendModel.fromMap(doc.data()));
-    });
+    }
   } catch (e) {
     friends = [];
   }
   return friends;
+}
+
+Future<List<ChatModel>> getLastMessages() async {
+    List<ChatModel> chats = [];
+  try{
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(Store().uid)
+        .collection('chats').get();
+    for(var doc in querySnapshot.docs) {
+      chats.add(ChatModel.fromMap(doc.data()));
+    }
+    }catch(e){
+      chats = [];
+  }
+  return chats;
+
+}
+Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
+  try {
+    await firestore
+        .collection("users")
+        .doc(Store().uid)
+        .collection("chats")
+        .doc(chat.uid)
+        .update(chat.toMap());
+    return true;
+  }catch(e){
+    try{
+      await firestore
+          .collection("users")
+          .doc(Store().uid)
+          .collection("chats")
+          .doc(chat.uid)
+          .set(chat.toMap());
+      return true;
+    }
+    catch(e){
+      return false;
+    }
+  }
+
 }

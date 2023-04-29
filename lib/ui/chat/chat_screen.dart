@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
 import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
+import 'components/message_composer.dart';
 
-class MessageScreen extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final String receiverId;
 
-  const MessageScreen({Key? key, required this.receiverId}) : super(key: key);
-
+  const ChatScreen({Key? key, required this.receiverId}) : super(key: key);
+  
   @override
-  State<MessageScreen> createState() => _MessageScreen();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _MessageScreen extends State<MessageScreen> {
-  TextEditingController messageController = TextEditingController();
-  bool show = false;
+class _ChatScreenState extends State<ChatScreen> {
   String prevMessageDate = '';
   String messageDate = '';
   late FriendModel friend;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    friend = Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
+    Store().friend = Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
+    friend = Store().friend!;
   }
 
   @override
@@ -62,7 +60,7 @@ class _MessageScreen extends State<MessageScreen> {
                         ),
                         Text(friend.fullName,
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w800,
                                 fontSize: size.width * 0.06)),
                       ],
@@ -95,7 +93,7 @@ class _MessageScreen extends State<MessageScreen> {
                   },
                 ),
               ),
-              _buildMessageComposer(),
+              MessageComposer( receiverId: friend.uid,),
             ],
           ),
         ),
@@ -171,77 +169,6 @@ class _MessageScreen extends State<MessageScreen> {
       ),
     );
   }
-
-  Widget _buildMessageComposer() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      height: 60,
-      child: Row(
-        children: [
-          Expanded(
-            child: CustomTextField(
-              controller: messageController,
-              // hintText: 'Type a message...',
-              titleText: 'Type a message...',
-              color: AppColors.i.greyColor.withOpacity(0.2),
-              radius: 15,
-              pl: 20,
-              isDark: false,
-
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    show = true;
-                  });
-                } else {
-                  setState(() {
-                    show = false;
-                  });
-                }
-              },
-            ),
-          ),
-          Padding(
-
-            padding: const EdgeInsets.only(bottom: 10),
-            child: IconButton(
-              icon: Icon(
-                Icons.send,
-                size: 30,
-
-                color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
-              ),
-              onPressed: () async {
-                if (await sendMessage(messageController.text)) {
-                  messageController.clear();
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool> sendMessage(String data) async {
-    if (data.isEmpty) {
-      return false;
-    }
-    MessageModel message = MessageModel(
-      message: data,
-      senderId: Store().uid,
-      receiverId: friend.uid,
-      timestamp: formatDate().toString(),
-      isRead: false,
-      type: 'text',
-    );
-    setMessagetoFirestore(message);
-    setState(() {
-      show = false;
-    });
-    return true;
-  }
-
   Widget messageView(MessageModel message) {
     if (prevMessageDate != getMessageTime(message.timestamp)) {
       messageDate = getMessageTime(message.timestamp);
