@@ -7,6 +7,7 @@ import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
 import '../chat/chat_user_list.dart';
+import '../likes/liked_profiles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -113,7 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {},
                         icon: Image.asset("assets/video.png")),
                     IconButton(
-                        onPressed: () {}, icon: Image.asset("assets/love.png")),
+                        onPressed: () {
+                          screenPush(context, const LikedProfiles());
+
+                        }, icon: Image.asset("assets/love.png")),
                     IconButton(
                         onPressed: () {
                           screenPush(context, const ChatUserList());
