@@ -283,7 +283,12 @@ void _showModalBottomSheet(BuildContext context, Size size) {
                 child: ListView.builder(
                     itemCount: Store().friends.length,
                     itemBuilder: (context, index) {
-                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.message)
+                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.call),onTap: () {
+                  screenPush(
+                      context,
+                      ChatScreen(
+                          receiverId: Store().friends[index].uid,));
+                },
                       );
                     }),
               ),

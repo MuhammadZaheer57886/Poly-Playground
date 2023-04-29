@@ -9,7 +9,8 @@ import '../chat_screen.dart';
 class FriendListItem extends StatefulWidget {
   final FriendModel friend;
   final Icon icon;
-  const FriendListItem({Key? key,required this.friend, required this.icon}) : super(key: key);
+  final VoidCallback onTap;
+  const FriendListItem({Key? key,required this.friend, required this.icon, required this.onTap}) : super(key: key);
 
   @override
   State<FriendListItem> createState() => _FriendListItemState();
@@ -18,7 +19,8 @@ class FriendListItem extends StatefulWidget {
 class _FriendListItemState extends State<FriendListItem> {
 
   late FriendModel friend;
-late Icon icon;
+    late Icon icon;
+    late VoidCallback onTap;
 
   @override
   void initState() {
@@ -26,6 +28,7 @@ late Icon icon;
     super.initState();
     friend = widget.friend;
     icon = widget.icon;
+    onTap = widget.onTap;
   }
   @override
   Widget build(BuildContext context) {
@@ -64,13 +67,7 @@ late Icon icon;
 
 
             IconButton(
-                onPressed: () {
-                  screenPush(
-                      context,
-                      ChatScreen(
-                          receiverId:
-                          friend.uid));
-                },
+                onPressed: onTap,
                 icon: icon,),
 
           ],
