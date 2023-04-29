@@ -48,69 +48,6 @@ class _ChatUserList extends State<ChatUserList> {
                   AppColors.i.darkBrownColor,
                   AppColors.i.darkBrownColor.withOpacity(0.4),
                 ])),
-<<<<<<< HEAD
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 0.05,
-                ),
-                Container(
-                  height: 40,
-                  width: size.width,
-                  color: AppColors.i.whiteColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            screenPush(context, const ProfileScreen());
-                          },
-                          icon: Image.asset("assets/profile.png")),
-                      IconButton(
-                          onPressed: () {
-                            screenPush(context, const HomeScreen());
-                          },
-                          icon: Image.asset("assets/home.png")),
-                      IconButton(
-                          onPressed: () {
-                            screenPush(context, const CallListScreen());
-                          },
-                          icon: Image.asset("assets/video.png")),
-                      IconButton(
-                          onPressed: () {}, icon: Image.asset("assets/love.png")),
-                      IconButton(
-                          onPressed: () {
-                            screenPush(context, const ChatScreen());
-                          },
-                          icon: Image.asset("assets/chat.png")),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)),
-                  width: size.width,
-                  height: size.height * 0.83,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: size.height * 0.1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-=======
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
@@ -130,7 +67,6 @@ class _ChatUserList extends State<ChatUserList> {
                           IconButton(
                               onPressed: () {
                                 screenPush(context, const ProfileScreen());
->>>>>>> origin/main
                               },
                               icon: Image.asset("assets/profile.png")),
                           IconButton(

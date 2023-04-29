@@ -9,6 +9,7 @@ import '../../model/user_model.dart';
 import '../../utils/firebase_utils.dart';
 import '../../utils/my_utils.dart';
 import '../chat/chat_user_list.dart';
+import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
 
 class CallListScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _CallListScreenState extends State<CallListScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    updaeChatList();
+    // updateCallList();
   }
 
   @override
@@ -78,7 +79,7 @@ class _CallListScreenState extends State<CallListScreen> {
                           onPressed: () {}, icon: Image.asset("assets/love.png")),
                       IconButton(
                           onPressed: () {
-                            screenPush(context, const ChatScreen());
+                            screenPush(context, const ChatUserList());
                           },
                           icon: Image.asset("assets/chat.png")),
                     ],
@@ -250,26 +251,27 @@ class _CallListScreenState extends State<CallListScreen> {
     );
   }
 
-  void updaeChatList() async {
-    for (var friend in Store().friends) {
-      final lastCall = await getLastCall(friend.uid);
-      if (lastCall != null) {
-        setState(() {
-          calls.add(createCallModel(friend, lastCall));
-        });
-      }
-    }
-  }
+  // void updateCallList() async {
+  //   for (var friend in Store().friends) {
+  //     final lastCall = await getLastCall(friend.uid);
+  //     if (lastCall != null) {
+  //       setState(() {
+  //         calls.add(createCallModel(friend, lastCall));
+  //       });
+  //     }
+  //   }
+  // }
 
-  void _showModalBottomSheet(BuildContext context,Size size) {
-    showModalBottomSheet(
+void _showModalBottomSheet(BuildContext context, Size size) {
+    showModalBottomSheet(backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
         return Container(
           height: size.height * 0.5,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          padding: const EdgeInsets.only(top: 20.0),
+          decoration:  BoxDecoration(
+            color: AppColors.i.whiteColor,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
             ),
@@ -278,44 +280,14 @@ class _CallListScreenState extends State<CallListScreen> {
             direction: Axis.vertical,
             children: [
               Expanded(
-              child: ListView.builder(
-                // shrinkWrap: true,
-                  itemCount: Store().friends.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                        margin: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CircleAvatar(
-                              radius: size.width * 0.07,
-                              backgroundImage:
-                              NetworkImage(Store().friends[index].photoUrl),
-                            ),
-                            Text(
-                              Store().friends[index].fullName,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize:size.width * 0.05),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.05,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  screenPush(
-                                      context,
-                                      MessageScreen(
-                                          receiverId:
-                                          Store().friends[index].uid));
-                                },
-                                icon: const Icon(Icons.message)),
-                          ],
-                        ));
-                  }),
-            ),
-        ],
+                child: ListView.builder(
+                    itemCount: Store().friends.length,
+                    itemBuilder: (context, index) {
+                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.message)
+                      );
+                    }),
+              ),
+            ],
           ),
         );
       },

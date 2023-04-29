@@ -54,35 +54,8 @@ Future<bool> logOut() async {
   return true;
 }
 
-<<<<<<< HEAD
-    return null;
-  }
-  }
-
-  Future<CallModel?> getLastCall(String receiverId) async {
-  try {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('calls')
-        .doc(Store().uid)
-        .collection(receiverId)
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-    return CallModel.fromMap(querySnapshot.docs.first.data());
-  } catch (e) {
-
-    return null;
-  }
-}
-
-
-Stream<List<MessageModel>> listenForNewMessages(String receiverId)  {
-  return  FirebaseFirestore
-      .instance
-=======
 Stream<List<MessageModel>> listenForNewMessages(String receiverId) {
   return FirebaseFirestore.instance
->>>>>>> origin/main
       .collection("chats")
       .doc(Store().uid)
       .collection(receiverId)
