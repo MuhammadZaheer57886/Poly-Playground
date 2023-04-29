@@ -138,5 +138,44 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
       return false;
     }
   }
+}
 
+Future<bool> removeLike(String uid) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(Store().uid)
+        .collection("likes")
+        .doc(uid)
+        .delete();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<bool> addLike(String uid) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(Store().uid)
+        .collection("likes")
+        .doc(uid).set({});
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<bool> dislikeUser(String uid) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(Store().uid)
+        .collection("dislikes")
+        .doc(uid).set({});
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/likes/full_screen_image.dart';
-import 'package:provider/provider.dart';
-import '../../../common/store.dart';
-import '../../../provider/sign_in_provider.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
 import '../../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_colors.dart';
-import '../home/settings_screen.dart';
 
 class LikedProfile extends StatefulWidget {
   final UserDataModel userData;
@@ -31,7 +27,6 @@ class _LikedProfileState extends State<LikedProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final sp = context.read<SignInProvider>();
     final Size size = MediaQuery.of(context).size;
     return Hero(
       tag: "profile",
@@ -46,56 +41,76 @@ class _LikedProfileState extends State<LikedProfile> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: AppColors.i.whiteColor,
             ),
           ),
           title: Text(
-            "Profile",
+            // "Profile",
+            userData.role,
             style: TextStyle(
-                color: Colors.black,
+                color: AppColors.i.whiteColor,
                 fontSize: size.width * 0.055,
                 fontWeight: FontWeight.w600),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                  onPressed: () {
+                    unLike(userData.uid);
+                  },
+                  icon: Icon(
+                    Icons.delete_rounded,
+                    color: AppColors.i.whiteColor,
+                    size: size.height * 0.035,
+                  )),
+            ),
+          ],
         ),
         body: Container(
           width: size.width,
           height: size.height,
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                AppColors.i.darkBrownColor,
-                AppColors.i.darkBrownColor.withOpacity(0.4),
-                AppColors.i.darkBrownColor.withOpacity(0.4),
-              ])),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.i.darkBrownColor,
+                  AppColors.i.darkBrownColor.withOpacity(0.4),
+                  AppColors.i.darkBrownColor.withOpacity(0.4),
+                ]),
+          ),
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.only(
+                left: 30,
+                right: 15,
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: size.height * 0.04,
+                      height: size.height * 0.01,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () {
                             screenPush(
                                 context, FullScreenImage(userData.photoUrl));
                           },
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.white,
-                            backgroundImage: NetworkImage(userData.photoUrl),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundColor: AppColors.i.whiteColor,
+                              backgroundImage: NetworkImage(userData.photoUrl),
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 20,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -104,37 +119,48 @@ class _LikedProfileState extends State<LikedProfile> {
                             Text(
                               userData.name,
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: AppColors.i.blackColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: size.width * 0.06),
+                                  fontSize: size.width * 0.065),
                             ),
                             Text(
                               userData.job,
                               style: TextStyle(
                                   color: AppColors.i.blackColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: size.width * 0.037),
+                                  fontSize: size.width * 0.05),
                             ),
                           ],
                         ),
                         SizedBox(
-                          width: size.width * 0.05,
+                          width: size.width * 0.1,
                         ),
                         Column(
                           children: [
                             IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: AppColors.i.redColor,
-                                  size: size.height * 0.05,
-                                )),
-                            Text(
-                              "0",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: size.width * 0.037),
+                              onPressed: () {
+                                screenPush(
+                                    context,
+                                    ChatScreen(
+                                      receiverId: userData.uid,
+                                    ));
+                              },
+                              icon: Icon(
+                                Icons.message_rounded,
+                                color: AppColors.i.whiteColor,
+                                size: size.height * 0.035,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.video_call_rounded,
+                                color: AppColors.i.whiteColor,
+                                size: size.height * 0.04,
+                              ),
                             ),
                           ],
                         )
@@ -143,39 +169,37 @@ class _LikedProfileState extends State<LikedProfile> {
                     SizedBox(
                       height: size.height * 0.02,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: size.width * 0.9,
-                            height: 20,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: size.width * 0.35,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                    color: AppColors.i.darkBrownColor,
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        topLeft: Radius.circular(10))),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                "Level 3",
-                                style: TextStyle(color: Colors.red),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                    Stack(
+                      children: [
+                        Container(
+                          width: size.width * 0.85,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color:
+                                  AppColors.i.darkBrownColor.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(15)),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: size.width * 0.35,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                  color: AppColors.i.darkBrownColor,
+                                  borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      topLeft: Radius.circular(10))),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Level 3",
+                              style: TextStyle(color: AppColors.i.whiteColor),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: size.height * 0.05,
@@ -183,15 +207,14 @@ class _LikedProfileState extends State<LikedProfile> {
                     Text(
                       "About me",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontSize: size.width * 0.05,
                           fontWeight: FontWeight.w700),
                     ),
                     Text(
-                      // "[bio]",
-                      userData.bio,
+                      userData.intro,
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontSize: size.width * 0.04,
                           fontWeight: FontWeight.w500),
                     ),
@@ -211,7 +234,7 @@ class _LikedProfileState extends State<LikedProfile> {
                     Text(
                       "Pictures",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontSize: size.width * 0.05,
                           fontWeight: FontWeight.w700),
                     ),
@@ -243,22 +266,24 @@ class _LikedProfileState extends State<LikedProfile> {
         fit: BoxFit.cover,
       );
     }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: size.width * 0.35,
-          height: size.height * 0.24,
-          decoration: BoxDecoration(
-            color: AppColors.i.brownColor,
-            borderRadius: BorderRadius.circular(18),
-            image: dImage,
-            boxShadow: const [
-              BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: 2)
-            ],
-          ),
+    return GestureDetector(
+      onTap: () {
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          screenPush(context, FullScreenImage(imageUrl));
+        }
+      },
+      child: Container(
+        width: size.width * 0.35,
+        height: size.height * 0.24,
+        decoration: BoxDecoration(
+          color: AppColors.i.brownColor,
+          borderRadius: BorderRadius.circular(18),
+          image: dImage,
+          boxShadow:  [
+            BoxShadow(color: AppColors.i.blackColor, blurRadius: 5, spreadRadius: 2)
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -269,14 +294,23 @@ class _LikedProfileState extends State<LikedProfile> {
         margin: const EdgeInsets.only(right: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            color: AppColors.i.whiteColor, borderRadius: BorderRadius.circular(15)),
         child: Text(
           text,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: AppColors.i.blackColor,
           ),
         ),
       ),
     );
+  }
+
+  void unLike(String uid) async {
+    bool isRemoved = await removeLike(uid);
+    if (isRemoved) {
+      bool disLiked = await dislikeUser(uid);
+      if (disLiked) {
+      }
+    }
   }
 }
