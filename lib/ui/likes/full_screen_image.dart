@@ -42,14 +42,11 @@ class FullScreenImage extends StatelessWidget {
                   ),
                 ),
               ),
-              Hero(
-                tag: 'user_image',
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: Image(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.contain,
-                  ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Image(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit.contain,
                 ),
               ),
             ],

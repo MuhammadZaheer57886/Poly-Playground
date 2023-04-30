@@ -232,9 +232,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   postDetailstoFirestore()  {
-    // await signUp();
-    // calling our firebase 
-    setUserFirestore().then((value) {
+    setUser().then((value) {
       if (value.isEmpty) {
         showFailedToast(context, "Something went wrong!");
         return;
