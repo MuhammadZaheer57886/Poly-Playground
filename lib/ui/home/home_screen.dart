@@ -75,7 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             icon: Image.asset("assets/profile.png")),
                         IconButton(
-                            onPressed: () {}, icon: Image.asset("assets/home.png")),
+                            onPressed: () {},
+                            icon: Image.asset("assets/home.png")),
                         IconButton(
                             onPressed: () {},
                             icon: Image.asset("assets/video.png")),
@@ -164,72 +165,53 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisSpacing: 1.0,
                                     childAspectRatio: 0.92),
                             itemBuilder: (context, index) {
-                              return Stack(
-                                children: [
-                                  GestureDetector(
-                                    onDoubleTap: () {
-                                      like(users[index]);
+                              return Stack(children: [
+                                GestureDetector(
+                                  onDoubleTap: () {
+                                    like(users[index]);
+                                  },
+                                  onTap: () {
+                                    screenPush(
+                                        context,
+                                        UserProfile(
+                                          userData: users[index],
+                                        ));
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    width: size.width * 0.5,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.i.whiteColor,
+                                        borderRadius: BorderRadius.circular(35),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                users[index].photoUrl),
+                                            fit: BoxFit.fill)),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      disLike(users[index].uid);
                                     },
                                     child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      width: size.width * 0.5,
+                                      width: size.width * 0.06,
+                                      height: size.width * 0.06,
                                       decoration: BoxDecoration(
                                           color: AppColors.i.whiteColor,
-                                          borderRadius: BorderRadius.circular(35),
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  users[index].photoUrl),
-                                              fit: BoxFit.fill)),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        disLike(users[index].uid);
-                                      },
-                                      child: Container(
-                                        width: size.width * 0.06,
-                                        height: size.width * 0.06,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.i.whiteColor,
-                                            shape: BoxShape.circle),
-                                        child: Icon(
-                                          Icons.close,
-                                          color: AppColors.i.blackColor,
-                                          size: 22,
-                                        ),
+                                          shape: BoxShape.circle),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: AppColors.i.blackColor,
+                                        size: 22,
                                       ),
                                     ),
                                   ),
-                                  Positioned(
-                                    left: 15,
-                                    top: 10,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        screenPush(
-                                            context,
-                                            UserProfile(
-                                              userData: users[index],
-                                              isLiked: false,
-                                            ));
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: size.width * 0.06,
-                                        height: size.width * 0.06,
-                                        child: Icon(
-                                          Icons.remove_red_eye_rounded,
-                                          color: AppColors.i.blueColor,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
+                                ),
+                              ]);
                             },
                           )
                         : Center(
@@ -246,7 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        isLoading ? const Center(child: CircularProgressIndicator()) : Container(),
+        isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(),
       ],
     );
   }

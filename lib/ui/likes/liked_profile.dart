@@ -11,9 +11,8 @@ import '../../utils/my_utils.dart';
 
 class UserProfile extends StatefulWidget {
   final UserDataModel userData;
-  final bool isLiked;
 
-  const UserProfile({Key? key, required this.userData, required this.isLiked})
+  const UserProfile({Key? key, required this.userData})
       : super(key: key);
 
   @override
@@ -23,14 +22,13 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   late UserDataModel userData;
   late bool isLiked = false;
-  bool newLike = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     userData = widget.userData;
-    isLiked = widget.isLiked;
+    isLiked = Store().likedUsersIds.contains(userData.uid);
   }
 
   @override
@@ -43,12 +41,8 @@ class _UserProfileState extends State<UserProfile> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {
-            if (newLike)
-              screenPush(context, const HomeScreen());
-            else
-              Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
+
           icon: Icon(
             Icons.arrow_back_ios,
             color: AppColors.i.whiteColor,
@@ -330,7 +324,6 @@ class _UserProfileState extends State<UserProfile> {
 
         setState(() {
           isLiked = false;
-          newLike = true;
         });
       }
     }
@@ -342,7 +335,6 @@ class _UserProfileState extends State<UserProfile> {
     if (isLike) {
       setState(() {
         isLiked = true;
-        newLike = true;
       });
     }
   }

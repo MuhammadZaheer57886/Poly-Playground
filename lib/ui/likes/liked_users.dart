@@ -119,9 +119,7 @@ class _LikedUsersState extends State<LikedUsers> {
                                 screenPush(
                                     context,
                                     UserProfile(
-                                      userData: Store().likedUsers[index],
-                                      isLiked: true,
-                                    ));
+                                      userData: Store().likedUsers[index]));
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(
