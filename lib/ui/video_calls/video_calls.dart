@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
@@ -11,6 +14,7 @@ import '../../utils/my_utils.dart';
 import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
+import 'utils/agoracall.dart';
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({Key? key}) : super(key: key);
@@ -283,11 +287,13 @@ void _showModalBottomSheet(BuildContext context, Size size) {
                 child: ListView.builder(
                     itemCount: Store().friends.length,
                     itemBuilder: (context, index) {
-                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.call),onTap: () {
-                  screenPush(
-                      context,
-                      ChatScreen(
-                          receiverId: Store().friends[index].uid,));
+                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.video_call_rounded),
+                      onTap: () async {
+                              await _handlecameraAndMic(Permission.camera);
+                              await _handlecameraAndMic(Permission.microphone); 
+                              screenPush(
+                                    context,
+                                    const AgoraCall());
                 },
                       );
                     }),
@@ -298,4 +304,10 @@ void _showModalBottomSheet(BuildContext context, Size size) {
       },
     );
   }
+  
+ Future<void> _handlecameraAndMic(Permission permission) async{
+  final status = await permission.request();
+
+  print(status.toString());
+ }
 }
