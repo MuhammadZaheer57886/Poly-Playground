@@ -18,7 +18,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   String prevMessageDate = '';
   String messageDate = '';
-  late FriendModel friend;
+  late UserDataModel friend;
   @override
   void initState() {
     // TODO: implement initState
