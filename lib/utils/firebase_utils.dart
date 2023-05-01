@@ -5,7 +5,8 @@ import '../model/user_model.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-final cruntUserRef = FirebaseFirestore.instance.collection('users').doc(Store().uid);
+final cruntUserRef =
+    FirebaseFirestore.instance.collection('users').doc(Store().uid);
 
 Future<String> setUser() async {
   User? user = firebaseAuth.currentUser;
@@ -13,8 +14,7 @@ Future<String> setUser() async {
   Store().userData.uid = user.uid;
   Store().uid = user.uid;
   try {
-    await cruntUserRef
-        .set(Store().userData.toMap());
+    await cruntUserRef.set(Store().userData.toMap());
     return Store().uid;
   } catch (e) {
     return '';
@@ -31,7 +31,8 @@ bool updateUserInFirestore(UserDataModel userData) {
 }
 
 Future<UserDataModel?> getUserData(String userId) async {
-  DocumentSnapshot userDoc = await firestore.collection("users").doc(userId).get();
+  DocumentSnapshot userDoc =
+      await firestore.collection("users").doc(userId).get();
   if (!userDoc.exists) {
     return null;
   }
@@ -81,26 +82,31 @@ Future<bool> setMessageToFirestore(MessageModel message) async {
   return true;
 }
 
-Future<List<FriendModel>> getFriends() async {
-  List<FriendModel> friends = [];
-  try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await firestore.collection("users").get();
-    for (var doc in querySnapshot.docs) {
-      friends.add(FriendModel.fromMap(doc.data()));
-    }
-  } catch (e) {
-    friends = [];
-  }
+Future<List<UserDataModel>> getFriends() async {
+  // List<UserDataModel> friends = [];
+  // try {
+  //   QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  //       await firestore.collection("users").get();
+  //   for (var doc in querySnapshot.docs) {
+  //     friends.add(UserDataModel.fromMap(doc.data()));
+  //   }
+  // } catch (e) {
+  //   friends = [];
+  // }
+
+  // return friends;
+  List<UserDataModel> friends = [];
+  Store().likedUsersIds.forEach((element) async {
+    final user = await getUserData(element);
+    if (user != null) friends.add(UserDataModel.fromMap(user.toMap()));
+  });
   return friends;
 }
 
 Future<List<ChatModel>> getLastMessages() async {
   List<ChatModel> chats = [];
   try {
-    final querySnapshot = await cruntUserRef
-        .collection('chats')
-        .get();
+    final querySnapshot = await cruntUserRef.collection('chats').get();
     for (var doc in querySnapshot.docs) {
       chats.add(ChatModel.fromMap(doc.data()));
     }
@@ -112,16 +118,23 @@ Future<List<ChatModel>> getLastMessages() async {
 
 Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
   try {
-    await cruntUserRef
-        .collection("chats")
+    await cruntUserRef.collection("chats").doc(chat.uid).update(chat.toMap());
+    await firestore
+        .collection("users")
         .doc(chat.uid)
+        .collection("chats")
+        .doc(Store().uid)
         .update(chat.toMap());
+
     return true;
   } catch (e) {
     try {
-      await cruntUserRef
-          .collection("chats")
+      await cruntUserRef.collection("chats").doc(chat.uid).set(chat.toMap());
+      await firestore
+          .collection("users")
           .doc(chat.uid)
+          .collection("chats")
+          .doc(Store().uid)
           .set(chat.toMap());
       return true;
     } catch (e) {
@@ -132,10 +145,7 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
 
 Future<bool> removeLike(String uid) async {
   try {
-    await cruntUserRef
-        .collection("likes")
-        .doc(uid)
-        .delete();
+    await cruntUserRef.collection("likes").doc(uid).delete();
     return true;
   } catch (e) {
     return false;
@@ -144,10 +154,7 @@ Future<bool> removeLike(String uid) async {
 
 Future<bool> addLike(String uid) async {
   try {
-    await cruntUserRef
-        .collection("likes")
-        .doc(uid)
-        .set({});
+    await cruntUserRef.collection("likes").doc(uid).set({});
     return true;
   } catch (e) {
     return false;
@@ -156,10 +163,7 @@ Future<bool> addLike(String uid) async {
 
 Future<bool> dislikeUser(String uid) async {
   try {
-    await cruntUserRef
-        .collection("dislikes")
-        .doc(uid)
-        .set({});
+    await cruntUserRef.collection("dislikes").doc(uid).set({});
     return true;
   } catch (e) {
     return false;
@@ -186,9 +190,7 @@ Future<List<UserDataModel>> getAllUsers() async {
 Future<List<String>> getDislikedUsers() async {
   List<String> dislikes = [];
   try {
-    QuerySnapshot snap = await cruntUserRef
-        .collection("dislikes")
-        .get();
+    QuerySnapshot snap = await cruntUserRef.collection("dislikes").get();
     for (var doc in snap.docs) {
       dislikes.add(doc.id);
     }
@@ -201,9 +203,7 @@ Future<List<String>> getDislikedUsers() async {
 Future<List<String>> getLikedUsers() async {
   List<String> likes = [];
   try {
-    QuerySnapshot snap = await cruntUserRef
-        .collection("likes")
-        .get();
+    QuerySnapshot snap = await cruntUserRef.collection("likes").get();
     for (var doc in snap.docs) {
       likes.add(doc.id);
     }

@@ -44,7 +44,7 @@ bool isValidDate(String date) {
   }
 }
 
-ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
+ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   return ChatModel(
     fullName: friend.fullName,
     photoUrl: friend.photoUrl,

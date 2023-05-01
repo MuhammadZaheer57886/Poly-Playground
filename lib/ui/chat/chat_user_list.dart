@@ -8,7 +8,6 @@ import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/firebase_utils.dart';
-import '../../utils/my_utils.dart';
 import '../home/profile_screen/profile_screen.dart';
 
 class ChatUserList extends StatefulWidget {
@@ -21,15 +20,18 @@ class ChatUserList extends StatefulWidget {
 class _ChatUserList extends State<ChatUserList> {
   List<ChatModel> chats = [];
   bool isLoading = false;
-
+Future<bool> getAllFriends() async{
+  final friends = await getFriends();
+   Store().friends = friends;
+   return friends.isNotEmpty;
+}
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    updaeChatList();
-    setState(() {});
+    updateChatList();
+    getAllFriends();
   }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -104,21 +106,26 @@ class _ChatUserList extends State<ChatUserList> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: size.width * 0.14,
-                                    height: size.height * 0.07,
-                                    alignment: Alignment.centerRight,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.i.darkBrownColor,
-                                      borderRadius: BorderRadius.circular(
-                                          size.width * 0.075),
-                                    ),
-                                  ),
-                                ),
+                                TextButton.icon(onPressed: ()=>Navigator.pop(context), icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.black,
+                                  size: size.width * 0.1,
+                                ), label: const Text("")),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     Navigator.pop(context);
+                                //   },
+                                //   child: Container(
+                                //     width: size.width * 0.14,
+                                //     height: size.height * 0.07,
+                                //     alignment: Alignment.centerRight,
+                                //     decoration: BoxDecoration(
+                                //       color: AppColors.i.darkBrownColor,
+                                //       borderRadius: BorderRadius.circular(
+                                //           size.width * 0.075),
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   width: size.width * 0.01,
                                 ),
@@ -130,14 +137,10 @@ class _ChatUserList extends State<ChatUserList> {
                                 SizedBox(
                                   width: size.width * 0.05,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: size.width * 0.06,
                                   height: size.height * 0.03,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.i.redColor,
-                                    borderRadius: BorderRadius.circular(
-                                        size.width * 0.075),
-                                  ),
+
                                 ),
                               ],
                             ),
@@ -169,7 +172,7 @@ class _ChatUserList extends State<ChatUserList> {
             ),
           ),
           floatingActionButton: Container(
-            margin: const EdgeInsets.only(bottom: 20, right: 10),
+            margin: const EdgeInsets.only(bottom: 30, right: 10),
             child: FloatingActionButton(
               onPressed: () {
                 _showModalBottomSheet(
@@ -251,7 +254,7 @@ class _ChatUserList extends State<ChatUserList> {
     );
   }
 
-  void updaeChatList() async {
+  void updateChatList() async {
     setState(() {
       isLoading = true;
     });
@@ -283,6 +286,10 @@ class _ChatUserList extends State<ChatUserList> {
           child: Flex(
             direction: Axis.vertical,
             children: [
+              const SizedBox(
+                height: 10,
+                child: Text("data") ,
+              ),
               Expanded(
                 child: ListView.builder(
                     itemCount: Store().friends.length,

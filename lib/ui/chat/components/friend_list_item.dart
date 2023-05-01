@@ -7,7 +7,7 @@ import '../../../utils/constants/app_colors.dart';
 import '../chat_screen.dart';
 
 class FriendListItem extends StatefulWidget {
-  final FriendModel friend;
+  final UserDataModel friend;
   final Icon icon;
   const FriendListItem({Key? key,required this.friend, required this.icon}) : super(key: key);
 
@@ -17,7 +17,7 @@ class FriendListItem extends StatefulWidget {
 
 class _FriendListItemState extends State<FriendListItem> {
 
-  late FriendModel friend;
+  late UserDataModel friend;
 late Icon icon;
 
   @override

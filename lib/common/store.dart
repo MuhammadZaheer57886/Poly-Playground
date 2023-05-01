@@ -13,13 +13,14 @@ class Store {
   String uid = "";
   DealModel? deal;
   bool isDarkMode = false;
-  FriendModel? friend;
-  List<FriendModel> friends = [];
+  UserDataModel? friend;
   List<UserDataModel> users = [];
   List<UserDataModel> dislikedUsers = [];
   List<String> dislikedUsersIds = [];
   List<UserDataModel> likedUsers = [];
   List<String> likedUsersIds = [];
+  List<UserDataModel> friends = [];
+
 
 
   void clear() {
