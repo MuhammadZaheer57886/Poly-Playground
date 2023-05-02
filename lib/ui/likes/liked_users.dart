@@ -7,6 +7,7 @@ import '../../common/store.dart';
 import '../../utils/firebase_utils.dart';
 import '../chat/chat_user_list.dart';
 import '../home/profile_screen/profile_screen.dart';
+import '../video_calls/video_calls.dart';
 import 'liked_profile.dart';
 
 class LikedUsers extends StatefulWidget {
@@ -75,10 +76,14 @@ class _LikedUsersState extends State<LikedUsers> {
                               },
                               icon: Image.asset("assets/home.png")),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                screenPush(context, const CallListScreen());
+                              },
                               icon: Image.asset("assets/video.png")),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                screenPush(context, widget);
+                              },
                               icon: Image.asset("assets/love.png")),
                           IconButton(
                               onPressed: () {

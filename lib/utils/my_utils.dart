@@ -53,8 +53,8 @@ ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   );
 }
 
-CallHistoryModel createCallModel(FriendModel friend, CallModel lastCall) {
-  return CallHistoryModel(
+CallModel createCallModel(FriendModel friend, CallHistoryModel lastCall) {
+  return CallModel(
     fullName: friend.fullName,
     photoUrl: friend.photoUrl,
     lastCall: lastCall,

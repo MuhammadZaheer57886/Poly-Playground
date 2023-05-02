@@ -14,6 +14,7 @@ import '../../utils/my_utils.dart';
 import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
+import '../likes/liked_users.dart';
 import 'utils/agoracall.dart';
 
 class CallListScreen extends StatefulWidget {
@@ -24,13 +25,20 @@ class CallListScreen extends StatefulWidget {
 }
 
 class _CallListScreenState extends State<CallListScreen> {
-  List<CallHistoryModel> calls = [];
+  List<CallModel> calls = [];
+  bool isLoading = false;
+  Future<bool> getAllFriends() async{
+  final friends = await getFriends();
+   Store().friends = friends;
+   return friends.isNotEmpty;
+}
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // updateCallList();
+    getAllFriends();
   }
 
   @override
@@ -80,7 +88,9 @@ class _CallListScreenState extends State<CallListScreen> {
                           },
                           icon: Image.asset("assets/video.png")),
                       IconButton(
-                          onPressed: () {}, icon: Image.asset("assets/love.png")),
+                          onPressed: () {
+                            screenPush(context, const LikedUsers());
+                          }, icon: Image.asset("assets/love.png")),
                       IconButton(
                           onPressed: () {
                             screenPush(context, const ChatUserList());
@@ -184,7 +194,7 @@ class _CallListScreenState extends State<CallListScreen> {
     );
   }
 
-  Widget callHistoyCart(Size size, CallHistoryModel lastCall) {
+  Widget callHistoyCart(Size size, CallModel lastCall) {
     return GestureDetector(
       onTap: () {
         // screenPush(context, MessageScreen(receiverId: lastChat.uid));
@@ -255,16 +265,28 @@ class _CallListScreenState extends State<CallListScreen> {
     );
   }
 
-  // void updateCallList() async {
-  //   for (var friend in Store().friends) {
-  //     final lastCall = await getLastCall(friend.uid);
-  //     if (lastCall != null) {
-  //       setState(() {
-  //         calls.add(createCallModel(friend, lastCall));
-  //       });
-  //     }
-  //   }
-  // }
+  void updateCallList() async {
+    setState(() {
+      isLoading = true;
+    });
+    final List<CallModel> callList = await getLastcall();
+    if (callList.isNotEmpty) {
+      setState(() {
+        calls = callList;
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+    // for (var friend in Store().friends) {
+    //   final lastCall = await getLastCall(friend.uid);
+    //   if (lastCall != null) {
+    //     setState(() {
+    //       calls.add(createCallModel(friend, lastCall));
+    //     });
+    //   }
+    // }
+  }
 
 void _showModalBottomSheet(BuildContext context, Size size) {
     showModalBottomSheet(backgroundColor: Colors.transparent,

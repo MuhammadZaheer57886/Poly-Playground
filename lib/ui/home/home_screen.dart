@@ -76,10 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             icon: Image.asset("assets/profile.png")),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              screenPush(context, widget);
+                            },
                             icon: Image.asset("assets/home.png")),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              screenPush(context, const CallListScreen());
+                            },
                             icon: Image.asset("assets/video.png")),
                         IconButton(
                             onPressed: () {
