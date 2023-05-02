@@ -67,7 +67,7 @@ class _MessageComposerState extends State<MessageComposer> {
                 color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
               ),
               onPressed: () async {
-                if (await sendMessage(_messageController.text)) {
+                if (await send(_messageController.text)) {
                   _messageController.clear();
                 }
               },
@@ -77,7 +77,7 @@ class _MessageComposerState extends State<MessageComposer> {
       ),
     );
   }
-  Future<bool> sendMessage(String data) async {
+  Future<bool> send(String data) async {
     if (data.isEmpty) {
       return false;
     }
@@ -91,9 +91,7 @@ class _MessageComposerState extends State<MessageComposer> {
     );
     await setMessageToFirestore(message);
     ChatModel chat = createChatModel(Store().friend!, message);
-    final v = await updateLastMessageToFirestore(chat);
-    print(v);
-
+    await updateLastMessageToFirestore(chat);
     setState(() {
       show = false;
     });

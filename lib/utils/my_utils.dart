@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import '../common/store.dart';
 import '../model/user_model.dart';
 import 'package:intl/intl.dart';
+
+import 'firebase_utils.dart';
 
 Future<String> uploadImage(String path) async {
   if (path == '') {
@@ -41,7 +44,7 @@ bool isValidDate(String date) {
   }
 }
 
-ChatModel createChatModel(FriendModel friend, MessageModel lastMessage) {
+ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   return ChatModel(
     fullName: friend.fullName,
     photoUrl: friend.photoUrl,
@@ -85,4 +88,13 @@ String getMessageTime(String date) {
     DateFormat formatter = DateFormat('MMMM dd, yyyy');
     return formatter.format(messageTime);
   }
+}
+
+Future<bool> likeUser(String uid) async {
+  bool isAdded = await addLike(uid);
+  if (isAdded) {
+    Store().likedUsersIds.add(uid);
+    return true;
+  }
+  return false;
 }

@@ -7,7 +7,7 @@ import '../../../utils/constants/app_colors.dart';
 import '../chat_screen.dart';
 
 class FriendListItem extends StatefulWidget {
-  final FriendModel friend;
+  final UserDataModel friend;
   final Icon icon;
   final VoidCallback onTap;
   const FriendListItem({Key? key,required this.friend, required this.icon, required this.onTap}) : super(key: key);
@@ -18,9 +18,9 @@ class FriendListItem extends StatefulWidget {
 
 class _FriendListItemState extends State<FriendListItem> {
 
-  late FriendModel friend;
-    late Icon icon;
-    late VoidCallback onTap;
+  late UserDataModel friend;
+late Icon icon;
+late VoidCallback onTap;
 
   @override
   void initState() {
