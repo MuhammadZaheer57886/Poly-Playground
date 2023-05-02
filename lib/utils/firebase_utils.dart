@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -216,15 +218,16 @@ Future<List<String>> getLikedUsers() async {
 
 Future<String?>  requestToken()async{
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission();
 
-  NotificationSettings settings = await messaging.requestPermission(
-
-  );
   final token = await messaging.getToken();
 
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      log('Message also contained a notification: ${message.notification}');
+    }
+  });
 
-
-  print('User granted permission: ${settings.authorizationStatus}');
 
   return token;
 

@@ -1,31 +1,37 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../common/store.dart';
 
-Future<void> snedNotification() async {
+Future<bool> snedNotification() async {
   final body = {
     "to": Store().friend!.token.toString(),
     "notification": {
-      "title": "New Message",
-      "body": "You got a new message from ${Store().userData.name}",
+      "title": AppStrings.i.messageNotificationTitle,
+      "body": AppStrings.i.messageNotificationBody,
+      "android_channel_id": AppStrings.i.appId,
+      "sound": AppStrings.i.messageNotificationSound,
       "mutable_content": true,
-      "sound": "Tri-tone"
     }
   };
 
-  const String serverKey = "AAAA0tAQQ0E:APA91bHLglpArpGyG7Gr6wlD4XL905YPYhwplJU6aCyK25TEVHvMGOAe8PZxk2yktfajTuxW2jLeAR0n065UwlY5OIWbROPSpsRG1ak16Cuh5xIrRZoaJ3rAKFhOjUed3CYdiwydXOXp";
   var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
-  var response = await http.post(
-    url,
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "key=$serverKey",
-    },
-    body: jsonEncode(body),
-  );
-
-  log('Response status: ${response.statusCode}');
-  log('Response body: ${response.body}');
+  try {
+    var response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "key=${AppStrings.i.serverKey}",
+      },
+      body: jsonEncode(body),
+    );
+    if(response.statusCode == 200)
+      return true;
+    return false;
+  }
+  catch (e) {
+    log(e.toString());
+    return false;
+  }
 }
-

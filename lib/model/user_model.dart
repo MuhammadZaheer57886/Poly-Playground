@@ -138,12 +138,12 @@ class MessageModel {
   final String type;
 
   MessageModel({
-    required this.senderId,
-    required this.receiverId,
-    required this.message,
-    required this.isRead,
-    required this.timestamp,
-    required this.type,
+    this.senderId = "",
+     this.receiverId = "",
+     this.message = "",
+     this.isRead = false,
+     this.timestamp = "",
+     this.type = "",
   });
 
   Map<String, dynamic> toMap() {

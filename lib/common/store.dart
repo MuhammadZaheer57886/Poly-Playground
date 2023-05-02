@@ -4,6 +4,7 @@ class Store {
   static final Store _store = Store._();
 
 
+
   factory Store() => _store;
 
   Store._();
@@ -21,8 +22,8 @@ class Store {
   List<UserDataModel> likedUsers = [];
   List<String> likedUsersIds = [];
   List<UserDataModel> friends = [];
-  // String token = "";
-
+  List <ChatModel> lastChats = [];
+  ChatModel lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
 
 
   void clear() {
@@ -39,7 +40,8 @@ class Store {
     likedUsers = [];
     dislikedUsersIds = [];
     likedUsersIds = [];
-    // token = "";
+    lastChats = [];
+    lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
 
   }
 
