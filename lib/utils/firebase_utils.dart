@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 
@@ -211,4 +212,20 @@ Future<List<String>> getLikedUsers() async {
     likes = [];
   }
   return likes;
+}
+
+Future<String?>  requestToken()async{
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+
+  );
+  final token = await messaging.getToken();
+
+
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
+  return token;
+
 }

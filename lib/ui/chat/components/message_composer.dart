@@ -3,6 +3,7 @@ import '../../../common/store.dart';
 import '../../../model/user_model.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/firebase_utils.dart';
+import '../../../utils/http_requests.dart';
 import '../../../utils/my_utils.dart';
 import '../../ui_components/custom_text_field.dart';
 
@@ -95,6 +96,7 @@ class _MessageComposerState extends State<MessageComposer> {
     setState(() {
       show = false;
     });
+    await snedNotification();
     return true;
   }
 }

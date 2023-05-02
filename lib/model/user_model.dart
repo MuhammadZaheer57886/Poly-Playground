@@ -23,6 +23,7 @@ class UserDataModel {
   String single;
   String open;
   String phone;
+  String token;
 
   UserDataModel({
     this.phone = '',
@@ -49,6 +50,7 @@ class UserDataModel {
     this.bio = '',
     this.single = '',
     this.open = '',
+    this.token = '',
   });
 
   static UserDataModel fromMap( Map<String, dynamic> map) {
@@ -77,6 +79,7 @@ class UserDataModel {
     user.single = map['single'];
     user.open = map['open'];
     user.phone = map['phone'];
+    user.token = map['token'];
     return user;
   }
 
@@ -106,6 +109,7 @@ class UserDataModel {
       'single': single,
       'open': open,
       'phone': phone,
+      'token': token,
       // add any other fields you want to serialize to JSON
     };
   }

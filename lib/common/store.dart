@@ -3,6 +3,7 @@ import '../model/user_model.dart';
 class Store {
   static final Store _store = Store._();
 
+
   factory Store() => _store;
 
   Store._();
@@ -20,6 +21,7 @@ class Store {
   List<UserDataModel> likedUsers = [];
   List<String> likedUsersIds = [];
   List<UserDataModel> friends = [];
+  // String token = "";
 
 
 
@@ -35,5 +37,10 @@ class Store {
     users = [];
     dislikedUsers = [];
     likedUsers = [];
+    dislikedUsersIds = [];
+    likedUsersIds = [];
+    // token = "";
+
   }
+
 }
