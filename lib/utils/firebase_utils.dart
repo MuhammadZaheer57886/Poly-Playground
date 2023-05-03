@@ -99,10 +99,10 @@ Future<List<UserDataModel>> getFriends() async {
 
   // return friends;
   List<UserDataModel> friends = [];
-  Store().likedUsersIds.forEach((element) async {
+  for (var element in Store().likedUsersIds)  {
     final user = await getUserData(element);
     if (user != null) friends.add(UserDataModel.fromMap(user.toMap()));
-  });
+  }
   return friends;
 }
 

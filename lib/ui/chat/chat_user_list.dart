@@ -20,18 +20,14 @@ class ChatUserList extends StatefulWidget {
 class _ChatUserList extends State<ChatUserList> {
   List<ChatModel> chats = [];
   bool isLoading = false;
-Future<bool> getAllFriends() async{
-  final friends = await getFriends();
-   Store().friends = friends;
-   return friends.isNotEmpty;
-}
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     updateChatList();
-    getAllFriends();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -106,18 +102,20 @@ Future<bool> getAllFriends() async{
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                TextButton.icon(onPressed: ()=>Navigator.pop(context), icon: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.black,
-                                  size: size.width * 0.1,
-                                ), label: const Text("")),
-
+                                TextButton.icon(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: AppColors.i.blackColor,
+                                      size: size.width * 0.1,
+                                    ),
+                                    label: const Text("")),
                                 SizedBox(
                                   width: size.width * 0.01,
                                 ),
                                 Text("Chats",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: AppColors.i.blackColor,
                                         fontWeight: FontWeight.w800,
                                         fontSize: size.width * 0.06)),
                                 SizedBox(
@@ -126,7 +124,6 @@ Future<bool> getAllFriends() async{
                                 SizedBox(
                                   width: size.width * 0.06,
                                   height: size.height * 0.03,
-
                                 ),
                               ],
                             ),
@@ -137,7 +134,8 @@ Future<bool> getAllFriends() async{
                                     shrinkWrap: true,
                                     itemCount: Store().lastChats.length,
                                     itemBuilder: (context, index) {
-                                      return chatCard(size, Store().lastChats[index]);
+                                      return chatCard(
+                                          size, Store().lastChats[index]);
                                     })
                                 : Center(
                                     child: Text(
@@ -170,7 +168,9 @@ Future<bool> getAllFriends() async{
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
-        isLoading ?const Center(child: CircularProgressIndicator()) : Container(),
+        isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(),
       ],
     );
   }
@@ -248,10 +248,8 @@ Future<bool> getAllFriends() async{
     final List<ChatModel> chatList = await getLastMessages();
     if (chatList.isNotEmpty) {
       Store().lastChats = chatList;
-      // setState(() {
-      //
-      //   chats = chatList;
-      // });
+      Store().lastChats.sort(
+          (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
     }
     setState(() {
       isLoading = false;
@@ -259,31 +257,18 @@ Future<bool> getAllFriends() async{
   }
 
   void _showModalBottomSheet(BuildContext context, Size size) {
-    showModalBottomSheet(backgroundColor: Colors.transparent,
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: size.height * 0.5,
-          padding: const EdgeInsets.only(top: 20.0),
-          decoration:  BoxDecoration(
-            color: AppColors.i.whiteColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
-            ),
-          ),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    itemCount: Store().friends.length,
-                    itemBuilder: (context, index) {
-                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.message));
-                    }),
-              ),
-            ],
-          ),
+        return FriendList(
+          onTap: () {
+            screenPush(
+                context,
+                ChatScreen(
+                    receiverId:
+                    Store().friend!.uid));
+          },
         );
       },
     );

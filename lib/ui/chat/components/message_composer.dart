@@ -99,8 +99,6 @@ class _MessageComposerState extends State<MessageComposer> {
     await setMessageToFirestore(message);
     ChatModel chat = createChatModel(Store().friend!, message);
     await updateLastMessageToFirestore(chat);
-    ChatModel lastChat =Store().lastChats.firstWhere((element) => element.uid == receeiverId);
-    lastChat.lastMessage = message;
     setState(() {
       show = false;
     });
