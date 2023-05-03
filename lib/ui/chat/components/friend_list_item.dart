@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
-import '../../../utils/firebase_utils.dart';
 
 class FriendList extends StatefulWidget {
   final VoidCallback onTap;
@@ -15,26 +14,22 @@ class FriendList extends StatefulWidget {
 class _FriendListState extends State<FriendList> {
   bool isLoading = true;
   late VoidCallback onTap;
+  late List<UserDataModel> friendList = [];
 
-  Future<bool> getAllFriends() async {
-    final friends = await getFriends();
-    Store().friends = friends
-        .where((obj) => Store().lastChats.any((obj1) => obj1.uid != obj.uid))
-        .toList();
-    setState(() {
-      isLoading = false;
-    });
-    return friends.isNotEmpty;
-  }
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     onTap = widget.onTap;
-    getAllFriends();
+    if (Store().lastChats.isNotEmpty) {
+      friendList = Store().friends.where((obj) =>
+          Store().lastChats.any((obj1) => obj1.uid != obj.uid))
+          .toList();
+    }else
+    friendList = Store().friends;
   }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -55,9 +50,9 @@ class _FriendListState extends State<FriendList> {
             children: [
               Expanded(
                 child: ListView.builder(
-                    itemCount: Store().friends.length,
+                    itemCount: friendList.length,
                     itemBuilder: (context, index) {
-                      return friendListItem(size, Store().friends[index],
+                      return friendListItem(size, friendList[index],
                           const Icon(Icons.message), onTap);
                     }),
               ),

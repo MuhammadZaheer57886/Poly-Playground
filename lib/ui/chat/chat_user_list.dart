@@ -20,12 +20,21 @@ class ChatUserList extends StatefulWidget {
 class _ChatUserList extends State<ChatUserList> {
   List<ChatModel> chats = [];
   bool isLoading = false;
+  Future<bool> getAllFriends() async {
+    final friends = await getFriends();
+    Store().friends = friends;
+    setState(() {
+      isLoading = false;
+    });
+    return friends.isNotEmpty;
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     updateChatList();
+    getAllFriends();
   }
 
   @override
@@ -177,9 +186,9 @@ class _ChatUserList extends State<ChatUserList> {
 
   Widget chatCard(Size size, ChatModel lastChat) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         Store().lastChat = lastChat;
-
+        await updateReadStatus(lastChat);
         screenPush(context, ChatScreen(receiverId: lastChat.uid));
       },
       child: Container(
@@ -229,9 +238,17 @@ class _ChatUserList extends State<ChatUserList> {
                         fontWeight: FontWeight.w400,
                         fontSize: size.width * 0.04),
                   ),
-                  const SizedBox(
-                    height: 23,
+                   const SizedBox(
+                    height: 5,
                   ),
+                  Container(
+                    width: size.width * 0.03,
+                    height: size.width * 0.03,
+                    decoration: BoxDecoration(
+                        color: !lastChat.lastMessage.isRead && lastChat.lastMessage.senderId  != Store().uid  ?  AppColors.i.greenColor : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20)),
+                    ),
+
                 ],
               ),
             ],

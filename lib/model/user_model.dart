@@ -133,7 +133,7 @@ class MessageModel {
   final String senderId;
   final String receiverId;
   final String message;
-  final bool isRead;
+  late  bool isRead;
   final String timestamp;
   final String type;
 

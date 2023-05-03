@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/ui/chat/chat_user_list.dart';
 import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -25,7 +23,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Store().friend = Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
+    Store().friend = Store().friends. firstWhere((frnd) => frnd.uid == widget.receiverId);
     friend = Store().friend!;
   }
 
@@ -46,8 +44,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      // onPressed: () => Navigator.pop(context),
-                      onPressed: () => screenPush(context, const ChatUserList()),
+                      onPressed: () => Navigator.pop(context),
+                      // onPressed: () => screenPush(context, const ChatUserList()),
                       icon: const Icon(
                         Icons.arrow_back,
                       ),

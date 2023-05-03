@@ -98,11 +98,13 @@ class _MessageComposerState extends State<MessageComposer> {
     );
     await setMessageToFirestore(message);
     ChatModel chat = createChatModel(Store().friend!, message);
-    await updateLastMessageToFirestore(chat);
+    ChatModel chat2 = createChatModel(Store().userData, message);
+    await updateLastMessageToFirestore(chat,chat2);
     setState(() {
       show = false;
     });
     await snedNotification();
     return true;
   }
+
 }
