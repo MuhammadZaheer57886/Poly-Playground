@@ -17,7 +17,7 @@ Future<String> setUser() async {
   Store().userData.uid = user.uid;
   Store().uid = user.uid;
   try {
-    await firestore.collection("users").doc(Store().uid).set(Store().userData.toMap());
+    await firestore.collection("users").doc(user.uid).set(Store().userData.toMap());
     return Store().uid.toString();
   } catch (e) {
     return '';
