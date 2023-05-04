@@ -1,16 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/firebase_utils.dart';
-import '../../utils/my_utils.dart';
 import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
@@ -102,7 +98,7 @@ class _CallListScreenState extends State<CallListScreen> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.i.whiteColor,
                       borderRadius: BorderRadius.circular(20)),
                   width: size.width,
                   height: size.height * 0.83,
@@ -136,21 +132,12 @@ class _CallListScreenState extends State<CallListScreen> {
                             ),
                             Text("Calls",
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: AppColors.i.blackColor,
                                     fontWeight: FontWeight.w800,
                                     fontSize: size.width * 0.09)),
                             SizedBox(
                               width: size.width * 0.05,
                             ),
-                            // Container(
-                            //   width: size.width * 0.06,
-                            //   height: size.height * 0.03,
-                            //   decoration: BoxDecoration(
-                            //     color: AppColors.i.redColor,
-                            //     borderRadius:
-                            //     BorderRadius.circular(size.width * 0.075),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -166,7 +153,7 @@ class _CallListScreenState extends State<CallListScreen> {
                           child: Text(
                             "You have no Calls!",
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w700,
                                 fontSize: size.width * 0.05),
                           ),
@@ -292,44 +279,22 @@ void _showModalBottomSheet(BuildContext context, Size size) {
     showModalBottomSheet(backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: size.height * 0.5,
-          padding: const EdgeInsets.only(top: 20.0),
-          decoration:  BoxDecoration(
-            color: AppColors.i.whiteColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
-            ),
-          ),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    itemCount: Store().friends.length,
-                    itemBuilder: (context, index) {
-                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.video_call_rounded),
-                      onTap: () async {
-                              await _handlecameraAndMic(Permission.camera);
-                              await _handlecameraAndMic(Permission.microphone); 
+      return FriendList(onTap: () async {
+                              Navigator.pop(context);
+        await _handleCameraAndMic(Permission.camera);
+                              await _handleCameraAndMic(Permission.microphone);
                               screenPush(
                                     context,
                                     const AgoraCall());
-                },
-                      );
-                    }),
-              ),
-            ],
-          ),
-        );
+      },forChat: false,
+      );
+
       },
     );
   }
   
- Future<void> _handlecameraAndMic(Permission permission) async{
+ Future<void> _handleCameraAndMic(Permission permission) async{
   final status = await permission.request();
 
-  print(status.toString());
  }
 }

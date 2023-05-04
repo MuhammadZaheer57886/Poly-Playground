@@ -260,6 +260,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> handleState() async {
     if (!Store().isUser) {
       if (await getDetails()) {
+        final token = await requestToken();
+        if (token != null) {
+          Store().userData.token = token;
+          await updateUserInFirestore(Store().userData);
+        }
         Store().isUser = true;
       }
     }

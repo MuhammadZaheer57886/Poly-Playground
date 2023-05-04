@@ -20,4 +20,6 @@ class AppColors {
 
   get blueColor => Colors.blue;
 
+  get greenColor => Colors.green;
+
 }

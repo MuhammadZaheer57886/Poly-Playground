@@ -23,7 +23,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Store().friend = Store().friends.firstWhere((frnd) => frnd.uid == widget.receiverId);
+    Store().friend = Store().friends. firstWhere((frnd) => frnd.uid == widget.receiverId);
     friend = Store().friend!;
   }
 
@@ -45,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.pop(context),
+                      // onPressed: () => screenPush(context, const ChatUserList()),
                       icon: const Icon(
                         Icons.arrow_back,
                       ),

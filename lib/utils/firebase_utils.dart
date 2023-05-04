@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 
@@ -115,20 +118,7 @@ Future<List<ChatModel>> getLastMessages() async {
   }
   return chats;
 }
-
-Future<List<CallModel>> getLastcall() async {
-  List<CallModel> call= [];
-  try {
-    final querySnapshot = await cruntUserRef.collection('call').get();
-    for (var doc in querySnapshot.docs) {
-      call.add(CallModel.fromMap(doc.data()));
-    }
-  } catch (e) {
-    call = [];
-  }
-  return call;
-}
-Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
+Future<bool> updateLastMessageToFirestore(ChatModel chat,ChatModel chat2) async {
   try {
     await cruntUserRef.collection("chats").doc(chat.uid).update(chat.toMap());
     await firestore
@@ -136,7 +126,7 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
         .doc(chat.uid)
         .collection("chats")
         .doc(Store().uid)
-        .update(chat.toMap());
+        .update(chat2.toMap());
 
     return true;
   } catch (e) {
@@ -147,7 +137,7 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
           .doc(chat.uid)
           .collection("chats")
           .doc(Store().uid)
-          .set(chat.toMap());
+          .set(chat2.toMap());
       return true;
     } catch (e) {
       return false;
@@ -223,4 +213,44 @@ Future<List<String>> getLikedUsers() async {
     likes = [];
   }
   return likes;
+}
+
+Future<String?>  requestToken()async{
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission();
+
+  final token = await messaging.getToken();
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      log('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+
+  return token;
+
+}
+
+Future<void> updateReadStatus(ChatModel chat) async{
+  try {
+    chat.lastMessage.isRead = true;
+    firestore.collection('users').doc(Store().uid).collection('chats').doc(
+        chat.uid).update(chat.toMap());
+  }catch(e){
+    print(e);
+  }
+
+}
+Future<List<CallModel>> getLastcall() async {
+  List<CallModel> call= [];
+  try {
+    final querySnapshot = await cruntUserRef.collection('call').get();
+    for (var doc in querySnapshot.docs) {
+      call.add(CallModel.fromMap(doc.data()));
+    }
+  } catch (e) {
+    call = [];
+  }
+  return call;
 }
