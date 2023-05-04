@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/store.dart';
 import '../../utils/constants/app_colors.dart';
@@ -10,7 +11,7 @@ import '../home/home_screen.dart';
 import 'textfield_constrans.dart';
 
 class ProfileForm extends StatefulWidget {
-  const ProfileForm({super.key});
+  const ProfileForm({Key? key}) : super(key: key);
 
   @override
   State<ProfileForm> createState() => _ProfileFormState();
@@ -19,14 +20,65 @@ class ProfileForm extends StatefulWidget {
 class _ProfileFormState extends State<ProfileForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
-  TextEditingController orientationController = TextEditingController();
-  TextEditingController genderIdentityController = TextEditingController();
-  TextEditingController pronounceController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  TextEditingController singleController = TextEditingController();
-  TextEditingController openController = TextEditingController();
+  String orientation = '';
+  String genderIdentity = '';
+  String pronoun = '';
+  String singleStatus = '';
+  String openStatus = '';
+
+  List<String> orientations = [
+    'Select Orientation',
+    'Straight',
+    'Gay',
+    'Lesbian',
+    'Bisexual',
+    'Asexual',
+    'Demisexual',
+    'Pansexual',
+    'Queer',
+  ];
+  List<String> genderIdentities = [
+    'Select Gender Identity',
+    'Agender',
+    'Androgynous',
+    'Bigender',
+    'Cisgender',
+    'Demigender',
+    'Genderfluid',
+    'Genderqueer',
+    'Nonbinary',
+    'Transgender',
+    'Two-Spirit'
+  ];
+  List<String> pronouns = [
+    'Select Your Pronoun',
+    'he/him',
+    'she/her',
+    'they/them',
+    'ze/zir',
+    'ey/em',
+    'per/pers',
+    've/ver',
+    'xe/xem',
+    'fae/faer',
+    'hir/hirs',
+    'ne/nem',
+    'sie/hir',
+    'ey/em',
+    'thon/thon',
+  ];
+  List<String> singleStatuses = [
+    'Select Single Status',
+    'Yes',
+    'No',
+  ];
+  List<String> openStatuses = [
+    'Select Open Status',
+    'Yes',
+    'No',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,190 +86,175 @@ class _ProfileFormState extends State<ProfileForm> {
     return Form(
       autovalidateMode: AutovalidateMode.disabled,
       key: _formKey,
-      child: Column(
-        children: [
-
-
-          TextFormFieldContainer(
-            hintText: 'Name',
-            controller: nameController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            hintText: 'Date of Birth',
-            controller: dobController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your date of birth';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            // labelText: 'Orientation *',
-            hintText: 'Enter your orientation',
-            controller: orientationController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your orientation';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            hintText: 'Enter your gender identity',
-            controller: genderIdentityController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your gender identity';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            // labelText: 'Pronouns',
-            hintText: 'Enter your pronouns',
-            controller: pronounceController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your pronouns';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            hintText: 'Enter your solo profile user name',
-            controller: userNameController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your solo profile user name';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            // labelText: 'About Me',
-            hintText: 'Enter information about yourself',
-            controller: bioController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter information about yourself';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            hintText: 'Enter your single status',
-            controller: singleController,
-            validator: (value) {
-              if (value.toString().toLowerCase() == 'yes' ||
-                  value.toString().toLowerCase() == 'no') {
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextFormFieldContainer(
+              hintText: 'Name',
+              controller: nameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your name';
+                }
                 return null;
-              }
-              return 'Please enter yes, no';
-            },
-          ),
-          const SizedBox(height: 10),
-          TextFormFieldContainer(
-            // labelText: 'Open',
-            hintText: 'Enter your open status',
-            controller: openController,
-            validator: (value) {
-              if (value.toString().toLowerCase() == 'yes' ||
-                  value.toString().toLowerCase() == 'no') {
+              },
+            ),
+            const SizedBox(height: 10),
+            MyDropdown(dropDownList: orientations, onChanged: (value) {
+              setState(() {
+                orientation = value;
+              });
+            }),
+            const SizedBox(height: 10),
+            MyDropdown(dropDownList: genderIdentities, onChanged: (value) {
+              setState(() {
+                genderIdentity = value;
+              });
+            }),
+            const SizedBox(height: 10),
+            MyDropdown(dropDownList: pronouns, onChanged: (value) {
+              setState(() {
+                pronoun = value;
+              });
+            }),
+            const SizedBox(height: 10),
+            TextFormFieldContainer(
+              hintText: 'Enter your solo profile user name',
+              controller: userNameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your solo profile user name';
+                }
                 return null;
-              }
-              return 'Please enter yes, no';
-            },
-          ),
-          const SizedBox(height: 25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () {
-                  if (updateProfile2()) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.20, vertical: 17),
-                  decoration: BoxDecoration(
-                    color: AppColors.i.darkBrownColor,
-                    borderRadius: BorderRadius.circular(40),
+              },
+            ),
+            const SizedBox(height: 10),
+            TextFormFieldContainer(
+              // labelText: 'About Me',
+              hintText: 'Enter information about yourself',
+              controller: bioController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter information about yourself';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10),
+            MyDropdown(dropDownList: singleStatuses, onChanged: (value) {
+              setState(() {
+                singleStatus = value;
+              });
+            }),
+            const SizedBox(height: 10),
+            MyDropdown(dropDownList: openStatuses, onChanged: (value) {
+              setState(() {
+                openStatus = value;
+              });
+            }),
+            const SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            SimpleButton(
+                    color: AppColors.i.darkBrownColor, title: 'Next', onTap: () {
+                    if (updateProfile2()) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    }
+                  },
                   ),
-                  child: Text(
-                    'NEXT',
-                    style: TextStyle(
-                      color: AppColors.i.whiteColor,
-                      fontSize: size.width * 0.04,
-                      fontWeight: FontWeight.w700,
-                    ),
+                FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: AppColors.i.darkBrownColor,
+                  child: const Icon(
+                    Icons.question_mark,
                   ),
                 ),
-              ),
-              FloatingActionButton(
-                onPressed: () {},
-                backgroundColor: AppColors.i.darkBrownColor,
-                child: const Icon(
-                  Icons.question_mark,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: size.height * 0.05)
-        ],
+              ],
+            ),
+            SizedBox(height: size.height * 0.05)
+          ],
+        ),
       ),
     );
   }
+
+  Widget dropDown(
+      BuildContext context,
+      List<String> dropDownList,
+      Function(String) onChanged,
+      ) {
+    late String dropdownValue = dropDownList[0];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: MediaQuery.of(context).size.width * 0.9,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: AppColors.i.whiteColor,
+      ),
+      child: DropdownButton<String>(
+        dropdownColor: AppColors.i.whiteColor,
+        isExpanded: true,
+        itemHeight: 55,
+        menuMaxHeight: 300,
+        value: dropdownValue,
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            onChanged(newValue);
+            dropdownValue = newValue;
+          }
+        },
+        items: dropDownList.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
 
   bool updateProfile2() {
     if (!_formKey.currentState!.validate()) {
       showFailedToast(context, 'Please fill all the fields');
       return false;
     }
-    if (!isValidDate(dobController.text)) {
-      showFailedToast(context, 'Date format should be in mm/dd/yyyy');
+
+    if (orientation.contains("Select") || orientation.isEmpty ) {
+      showFailedToast(context, 'Please select orientation');
       return false;
     }
-    if (singleController.text.toString().toLowerCase() != 'yes' &&
-        singleController.text.toString().toLowerCase() != 'no') {
-      showFailedToast(context, 'Please enter yes, no in single field');
+    if (genderIdentity.contains("Select") || genderIdentity.isEmpty ) {
+      showFailedToast(context, 'Please Select gender identity');
       return false;
     }
-    if (openController.text.toString().toLowerCase() != 'yes' &&
-        openController.text.toString().toLowerCase() != 'no') {
-      showFailedToast(context, 'Please enter yes, no in open field');
+    if (pronoun.toLowerCase().contains("select") || pronoun.isEmpty) {
+      showFailedToast(context, 'Please select pronoun');
       return false;
     }
+
+    if (singleStatus.contains("Select") || singleStatus.isEmpty ) {
+      showFailedToast(context, 'Please select single status');
+      return false;
+    }
+    if (openStatus.contains("Select")|| openStatus.isEmpty ) {
+      showFailedToast(context, 'Please select single status');
+      return false;
+    }
+    print('Form is valid');
     _formKey.currentState!.save();
-    screenPush(context, const HomeScreen());
     UserDataModel userData = Store().userData;
     userData.name = nameController.text;
-    userData.dob = dobController.text;
-    userData.orientation = orientationController.text;
-    userData.genderIdentity = genderIdentityController.text;
-    userData.pronouns = pronounceController.text;
+    userData.orientation = orientation ;
+    userData.genderIdentity = genderIdentity;
+    userData.pronouns = pronoun;
     userData.userName = userNameController.text;
     userData.bio = bioController.text;
-    userData.single = singleController.text;
-    userData.open = openController.text;
+    userData.single = singleStatus;
 
     if (updateUserInFirestore(userData)) {
       showSuccessToast(context, 'Profile created successfully');
@@ -225,5 +262,58 @@ class _ProfileFormState extends State<ProfileForm> {
     }
     showFailedToast(context, 'Failed to create profile');
     return false;
+  }
+}
+
+class MyDropdown extends StatefulWidget {
+  final List<String> dropDownList;
+  final Function(String) onChanged;
+
+  MyDropdown({required this.dropDownList, required this.onChanged});
+
+  @override
+  _MyDropdownState createState() => _MyDropdownState();
+}
+
+class _MyDropdownState extends State<MyDropdown> {
+  String dropdownValue = "";
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownValue = widget.dropDownList[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: MediaQuery.of(context).size.width * 0.9,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: AppColors.i.whiteColor,
+      ),
+      child: DropdownButton<String>(
+        dropdownColor: AppColors.i.whiteColor,
+        isExpanded: true,
+        itemHeight: 55,
+        menuMaxHeight: 300,
+        value: dropdownValue,
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(() {
+              dropdownValue = newValue;
+            });
+            widget.onChanged(newValue);
+          }
+        },
+        items: widget.dropDownList.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
   }
 }

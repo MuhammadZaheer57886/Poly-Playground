@@ -33,16 +33,28 @@ Future<String> getImageFromUser() async {
   }
 }
 
-
-
-bool isValidDate(String date) {
-  try {
-    DateFormat.yMd().parseStrict(date);
-    return true;
-  } catch (e) {
+bool isValidDate(int day, int month, int year) {
+  if (year < 1) {
     return false;
   }
+  if (month < 1 || month > 12) {
+    return false;
+  }
+  int daysInMonth = DateTime(year, month + 1, 0).day;
+  if (day < 1 || day > daysInMonth) {
+    return false;
+  }
+  return true;
 }
+bool isEighteenYearsOld(int day,int month,int year) {
+  final date = DateTime(year, month, day);
+  final now = DateTime.now();
+  final age = now.year - date.year - ((now.month > date.month || (now.month == date.month && now.day >= date.day)) ? 0 : 1);
+
+  return age >= 18;
+}
+
+
 
 ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   return ChatModel(

@@ -44,15 +44,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon:  Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: AppColors.i.whiteColor,
           ),
         ),
         title: Text(
           "Edit your profile",
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.i.blackColor,
             fontWeight: FontWeight.w700,
             fontSize: size.width * 0.055,
           ),
@@ -88,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         width: size.width * 0.34,
                         height: size.width * 0.34,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.i.whiteColor,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: profileImage.isEmpty
@@ -112,11 +112,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             padding: const EdgeInsets.all(5),
                             width: size.width * 0.07,
                             height: size.width * 0.07,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.white70),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: AppColors.i.whiteColor.withOpacity(0.8)),
                             child: Icon(
                               Icons.mode_edit,
-                              color: Colors.black,
+                              color: AppColors.i.blackColor,
                               size: size.width * 0.042,
                             ),
                           ),
@@ -170,7 +170,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Text(
                           "Unicorn",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -193,7 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Text(
                           "Griffin",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -221,7 +221,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Text(
                           "Couple",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -244,7 +244,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Text(
                           "Undecided",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -403,7 +403,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget takePictureBox(
       BuildContext context, Size size, VoidCallback onTap, String image) {
     bool selected = false;
-    // ImageProvider<Object> imageProvider = selected ? FileImage(File(image)):NetworkImage(image);
     return GestureDetector(
       onTap: () {
         selected = true;
@@ -424,21 +423,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   alignment: Alignment.center,
                   width: size.width * 0.09,
                   height: size.width * 0.09,
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(
+                  decoration: BoxDecoration(
+                      color: AppColors.i.whiteColor, shape: BoxShape.circle),
+                  child: Icon(
                     Icons.add,
-                    color: Colors.grey,
+                    color: AppColors.i.greyColor,
                   ),
                 )
               : Container(
                   width: size.width * 0.34,
                   height: size.height * 0.24,
                   decoration: BoxDecoration(
-                    // color: AppColors.i.brownColor,
                     borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
-                      // image:imageProvider,
                       image: selected
                           ? FileImage(File(image)) as ImageProvider<Object>
                           : NetworkImage(image),
@@ -450,22 +447,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
-
-  // Future<String> getImageFromUser() async {
-  //   final picker = ImagePicker();
-  //   try {
-  //     final pickedFile = await picker.pickImage(source: ImageSource.camera);
-  //     if (pickedFile == null) {
-  //       showFailedToast(context, 'No image selected.');
-  //       return '';
-  //     }
-  //     return pickedFile.path;
-  //   } catch (e) {
-  //     showFailedToast(context, 'Failed to get image from camera.');
-  //     return '';
-  //   }
-  // }
-
   void editeProfileImage() {
     getImageFromUser().then((value) {
       if (value.isNotEmpty) {
@@ -512,9 +493,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     final date =
-        '${controllerMonth.text}/${controllerDay.text}/${controllerYear.text}';
+        '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
 
-    final idDate = isValidDate(date);
+    final idDate = isValidDate(int.parse(controllerDay.text),
+        int.parse(controllerMonth.text), int.parse(controllerYear.text));
+    final isEighteen = isEighteenYearsOld(
+        int.parse(controllerDay.text),
+        int.parse(controllerMonth.text),
+        int.parse(controllerYear.text));
+    if (!idDate || !isEighteen) {
+      showFailedToast(context, 'Invalid Date! date not updated');
+    }
     userData.photoUrl = profileImage.isEmpty
         ? userData.photoUrl
         : await uploadImage(profileImage);
@@ -527,7 +516,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         controllerIntro.text.isEmpty ? userData.intro : controllerIntro.text;
 
     userData.role = role;
-    userData.date = idDate ? date : userData.date;
+    userData.date = idDate && isEighteen ? date : userData.date;
     userData.city =
         controllerCity.text.isEmpty ? userData.city : controllerCity.text;
     userData.town =
