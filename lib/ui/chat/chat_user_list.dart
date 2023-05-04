@@ -3,14 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/chat/components/friend_list_item.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
-import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/firebase_utils.dart';
 import '../home/profile_screen/profile_screen.dart';
-import '../likes/liked_users.dart';
 
 class ChatUserList extends StatefulWidget {
   const ChatUserList({Key? key}) : super(key: key);
@@ -22,11 +20,15 @@ class ChatUserList extends StatefulWidget {
 class _ChatUserList extends State<ChatUserList> {
   List<ChatModel> chats = [];
   bool isLoading = false;
-Future<bool> getAllFriends() async{
-  final friends = await getFriends();
-   Store().friends = friends;
-   return friends.isNotEmpty;
-}
+  Future<bool> getAllFriends() async {
+    final friends = await getFriends();
+    Store().friends = friends;
+    setState(() {
+      isLoading = false;
+    });
+    return friends.isNotEmpty;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -34,6 +36,7 @@ Future<bool> getAllFriends() async{
     updateChatList();
     getAllFriends();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -112,32 +115,20 @@ Future<bool> getAllFriends() async{
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                TextButton.icon(onPressed: ()=>Navigator.pop(context), icon: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.black,
-                                  size: size.width * 0.1,
-                                ), label: const Text("")),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     Navigator.pop(context);
-                                //   },
-                                //   child: Container(
-                                //     width: size.width * 0.14,
-                                //     height: size.height * 0.07,
-                                //     alignment: Alignment.centerRight,
-                                //     decoration: BoxDecoration(
-                                //       color: AppColors.i.darkBrownColor,
-                                //       borderRadius: BorderRadius.circular(
-                                //           size.width * 0.075),
-                                //     ),
-                                //   ),
-                                // ),
+                                TextButton.icon(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: AppColors.i.blackColor,
+                                      size: size.width * 0.1,
+                                    ),
+                                    label: const Text("")),
                                 SizedBox(
                                   width: size.width * 0.01,
                                 ),
                                 Text("Chats",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: AppColors.i.blackColor,
                                         fontWeight: FontWeight.w800,
                                         fontSize: size.width * 0.06)),
                                 SizedBox(
@@ -146,18 +137,18 @@ Future<bool> getAllFriends() async{
                                 SizedBox(
                                   width: size.width * 0.06,
                                   height: size.height * 0.03,
-
                                 ),
                               ],
                             ),
                           ),
                           Expanded(
-                            child: chats.isNotEmpty
+                            child: Store().lastChats.isNotEmpty
                                 ? ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: chats.length,
+                                    itemCount: Store().lastChats.length,
                                     itemBuilder: (context, index) {
-                                      return chatCard(size, chats[index]);
+                                      return chatCard(
+                                          size, Store().lastChats[index]);
                                     })
                                 : Center(
                                     child: Text(
@@ -190,15 +181,18 @@ Future<bool> getAllFriends() async{
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
-        isLoading ?const Center(child: CircularProgressIndicator()) : Container(),
+        isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(),
       ],
     );
   }
 
   Widget chatCard(Size size, ChatModel lastChat) {
     return GestureDetector(
-      onTap: () {
-
+      onTap: () async {
+        Store().lastChat = lastChat;
+        await updateReadStatus(lastChat);
         screenPush(context, ChatScreen(receiverId: lastChat.uid));
       },
       child: Container(
@@ -248,9 +242,17 @@ Future<bool> getAllFriends() async{
                         fontWeight: FontWeight.w400,
                         fontSize: size.width * 0.04),
                   ),
-                  const SizedBox(
-                    height: 23,
+                   const SizedBox(
+                    height: 5,
                   ),
+                  Container(
+                    width: size.width * 0.03,
+                    height: size.width * 0.03,
+                    decoration: BoxDecoration(
+                        color: !lastChat.lastMessage.isRead && lastChat.lastMessage.senderId  != Store().uid  ?  AppColors.i.greenColor : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20)),
+                    ),
+
                 ],
               ),
             ],
@@ -266,9 +268,9 @@ Future<bool> getAllFriends() async{
     });
     final List<ChatModel> chatList = await getLastMessages();
     if (chatList.isNotEmpty) {
-      setState(() {
-        chats = chatList;
-      });
+      Store().lastChats = chatList;
+      Store().lastChats.sort(
+          (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
     }
     setState(() {
       isLoading = false;
@@ -276,38 +278,18 @@ Future<bool> getAllFriends() async{
   }
 
   void _showModalBottomSheet(BuildContext context, Size size) {
-    showModalBottomSheet(backgroundColor: Colors.transparent,
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: size.height * 0.5,
-          padding: const EdgeInsets.only(top: 20.0),
-          decoration:  BoxDecoration(
-            color: AppColors.i.whiteColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
-            ),
-          ),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              const SizedBox(
-                height: 10,
-                child: Text("data") ,
-              ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: Store().friends.length,
-                    itemBuilder: (context, index) {
-                      return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.message) ,onTap: () {
-                        screenPush(context, ChatScreen(receiverId: Store().friends[index].uid));
-                      },
-                      );
-                    }),
-              ),
-            ],
-          ),
+        return FriendList(
+          onTap: () {
+            screenPush(
+                context,
+                ChatScreen(
+                    receiverId:
+                    Store().friend!.uid));
+          },
         );
       },
     );

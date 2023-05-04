@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 
@@ -116,18 +119,6 @@ Future<List<ChatModel>> getLastMessages() async {
   return chats;
 }
 
-Future<List<CallModel>> getLastcall() async {
-  List<CallModel> call= [];
-  try {
-    final querySnapshot = await cruntUserRef.collection('call').get();
-    for (var doc in querySnapshot.docs) {
-      call.add(CallModel.fromMap(doc.data()));
-    }
-  } catch (e) {
-    call = [];
-  }
-  return call;
-}
 Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
   try {
     await cruntUserRef.collection("chats").doc(chat.uid).update(chat.toMap());
@@ -223,4 +214,32 @@ Future<List<String>> getLikedUsers() async {
     likes = [];
   }
   return likes;
+}
+
+Future<String?>  requestToken()async{
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission();
+
+  final token = await messaging.getToken();
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      log('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+
+  return token;
+
+}
+
+Future<void> updateReadStatus(ChatModel chat) async{
+  try {
+    chat.lastMessage.isRead = true;
+    firestore.collection('users').doc(Store().uid).collection('chats').doc(
+        chat.uid).update(chat.toMap());
+  }catch(e){
+    print(e);
+  }
+
 }

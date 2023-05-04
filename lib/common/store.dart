@@ -3,6 +3,8 @@ import '../model/user_model.dart';
 class Store {
   static final Store _store = Store._();
 
+
+
   factory Store() => _store;
 
   Store._();
@@ -20,7 +22,8 @@ class Store {
   List<UserDataModel> likedUsers = [];
   List<String> likedUsersIds = [];
   List<UserDataModel> friends = [];
-
+  List <ChatModel> lastChats = [];
+  ChatModel lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
 
 
   void clear() {
@@ -35,5 +38,11 @@ class Store {
     users = [];
     dislikedUsers = [];
     likedUsers = [];
+    dislikedUsersIds = [];
+    likedUsersIds = [];
+    lastChats = [];
+    lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
+
   }
+
 }

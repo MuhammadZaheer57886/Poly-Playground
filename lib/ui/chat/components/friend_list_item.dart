@@ -1,38 +1,72 @@
 
 import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
-
-import '../../../common/nav_function.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../chat_screen.dart';
 
-class FriendListItem extends StatefulWidget {
-  final UserDataModel friend;
-  final Icon icon;
+class FriendList extends StatefulWidget {
   final VoidCallback onTap;
-  const FriendListItem({Key? key,required this.friend, required this.icon, required this.onTap}) : super(key: key);
+  const FriendList({Key? key, required this.onTap}) : super(key: key);
 
   @override
-  State<FriendListItem> createState() => _FriendListItemState();
+  State<FriendList> createState() => _FriendListState();
 }
 
-class _FriendListItemState extends State<FriendListItem> {
+class _FriendListState extends State<FriendList> {
+  bool isLoading = true;
+  late VoidCallback onTap;
+  late List<UserDataModel> friendList = [];
 
-  late UserDataModel friend;
-late Icon icon;
-late VoidCallback onTap;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    friend = widget.friend;
-    icon = widget.icon;
     onTap = widget.onTap;
+    if (Store().lastChats.isNotEmpty) {
+      friendList = Store().friends.where((obj) =>
+          Store().lastChats.any((obj1) => obj1.uid != obj.uid))
+          .toList();
+    }else
+    friendList = Store().friends;
   }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    return Stack(
+      children: [
+        Container(
+          height: size.height * 0.5,
+          padding: const EdgeInsets.only(top: 20.0),
+          decoration: BoxDecoration(
+            color: AppColors.i.whiteColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+          ),
+          child: Flex(
+            direction: Axis.vertical,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                    itemCount: friendList.length,
+                    itemBuilder: (context, index) {
+                      return friendListItem(size, friendList[index],
+                          const Icon(Icons.message), onTap);
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget friendListItem(
+      Size size, UserDataModel friend, Icon icon, VoidCallback onTap) {
     return Container(
         decoration: BoxDecoration(
           color: AppColors.i.greyColor.withOpacity(0.2),
@@ -67,7 +101,13 @@ late VoidCallback onTap;
 
 
             IconButton(
-                onPressed: onTap,
+                onPressed: () {
+                  screenPush(
+                      context,
+                      ChatScreen(
+                          receiverId:
+                          friend.uid));
+                },
                 icon: icon,),
 
           ],

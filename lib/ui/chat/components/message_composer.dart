@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/pop_message.dart';
 import '../../../common/store.dart';
 import '../../../model/user_model.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/firebase_utils.dart';
+import '../../../utils/http_requests.dart';
 import '../../../utils/my_utils.dart';
 import '../../ui_components/custom_text_field.dart';
 
@@ -67,8 +69,13 @@ class _MessageComposerState extends State<MessageComposer> {
                 color: show ? AppColors.i.blueColor : AppColors.i.greyColor,
               ),
               onPressed: () async {
-                if (await send(_messageController.text)) {
+                String msg = _messageController.text;
                   _messageController.clear();
+
+                if (! await send(msg)) {
+                  showFailedToast(context, "something went wrong");
+                  _messageController.text = msg;
+
                 }
               },
             ),
@@ -91,10 +98,13 @@ class _MessageComposerState extends State<MessageComposer> {
     );
     await setMessageToFirestore(message);
     ChatModel chat = createChatModel(Store().friend!, message);
-    await updateLastMessageToFirestore(chat);
+    ChatModel chat2 = createChatModel(Store().userData, message);
+    await updateLastMessageToFirestore(chat,chat2);
     setState(() {
       show = false;
     });
+    await snedNotification();
     return true;
   }
+
 }
