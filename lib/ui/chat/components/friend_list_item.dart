@@ -103,10 +103,8 @@ class _FriendListState extends State<FriendList> {
               ],
             ),
             IconButton(
-              onPressed: () {
-                screenPush(context, ChatScreen(receiverId: friend.uid));
-              },
-              icon:  forChat ? Icon(Icons.chat,) :   Icon(Icons.video_call,),
+              onPressed: onTap,
+              icon:  forChat ? Icon(Icons.chat,) :  Icon(Icons.video_call,),
             ),
           ],
         ));
