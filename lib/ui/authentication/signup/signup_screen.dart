@@ -7,6 +7,7 @@ import 'package:poly_playground/ui/authentication/profile_info/photo_profile_scr
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
 import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../common/nav_function.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/firebase_utils.dart';
 import '../../../utils/phoneUtils.dart';
@@ -221,7 +222,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         conPassError = "Password does not match";
       });
       return;
-    }else{      
+    }else{
+      Store().userData.email = email;
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postDetailstoFirestore()})
