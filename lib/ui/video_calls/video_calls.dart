@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -11,6 +13,7 @@ import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
 import '../likes/liked_users.dart';
+import 'utils/zegocall.dart';
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({Key? key}) : super(key: key);
@@ -307,10 +310,12 @@ void _showModalBottomSheet(BuildContext context, Size size) {
                       return FriendListItem(friend: Store().friends[index],icon: const Icon(Icons.video_call_rounded),
                       onTap: () async {
                               await _handlecameraAndMic(Permission.camera);
-                              await _handlecameraAndMic(Permission.microphone); 
-                              // screenPush(
-                              //       context,
-                              //       const AgoraCall());
+                              await _handlecameraAndMic(Permission.microphone);
+                              String callId = getRandomNumber();
+                            await  updateCallId(callId);
+                              screenPush(
+                                    context,
+                                    ZegoCall(callID: callId,));
                 },
                       );
                     }),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../common/store.dart';
@@ -97,4 +98,11 @@ Future<bool> likeUser(String uid) async {
     return true;
   }
   return false;
+}
+
+String getRandomNumber() {
+  final random = Random();
+  int min = 100000; // minimum 6-digit number
+  int max = 999999; // maximum 6-digit number
+  return (min + random.nextInt(max - min)).toString();
 }

@@ -224,3 +224,9 @@ Future<List<String>> getLikedUsers() async {
   }
   return likes;
 }
+
+updateCallId(String callId) async {
+  try {
+    await cruntUserRef.update({"call_id": callId});
+  } catch (e) {}
+}
