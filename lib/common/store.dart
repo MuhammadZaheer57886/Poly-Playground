@@ -24,6 +24,7 @@ class Store {
   List<UserDataModel> friends = [];
   List <ChatModel> lastChats = [];
   ChatModel lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
+  List<CallModel> lastCalls = [];
 
 
   void clear() {
@@ -42,6 +43,7 @@ class Store {
     likedUsersIds = [];
     lastChats = [];
     lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
+    lastCalls = [];
 
   }
 

@@ -103,10 +103,8 @@ class _FriendListState extends State<FriendList> {
               ],
             ),
             IconButton(
-              onPressed: () {
-                screenPush(context, ChatScreen(receiverId: friend.uid));
-              },
-              icon:  forChat ? Icon(Icons.chat,) :   Icon(Icons.video_call,),
+              onPressed: onTap,
+              icon:  forChat ? const Icon(Icons.chat,) :   const Icon(Icons.video_call,),
             ),
           ],
         ));
@@ -136,13 +134,13 @@ class _FriendListState extends State<FriendList> {
 
   void setFriendListForCall() {
     List<UserDataModel> friends = Store().friends;
-    List<ChatModel> lastChats = Store().lastChats;
+    List<CallModel> lastCall = Store().lastCalls;
     List<UserDataModel> filteredFriends = [];
 
     for (int i = 0; i < friends.length; i++) {
       bool isMatching = false;
-      for (int j = 0; j < lastChats.length; j++) {
-        if (friends[i].uid == lastChats[j].uid) {
+      for (int j = 0; j < lastCall.length; j++) {
+        if (friends[i].uid == lastCall[j].uid) {
           isMatching = true;
           break;
         }
