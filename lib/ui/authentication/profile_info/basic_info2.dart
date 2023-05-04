@@ -17,23 +17,12 @@ class BasicInfo2Screen extends StatefulWidget {
 }
 
 class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
-  String role = Store().userData.role;
-  final TextEditingController controllerDay = TextEditingController(
-      text: Store().userData.date.isEmpty
-          ? ''
-          : Store().userData.date.split('/')[0]);
-  final TextEditingController controllerMonth = TextEditingController(
-      text: Store().userData.date.isEmpty
-          ? ''
-          : Store().userData.date.split('/')[1]);
-  final TextEditingController controllerYear = TextEditingController(
-      text: Store().userData.date.isEmpty
-          ? ''
-          : Store().userData.date.split('/')[2]);
-  final TextEditingController controllerCity =
-      TextEditingController(text: Store().userData.city);
-  final TextEditingController controllerTown =
-      TextEditingController(text: Store().userData.town);
+  String role = "";
+  final TextEditingController controllerDay = TextEditingController();
+  final TextEditingController controllerMonth = TextEditingController();
+  final TextEditingController controllerYear = TextEditingController();
+  final TextEditingController controllerCity = TextEditingController();
+  final TextEditingController controllerTown = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +31,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
         width: size.width,
-        height: size.height ,
+        height: size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -80,7 +69,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                         child: Text(
                           "Unicorn",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -103,7 +92,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                         child: Text(
                           "Griffin",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -131,7 +120,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                         child: Text(
                           "Couple",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -154,7 +143,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                         child: Text(
                           "Undecided",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: size.width * 0.045,
                           ),
@@ -290,13 +279,16 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
       showFailedToast(context, "Please fill all fields");
       return false;
     }
-    final date = '${controllerMonth.text}/${controllerDay.text}/${controllerYear.text}';
-    if (!isValidDate(date)) {
-      showFailedToast(context, 'invalid date');
+    if(!isValidDate(int.parse(controllerDay.text),int.parse(controllerMonth.text),int.parse(controllerYear.text))){
+      showFailedToast(context, "Please enter a valid date");
+      return false;
+    }
+    if(!isEighteenYearsOld(int.parse(controllerDay.text),int.parse(controllerMonth.text),int.parse(controllerYear.text))){
+      showFailedToast(context, "You must be 18 years old");
       return false;
     }
     Store().userData.role = role;
-    Store().userData.date = date;
+    Store().userData.date = '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
     Store().userData.city = controllerCity.text;
     Store().userData.town = controllerTown.text;
     if(updateUserInFirestore(Store().userData)){
