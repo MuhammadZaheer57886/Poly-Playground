@@ -118,8 +118,7 @@ Future<List<ChatModel>> getLastMessages() async {
   }
   return chats;
 }
-
-Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
+Future<bool> updateLastMessageToFirestore(ChatModel chat,ChatModel chat2) async {
   try {
     await cruntUserRef.collection("chats").doc(chat.uid).update(chat.toMap());
     await firestore
@@ -127,7 +126,7 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
         .doc(chat.uid)
         .collection("chats")
         .doc(Store().uid)
-        .update(chat.toMap());
+        .update(chat2.toMap());
 
     return true;
   } catch (e) {
@@ -138,7 +137,7 @@ Future<bool> updateLastMessageToFirestore(ChatModel chat) async {
           .doc(chat.uid)
           .collection("chats")
           .doc(Store().uid)
-          .set(chat.toMap());
+          .set(chat2.toMap());
       return true;
     } catch (e) {
       return false;
@@ -242,4 +241,16 @@ Future<void> updateReadStatus(ChatModel chat) async{
     print(e);
   }
 
+}
+Future<List<CallModel>> getLastcall() async {
+  List<CallModel> call= [];
+  try {
+    final querySnapshot = await cruntUserRef.collection('call').get();
+    for (var doc in querySnapshot.docs) {
+      call.add(CallModel.fromMap(doc.data()));
+    }
+  } catch (e) {
+    call = [];
+  }
+  return call;
 }

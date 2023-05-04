@@ -1,13 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
+import '../../../common/nav_function.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../chat_screen.dart';
 
 class FriendList extends StatefulWidget {
   final VoidCallback onTap;
-  const FriendList({Key? key, required this.onTap}) : super(key: key);
+  final bool forChat;
+
+  const FriendList(
+      {Key? key, required this.onTap,  this.forChat = true})
+      : super(key: key);
 
   @override
   State<FriendList> createState() => _FriendListState();
@@ -17,21 +21,22 @@ class _FriendListState extends State<FriendList> {
   bool isLoading = true;
   late VoidCallback onTap;
   late List<UserDataModel> friendList = [];
-
-
+  late bool forChat;
 
   @override
   void initState() {
+    print(Store().lastChats.length);
     // TODO: implement initState
     super.initState();
     onTap = widget.onTap;
-    if (Store().lastChats.isNotEmpty) {
-      friendList = Store().friends.where((obj) =>
-          Store().lastChats.any((obj1) => obj1.uid != obj.uid))
-          .toList();
-    }else
-    friendList = Store().friends;
+    forChat = widget.forChat;
+    if (widget.forChat) {
+      setFriendListForChat();
+    } else {
+      setFriendListForCall();
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -54,8 +59,8 @@ class _FriendListState extends State<FriendList> {
                 child: ListView.builder(
                     itemCount: friendList.length,
                     itemBuilder: (context, index) {
-                      return friendListItem(size, friendList[index],
-                          const Icon(Icons.message), onTap);
+                      return friendListItem(
+                          size, friendList[index], onTap);
                     }),
               ),
             ],
@@ -66,14 +71,14 @@ class _FriendListState extends State<FriendList> {
   }
 
   Widget friendListItem(
-      Size size, UserDataModel friend, Icon icon, VoidCallback onTap) {
+      Size size, UserDataModel friend,  VoidCallback onTap) {
     return Container(
         decoration: BoxDecoration(
           color: AppColors.i.greyColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 15 , vertical: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 8 , vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -81,16 +86,15 @@ class _FriendListState extends State<FriendList> {
               children: [
                 CircleAvatar(
                   radius: size.width * 0.07,
-                  backgroundImage: NetworkImage(
-                      friend.photoUrl),
+                  backgroundImage: NetworkImage(friend.photoUrl),
                 ),
                 SizedBox(
                   width: size.width * 0.10,
                 ),
                 Text(
-                    friend.fullName.length < 15
-                        ? friend.fullName
-                        :friend.fullName.substring(0, 12) + '...',
+                  friend.fullName.length < 15
+                      ? friend.fullName
+                      : friend.fullName.substring(0, 12) + '...',
                   style: TextStyle(
                       color: AppColors.i.blackColor,
                       fontWeight: FontWeight.w700,
@@ -98,19 +102,57 @@ class _FriendListState extends State<FriendList> {
                 ),
               ],
             ),
-
-
             IconButton(
-                onPressed: () {
-                  screenPush(
-                      context,
-                      ChatScreen(
-                          receiverId:
-                          friend.uid));
-                },
-                icon: icon,),
-
+              onPressed: () {
+                screenPush(context, ChatScreen(receiverId: friend.uid));
+              },
+              icon:  forChat ? Icon(Icons.chat,) :   Icon(Icons.video_call,),
+            ),
           ],
         ));
+  }
+
+  void setFriendListForChat() {
+    List<UserDataModel> friends = Store().friends;
+    List<ChatModel> lastChats = Store().lastChats;
+    List<UserDataModel> filteredFriends = [];
+
+    for (int i = 0; i < friends.length; i++) {
+      bool isMatching = false;
+      for (int j = 0; j < lastChats.length; j++) {
+        if (friends[i].uid == lastChats[j].uid) {
+          isMatching = true;
+          break;
+        }
+      }
+      if (!isMatching) {
+        filteredFriends.add(friends[i]);
+      }
+    }
+    setState(() {
+      friendList = filteredFriends;
+    });
+  }
+
+  void setFriendListForCall() {
+    List<UserDataModel> friends = Store().friends;
+    List<ChatModel> lastChats = Store().lastChats;
+    List<UserDataModel> filteredFriends = [];
+
+    for (int i = 0; i < friends.length; i++) {
+      bool isMatching = false;
+      for (int j = 0; j < lastChats.length; j++) {
+        if (friends[i].uid == lastChats[j].uid) {
+          isMatching = true;
+          break;
+        }
+      }
+      if (!isMatching) {
+        filteredFriends.add(friends[i]);
+      }
+    }
+    setState(() {
+      friendList = filteredFriends;
+    });
   }
 }
