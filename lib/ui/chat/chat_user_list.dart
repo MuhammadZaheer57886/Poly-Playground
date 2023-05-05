@@ -63,7 +63,7 @@ class _ChatUserList extends State<ChatUserList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
-                      height: 0.05,
+                      height: 0.07,
                     ),
                     Container(
                       height: 40,

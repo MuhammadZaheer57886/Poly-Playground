@@ -75,23 +75,27 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Expanded(
-                child: StreamBuilder<List<MessageModel>>(
-                  stream: listenForNewMessages(friend.uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<MessageModel> messages = snapshot.data!;
-                      return ListView.builder(
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) =>
-                            messageView(messages[index]),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
+              Container(
+                height: size.height * 0.769,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Expanded(
+                  child: StreamBuilder<List<MessageModel>>(
+                    stream: listenForNewMessages(friend.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<MessageModel> messages = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) =>
+                              messageView(messages[index]),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
               ),
               MessageComposer( receiverId: friend.uid,),
@@ -114,12 +118,16 @@ class _ChatScreenState extends State<ChatScreen> {
             constraints: BoxConstraints(
               maxWidth: size.width * 0.7,
             ),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               // color: Colors.blue,
               color: AppColors.i.darkBrownColor.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              )
             ),
             child: Text(
               message.message,
@@ -127,10 +135,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: AppColors.i.whiteColor,
               ),
             ),
-          ),
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(Store().userData.photoUrl),
           ),
         ],
       ),
@@ -157,7 +161,12 @@ class _ChatScreenState extends State<ChatScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               color: AppColors.i.greyColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  // bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                )
             ),
             child: Text(
               message.message,

@@ -59,7 +59,7 @@ bool isEighteenYearsOld(int day,int month,int year) {
 ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   return ChatModel(
     fullName: friend.fullName,
-    photoUrl: friend.photoUrl,
+    photoUrl:  friend.photoUrl,
     lastMessage: lastMessage,
     uid: friend.uid,
   );
