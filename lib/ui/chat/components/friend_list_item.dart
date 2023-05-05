@@ -103,7 +103,10 @@ class _FriendListState extends State<FriendList> {
               ],
             ),
             IconButton(
-              onPressed: onTap,
+              onPressed:(){
+                Store().friend = friend;
+                onTap();
+              },
               icon:  forChat ? Icon(Icons.chat,) :  Icon(Icons.video_call,),
             ),
           ],

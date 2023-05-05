@@ -118,7 +118,7 @@ Future<List<ChatModel>> getLastMessages() async {
   }
   return chats;
 }
-Future<bool> updateLastMessageToFirestore(ChatModel chat,ChatModel chat2) async {
+Future<bool>  updateLastMessageToFirestore(ChatModel chat,ChatModel chat2) async {
   try {
     await cruntUserRef.collection("chats").doc(chat.uid).update(chat.toMap());
     await firestore
