@@ -246,6 +246,8 @@ Future<List<String>> getLikedUsers() async {
 updateCallId(String callId) async {
   try {
     await cruntUserRef.update({"call_id": callId});
+    await FirebaseFirestore.instance.collection('users').doc(Store().friend!.uid).update({"call_id": callId});
+    
   } catch (e) {}
 }
 Future<String?>  requestToken()async{

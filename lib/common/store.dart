@@ -25,6 +25,7 @@ class Store {
   List <ChatModel> lastChats = [];
   ChatModel lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
   List<CallModel> lastCalls = [];
+  
 
 
   void clear() {

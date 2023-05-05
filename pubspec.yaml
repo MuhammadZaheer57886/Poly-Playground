@@ -56,7 +56,7 @@ dependencies:
   intl: ^0.17.0
   permission_handler: ^10.1.0
   zego_uikit_prebuilt_call: ^3.3.7
-  zego_uikit_signaling_plugin: ^2.1.4
+  # zego_uikit_signaling_plugin: ^2.1.4
   firebase_messaging: ^14.4.1
   flutter_notification_channel: ^2.0.0
 
