@@ -17,8 +17,8 @@ Future<String> setUser() async {
   Store().userData.uid = user.uid;
   Store().uid = user.uid;
   try {
-    await cruntUserRef.set(Store().userData.toMap());
-    return Store().uid;
+    await firestore.collection("users").doc(Store().uid).set(Store().userData.toMap());
+    return Store().uid.toString();
   } catch (e) {
     return '';
   }
@@ -216,19 +216,24 @@ Future<List<String>> getLikedUsers() async {
 }
 
 Future<String?>  requestToken()async{
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.requestPermission();
+  try {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission();
 
-  final token = await messaging.getToken();
+    final token = await messaging.getToken();
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    if (message.notification != null) {
-      log('Message also contained a notification: ${message.notification}');
-    }
-  });
-
-
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        log('Message also contained a notification: ${message.notification}');
+      }
+    });
   return token;
+  }
+catch(e){
+    print("object");
+  return null;
+}
+
 
 }
 
