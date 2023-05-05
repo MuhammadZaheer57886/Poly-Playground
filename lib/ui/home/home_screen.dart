@@ -5,6 +5,7 @@ import 'package:poly_playground/ui/authentication/profile_info/photo_profile_scr
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
+import 'package:poly_playground/utils/http_requests.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
@@ -172,9 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               return Stack(children: [
                                 GestureDetector(
-                                  onDoubleTap: () {
-                                    like(users[index]);
-                                  },
+                                  onDoubleTap:makeFriendRequest(index),
                                   onTap: () {
                                     screenPush(
                                         context,
@@ -301,5 +300,43 @@ class _HomeScreenState extends State<HomeScreen> {
         users.add(user);
       });
     }
+  }
+
+  makeFriendRequest (int index) async {
+    setState(() {
+      users.removeAt(index);
+    });
+    FriendRequest request =
+    FriendRequest.createFriendRequest(
+      users[index],
+      users[index].uid,
+    );
+    FriendRequest request2 =
+    FriendRequest.createFriendRequest(
+      Store().userData,
+      users[index].uid,
+    );
+
+    bool send = await sendFriendRequest(request,request2);
+    if (send) {
+      Store().friendRequests.add(request);
+      await friendRequestNotification(
+          users[index]);
+      setNotification(
+          users[index].uid);
+
+    }
+    else {
+      setState(() {
+        users.insert(index, users[index]);
+      });
+    }
+  }
+
+  void setNotification(String uid){
+    NotificationModel notification = NotificationModel.createNotification(uid, "Friend Request", Store().userData);
+
+
+    setNotificationInFirestore(notification);
   }
 }

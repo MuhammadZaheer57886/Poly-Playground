@@ -26,4 +26,8 @@ class AppStrings {
 
   get serverKey => "AAAA0tAQQ0E:APA91bHLglpArpGyG7Gr6wlD4XL905YPYhwplJU6aCyK25TEVHvMGOAe8PZxk2yktfajTuxW2jLeAR0n065UwlY5OIWbROPSpsRG1ak16Cuh5xIrRZoaJ3rAKFhOjUed3CYdiwydXOXp";
 
+  get friendRequestNotificationTitle => "New Friend Request";
+
+  get friendRequestNotificationBody => "${Store().userData.name} sent you a friend request";
+
 }

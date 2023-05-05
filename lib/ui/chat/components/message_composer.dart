@@ -103,7 +103,7 @@ class _MessageComposerState extends State<MessageComposer> {
     setState(() {
       show = false;
     });
-    await snedNotification();
+    await messageNotification();
     return true;
   }
 
