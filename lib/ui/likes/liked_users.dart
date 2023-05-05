@@ -96,7 +96,7 @@ class _LikedUsersState extends State<LikedUsers> {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
-                      height: size.height * 0.06,
+                      height: 45,
                       child: Text(
                         "People You Liked ",
                         style: TextStyle(
@@ -105,45 +105,46 @@ class _LikedUsersState extends State<LikedUsers> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: SizedBox(
-                        height: size.height * 0.8,
-                        child: GridView.builder(
-                          itemCount: Store().likedUsers.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 5.0,
-                            crossAxisSpacing: 1.0,
-                            childAspectRatio: 0.92,
-                          ),
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                screenPush(
-                                    context,
-                                    UserProfile(
-                                      userData: Store().likedUsers[index]));
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 5),
-                                width: size.width * 0.3,
-                                decoration: BoxDecoration(
-                                    color: AppColors.i.whiteColor,
-                                    borderRadius: BorderRadius.circular(35),
-                                    image: DecorationImage(
-                                        image: NetworkImage(Store()
-                                            .likedUsers[index]
-                                            .photoUrl),
-                                        fit: BoxFit.fill)),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+
+                    // SingleChildScrollView(
+                    //   physics: const AlwaysScrollableScrollPhysics(),
+                    //   child: SizedBox(
+                    //     height: size.height * 0.8,
+                    //     child: GridView.builder(
+                    //       itemCount: Store().likedUsers.length,
+                    //       gridDelegate:
+                    //           const SliverGridDelegateWithFixedCrossAxisCount(
+                    //         crossAxisCount: 2,
+                    //         mainAxisSpacing: 5.0,
+                    //         crossAxisSpacing: 1.0,
+                    //         childAspectRatio: 0.92,
+                    //       ),
+                    //       itemBuilder: (context, index) {
+                    //         return GestureDetector(
+                    //           onTap: () {
+                    //             screenPush(
+                    //                 context,
+                    //                 UserProfile(
+                    //                   userData: Store().likedUsers[index]));
+                    //           },
+                    //           child: Container(
+                    //             margin: const EdgeInsets.symmetric(
+                    //                 horizontal: 16, vertical: 5),
+                    //             width: size.width * 0.3,
+                    //             decoration: BoxDecoration(
+                    //                 color: AppColors.i.whiteColor,
+                    //                 borderRadius: BorderRadius.circular(35),
+                    //                 image: DecorationImage(
+                    //                     image: NetworkImage(Store()
+                    //                         .likedUsers[index]
+                    //                         .photoUrl),
+                    //                     fit: BoxFit.fill)),
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
