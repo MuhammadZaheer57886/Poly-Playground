@@ -90,7 +90,7 @@ Future<bool> setMessageToFirestore(MessageModel message) async {
 
 Future<List<UserDataModel>> getFriends() async {
   List<UserDataModel> friends = [];
-  for (var element in Store().likedUsersIds) {
+  for (var element in Store().friendsIds) {
     final user = await getUserData(element);
     if (user != null) friends.add(UserDataModel.fromMap(user.toMap()));
   }
@@ -322,4 +322,115 @@ Future<void> updateNotificationToFirestore(NotificationModel notification) async
       .collection('notifications')
       .doc(notification.id)
       .update(notification.toMap());
+}
+
+Future<void> deleteFriendRequestFromeFireBase(FriendRequest request) async {
+  String id = request.senderId == Store().uid ? request.receiverId : request.senderId;
+  try {
+    await currentRef
+        .collection('friendRequests')
+        .doc(id)
+        .delete();
+    await fireStore
+        .collection('users')
+        .doc(id)
+        .collection("friendRequests")
+        .doc(Store().uid)
+        .delete();
+  }catch(e){
+  }
+}
+// Future<void> updateFriendRequestFromeFireBase(FriendRequest request) async {
+//   String id = request.senderId == Store().uid ? request.receiverId : request.senderId;
+//   try {
+//     await currentRef
+//         .collection('friendRequests')
+//         .doc(id)
+//         .update({"status":request.status});
+//     await fireStore
+//         .collection('users')
+//         .doc(id)
+//         .collection("friendRequests")
+//         .doc(Store().uid)
+//         .update({"status":request.status});
+//   }catch(e){
+//   }
+// }
+
+Future<void> addFriendToFireStore(String friendId) async {
+  await currentRef
+      .collection('friends')
+      .doc(friendId)
+      .set({});
+  await fireStore
+      .collection('users')
+      .doc(friendId)
+      .collection("friends")
+      .doc(Store().uid)
+      .set({});
+}
+Future<FriendRequest?> checkFriendRequest(String friendId) async {
+  try {
+    final value = await currentRef
+        .collection('friendRequests')
+        .doc(friendId)
+        .get();
+    if (value == null) {
+      return null;
+    }
+    return FriendRequest.fromMap(value.data()!);
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<List<String>> getFriendsIds() async {
+  try {
+    final value = await currentRef
+        .collection('friends')
+        .get();
+    if (value == null) {
+      return [];
+    }
+    List<String> friendsIds = [];
+    for (var doc in value.docs) {
+      friendsIds.add(doc.id);
+    }
+
+    return friendsIds;
+  } catch (e) {
+    return [];
+  }
+}
+Future <bool> checkIsFriend(String friendId) async {
+  try {
+    final value = await currentRef
+        .collection('friends')
+        .doc(friendId)
+        .get();
+    if (value == null) {
+      return false;
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+Future<List<String>> getFriendRequestsIds() async {
+  try {
+    final value = await currentRef
+        .collection('friendRequests')
+        .get();
+    if (value == null) {
+      return [];
+    }
+    List<String> friendsIds = [];
+    for (var doc in value.docs) {
+      friendsIds.add(doc.id);
+    }
+
+    return friendsIds;
+  } catch (e) {
+    return [];
+  }
 }

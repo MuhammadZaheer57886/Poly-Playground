@@ -33,7 +33,7 @@ Future<bool> messageNotification() async {
       "title": AppStrings.i.messageNotificationTitle,
       "body": AppStrings.i.messageNotificationBody,
       "android_channel_id": AppStrings.i.appId,
-      "sound": AppStrings.i.messageNotificationSound,
+      "sound": AppStrings.i.notificationSound,
       "mutable_content": true,
       "image": Store().userData.photoUrl,
     }
@@ -41,6 +41,22 @@ Future<bool> messageNotification() async {
   return await sendNotification(body);
 }
 
+Future<bool> cancelFriendRequestNotification(UserDataModel user) async {
+  final body = {
+    "to": user.token.toString(),
+    "notification": {
+      "title": AppStrings.i.canselFriendRequestNotificationTitle,
+      "body": AppStrings.i.cancelFriendRequestNotificationBody,
+      "android_channel_id": AppStrings.i.appId,
+      "sound": AppStrings.i.notificationSound,
+      "mutable_content": true,
+      "image": Store().userData.photoUrl,
+    }
+  };
+
+  return await sendNotification(body);
+
+}
 Future<bool> friendRequestNotification(UserDataModel user) async {
   final body = {
     "to": user.token.toString(),
@@ -48,7 +64,39 @@ Future<bool> friendRequestNotification(UserDataModel user) async {
       "title": AppStrings.i.friendRequestNotificationTitle,
       "body": AppStrings.i.friendRequestNotificationBody,
       "android_channel_id": AppStrings.i.appId,
-      "sound": AppStrings.i.messageNotificationSound,
+      "sound": AppStrings.i.notificationSound,
+      "mutable_content": true,
+      "image": Store().userData.photoUrl,
+    }
+  };
+
+  return await sendNotification(body);
+
+}
+Future<bool> friendRequestAcceptedNotification(UserDataModel user) async {
+  final body = {
+    "to": user.token.toString(),
+    "notification": {
+      "title": AppStrings.i.friendRequestAcceptedNotificationTitle,
+      "body": AppStrings.i.friendRequestAcceptedNotificationBody,
+      "android_channel_id": AppStrings.i.appId,
+      "sound": AppStrings.i.notificationSound,
+      "mutable_content": true,
+      "image": Store().userData.photoUrl,
+    }
+  };
+
+  return await sendNotification(body);
+
+}
+Future<bool> friendRequestRejectedNotification(UserDataModel user) async {
+  final body = {
+    "to": user.token.toString(),
+    "notification": {
+      "title": AppStrings.i.friendRequestRejectedNotificationTitle,
+      "body": AppStrings.i.friendRequestRejectedNotificationBody,
+      "android_channel_id": AppStrings.i.appId,
+      "sound": AppStrings.i.notificationSound,
       "mutable_content": true,
       "image": Store().userData.photoUrl,
     }

@@ -187,7 +187,7 @@ class _NotificationList extends State<NotificationList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'New ${notification.type}',
+                          notification.type,
                           style: TextStyle(
                               color: AppColors.i.blackColor,
                               fontWeight: FontWeight.w700,
@@ -204,8 +204,8 @@ class _NotificationList extends State<NotificationList> {
                     ),
                     Container(
                       child: Text(
-                        notification.title.length > 33
-                            ? '${notification.title.substring(0, 30)}...'
+                        notification.title.length > 30
+                            ? '${notification.title.substring(0, 27)}...'
                             : notification.title,
                         style: TextStyle(
                             color: AppColors.i.blackColor,

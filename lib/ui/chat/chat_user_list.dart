@@ -111,37 +111,13 @@ class _ChatUserList extends State<ChatUserList> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: size.height * 0.1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                TextButton.icon(
-                                    onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                      color: AppColors.i.blackColor,
-                                      size: size.width * 0.1,
-                                    ),
-                                    label: const Text("")),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Text("Chats",
-                                    style: TextStyle(
-                                        color: AppColors.i.blackColor,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: size.width * 0.06)),
-                                SizedBox(
-                                  width: size.width * 0.05,
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.06,
-                                  height: size.height * 0.03,
-                                ),
-                              ],
-                            ),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            child:   Text("Chats",
+                                      style: TextStyle(
+                                          color: AppColors.i.blackColor,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: size.width * 0.06)),
                           ),
                           Expanded(
                             child: Store().lastChats.isNotEmpty

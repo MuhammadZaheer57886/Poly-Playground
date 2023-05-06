@@ -4,16 +4,14 @@ import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
+import 'package:poly_playground/ui/home/profile_screen/user_profile.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
-import 'package:poly_playground/utils/constants/app_strings.dart';
-import 'package:poly_playground/utils/http_requests.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/firebase_utils.dart';
 import '../../utils/my_utils.dart';
 import '../chat/chat_user_list.dart';
-import '../likes/liked_profile.dart';
 import '../likes/liked_users.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -175,13 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               return Stack(children: [
                                 GestureDetector(
                                   onDoubleTap:(){
-                                    makeFriendRequest(index);
+                                    handelFriendRequest(index);
                                   },
                                   onTap: () {
                                     screenPush(
                                         context,
                                         UserProfile(
-                                          userData: users[index],
+                                          userId: users[index].uid,
                                         ));
                                   },
                                   child: Container(
@@ -255,7 +253,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
-    Store().likedUsersIds = await getLikedUsers();
+    // Store().likedUsersIds = await getLikedUsers();
+    Store().friendsIds = await getFriendsIds();
+    Store().friendRequestsIds = await getFriendRequestsIds();
     return true;
   }
 
@@ -277,7 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
         users.removeWhere(
             (element) => Store().dislikedUsersIds.contains(element.uid));
         users.removeWhere(
-            (element) => Store().likedUsersIds.contains(element.uid));
+                (element) => Store().friendsIds.contains(element.uid));
+        users.removeWhere(
+                (element) => Store().friendRequestsIds.contains(element.uid));
       });
     }
     return Store().isUser;
@@ -290,56 +292,16 @@ class _HomeScreenState extends State<HomeScreen> {
       users.removeWhere((element) => element.uid == uid);
     });
   }
-
-  like(UserDataModel user) async {
-    setState(() {
-      users.removeWhere((element) => element == user);
-    });
-    bool isLike = await likeUser(user.uid);
-    if (!isLike) {
-      Store().likedUsersIds.add(user.uid);
-      showFailedToast(context, "something went wrong");
+    Future<void> handelFriendRequest(int index) async {
+      UserDataModel user = users[index];
       setState(() {
-        users.add(user);
+        users[index] = users[users.length - 1];
+        users.removeAt(users.length - 1);
       });
+      if(!await makeFriendRequest(user)){
+        setState(() {
+          users.insert(index, user);
+        });
+      }
     }
-  }
-
-   Future<void> makeFriendRequest (int index) async {
-    UserDataModel user = users[index];
-    setState(() {
-      users[index] = users[users.length - 1];
-      users.removeAt(index);
-    });
-    FriendRequest request =
-    FriendRequest.createFriendRequest(
-      user,
-      user.uid,
-    );
-    FriendRequest request2 =
-    FriendRequest.createFriendRequest(
-      Store().userData,
-      user.uid,
-    );
-
-    bool send = await sendFriendRequest(request,request2);
-    if (send) {
-      Store().friendRequests.add(request);
-      await friendRequestNotification(
-          user);
-      setNotification(
-          user.uid);
-    }
-    else {
-      setState(() {
-        users.insert(index, user);
-      });
-    }
-  }
-
-  void setNotification(String uid){
-    NotificationModel notification = NotificationModel.createNotification(uid, "Friend Request", Store().userData);
-
-    setNotificationInFirestore(notification);
-  }
 }

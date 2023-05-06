@@ -1,4 +1,5 @@
 import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
 
 import '../utils/my_utils.dart';
 
@@ -359,7 +360,7 @@ class FriendRequest {
     };
   }
 
-  updateRequest(String status) {
+  updateStatus(String status) {
     this.status = status;
   }
 }
@@ -412,12 +413,12 @@ class NotificationModel {
   }
 
   static NotificationModel createNotification(
-      String receiverId, String type, UserDataModel sender) {
+      String receiverId,String title, String type, UserDataModel sender) {
     return NotificationModel(
       receiverId: receiverId,
       senderId: sender.uid,
       timestamp: formatDate().toString(),
-      title: "${sender.fullName} sent you a $type",
+      title: title,
       type: type,
       photoUrl: sender.photoUrl,
     );

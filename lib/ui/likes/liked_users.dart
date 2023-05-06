@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
-import 'package:poly_playground/ui/likes/like_utils.dart';
+import 'package:poly_playground/ui/likes/friends.dart';
+import 'package:poly_playground/ui/likes/panding_requests.dart';
 import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import '../../common/nav_function.dart';
@@ -25,7 +26,7 @@ class _LikedUsersState extends State<LikedUsers> {
     // TODO: implement initState
     super.initState();
     getLikedProfiles().then((value) => {
-          Store().likedUsers = value,
+          Store().friends = value,
           getAllFriendRequests().then((value) => {
                 Store().friendRequests = value,
                 setState(() {
@@ -146,10 +147,10 @@ class _LikedUsersState extends State<LikedUsers> {
                 SizedBox(
                   height: size.height * 0.01,
                 ),
-                Expanded(
+                const Expanded(
                   child: TabBarView(children: [
-                    friends(size, context),
-                    pending(size, context),
+                    Friends(),
+                    PendingRequests(),
                   ]),
                 ),
               ],
@@ -161,15 +162,15 @@ class _LikedUsersState extends State<LikedUsers> {
   }
 
   Future<List<UserDataModel>> getLikedProfiles() async {
-    List<UserDataModel> likedProfiles = [];
-    for (var uid in Store().likedUsersIds) {
+    List<UserDataModel> friends = [];
+    for (var uid in Store().friendsIds) {
       final user = await getUserData(uid);
       if (user == null || user.uid == Store().uid) {
       } else {
-        likedProfiles.add(user);
+        friends.add(user);
       }
     }
-    return likedProfiles;
+    return friends;
   }
 
   Future<List<FriendRequest>> getAllFriendRequests() async {
