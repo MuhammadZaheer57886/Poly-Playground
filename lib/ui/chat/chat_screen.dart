@@ -75,27 +75,23 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                height: size.height * 0.769,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Expanded(
-                  child: StreamBuilder<List<MessageModel>>(
-                    stream: listenForNewMessages(friend.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<MessageModel> messages = snapshot.data!;
-                        return ListView.builder(
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) =>
-                              messageView(messages[index]),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
+              Expanded(
+                child: StreamBuilder<List<MessageModel>>(
+                  stream: listenForNewMessages(friend.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<MessageModel> messages = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) =>
+                            messageView(messages[index]),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
               ),
               MessageComposer( receiverId: friend.uid,),
@@ -110,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -145,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

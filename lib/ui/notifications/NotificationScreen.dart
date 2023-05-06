@@ -4,6 +4,8 @@ import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/chat/chat_user_list.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -151,17 +153,20 @@ class _NotificationList extends State<NotificationList> {
   Widget notificationCard(Size size, NotificationModel notification) {
     return GestureDetector(
       onTap: () async {
-        // await updateReadStatus(lastChat);
-        // screenPush(context, ChatScreen(receiverId: lastChat.uid));
+        if(!notification.status) {
+          notification.updateStatus();
+          await updateNotificationToFirestore(notification);
+        }
+        navidateFromNotificationScreen(notification);
+
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: AppColors.i.darkBrownColor.withOpacity(0.3),
+          color: notification.status ?AppColors.i.darkBrownColor.withOpacity(0.3) : AppColors.i.darkBrownColor.withOpacity(0.5),
           border: Border(
             bottom: BorderSide(color: AppColors.i.blackColor),
           ),
-          // borderRadius: BorderRadius.circular(10)
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
@@ -189,10 +194,7 @@ class _NotificationList extends State<NotificationList> {
                               fontSize: size.width * 0.05),
                         ),
                         Text(
-                          "time",
-                          // DateFormat('h:mm a').format(
-                          //     DateFormat('MMM dd, yyyy h:mm:ss.SSSS a')
-                          //         .parse(notification.timestamp)),
+                          getMessageTime(notification.timestamp),
                           style: TextStyle(
                               color: AppColors.i.whiteColor.withOpacity(0.8),
                               fontWeight: FontWeight.w400,
@@ -235,4 +237,22 @@ class _NotificationList extends State<NotificationList> {
       isLoading = false;
     });
   }
+
+  void navidateFromNotificationScreen(NotificationModel notification) {
+    switch(notification.type)
+        {
+      case "Friend Request":
+        screenPush(context, LikedUsers());
+        break;
+      case "Message":
+        screenPush(context, ChatScreen(receiverId: notification.senderId));
+        break;
+      default:
+        "";
+        break;
+    }
+  }
+
+
+
 }

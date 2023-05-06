@@ -1,5 +1,7 @@
 import 'package:poly_playground/common/store.dart';
 
+import '../utils/my_utils.dart';
+
 class UserDataModel {
   String city;
   String date;
@@ -330,7 +332,7 @@ class FriendRequest {
       photoUrl: user.photoUrl,
       senderId: Store().uid,
       receiverId: receiverId,
-      timestamp: DateTime.now().toString(),
+      timestamp: formatDate().toString(),
       status: "pending",
     );
   }
@@ -369,6 +371,9 @@ class NotificationModel {
   final String receiverId;
   final String timestamp;
   final String photoUrl;
+  bool status;
+
+  String id;
 
   NotificationModel(
       {required this.receiverId,
@@ -376,7 +381,9 @@ class NotificationModel {
       required this.timestamp,
       required this.title,
       required this.type,
-      required this.photoUrl});
+      required this.photoUrl,
+      this.status = false,
+      this.id = ""});
 
   Map<String, dynamic> toMap() {
     return {
@@ -386,6 +393,8 @@ class NotificationModel {
       'title': title,
       'type': type,
       'photoUrl': photoUrl,
+      'status': status,
+      'id': id,
     };
   }
 
@@ -397,16 +406,24 @@ class NotificationModel {
       title: map['title'],
       type: map['type'],
       photoUrl: map['photoUrl'],
+      status: map['status'],
+      id: map['id'],
     );
   }
-  static NotificationModel createNotification(String receiverId,String type,UserDataModel sender ) {
+
+  static NotificationModel createNotification(
+      String receiverId, String type, UserDataModel sender) {
     return NotificationModel(
       receiverId: receiverId,
       senderId: sender.uid,
-      timestamp: DateTime.now().toString(),
-      title:  "${sender.fullName} sent you a $type",
+      timestamp: formatDate().toString(),
+      title: "${sender.fullName} sent you a $type",
       type: type,
       photoUrl: sender.photoUrl,
     );
   }
+
+  updateStatus() => status = true;
+
+
 }

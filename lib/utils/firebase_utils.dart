@@ -303,11 +303,23 @@ Future<List<NotificationModel>> getNotificationFromFirestore() async {
         .collection("notifications")
         .get();
     for (var doc in snaps.docs) {
-      notifications.add(NotificationModel.fromMap(doc.data()));
+      NotificationModel notification = NotificationModel.fromMap(doc.data());
+      if(notification.id.isEmpty){
+        notification.id = doc.id;
+      }
+      notifications.add(notification);
     }
   } catch (e) {
     notifications = [];
   }
 
   return notifications;
+
+}
+
+Future<void> updateNotificationToFirestore(NotificationModel notification) async {
+  currentRef
+      .collection('notifications')
+      .doc(notification.id)
+      .update(notification.toMap());
 }
