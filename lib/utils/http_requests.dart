@@ -16,7 +16,9 @@ Future<bool> sendNotification(body) async {
       },
       body: jsonEncode(body),
     );
+    log(response.body);
     if (response.statusCode == 200) return true;
+
     return false;
   } catch (e) {
     log(e.toString());

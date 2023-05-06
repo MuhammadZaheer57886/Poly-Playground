@@ -173,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               return Stack(children: [
                                 GestureDetector(
-                                  onDoubleTap:makeFriendRequest(index),
+                                  onDoubleTap:(){
+                                    makeFriendRequest(index);
+                                  },
                                   onTap: () {
                                     screenPush(
                                         context,
@@ -302,40 +304,40 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  makeFriendRequest (int index) async {
+   Future<void> makeFriendRequest (int index) async {
+    UserDataModel user = users[index];
     setState(() {
+      users[index] = users[users.length - 1];
       users.removeAt(index);
     });
     FriendRequest request =
     FriendRequest.createFriendRequest(
-      users[index],
-      users[index].uid,
+      user,
+      user.uid,
     );
     FriendRequest request2 =
     FriendRequest.createFriendRequest(
       Store().userData,
-      users[index].uid,
+      user.uid,
     );
 
     bool send = await sendFriendRequest(request,request2);
     if (send) {
       Store().friendRequests.add(request);
       await friendRequestNotification(
-          users[index]);
+          user);
       setNotification(
-          users[index].uid);
-
+          user.uid);
     }
     else {
       setState(() {
-        users.insert(index, users[index]);
+        users.insert(index, user);
       });
     }
   }
 
   void setNotification(String uid){
     NotificationModel notification = NotificationModel.createNotification(uid, "Friend Request", Store().userData);
-
 
     setNotificationInFirestore(notification);
   }

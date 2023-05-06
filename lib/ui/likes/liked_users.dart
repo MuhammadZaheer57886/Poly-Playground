@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/ui/likes/like_utils.dart';
+import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
@@ -25,12 +26,12 @@ class _LikedUsersState extends State<LikedUsers> {
     super.initState();
     getLikedProfiles().then((value) => {
           Store().likedUsers = value,
-          setState(() {
-            isLoading = false;
-          })
-        });
-    getAllFriendRequests().then((value) => {
-          Store().friendRequests = value,
+          getAllFriendRequests().then((value) => {
+                Store().friendRequests = value,
+                setState(() {
+                  isLoading = false;
+                }),
+              }),
         });
   }
 
@@ -89,6 +90,14 @@ class _LikedUsersState extends State<LikedUsers> {
                             screenPush(context, const ChatUserList());
                           },
                           icon: Image.asset("assets/chat.png")),
+                      IconButton(
+                          onPressed: () {
+                            screenPush(context, const NotificationList());
+                          },
+                          icon: const Icon(
+                            Icons.notifications_on_outlined,
+                            size: 32,
+                          )),
                     ],
                   ),
                 ),

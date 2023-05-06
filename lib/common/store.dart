@@ -3,6 +3,7 @@ import '../model/user_model.dart';
 class Store {
   static final Store _store = Store._();
 
+
   factory Store() => _store;
 
   Store._();
@@ -23,6 +24,7 @@ class Store {
   List <ChatModel> lastChats = [];
   ChatModel lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
   List<FriendRequest> friendRequests = [];
+  List<NotificationModel> notifications = [];
 
   void clear() {
     isLogedIn = false;
@@ -41,6 +43,7 @@ class Store {
     lastChats = [];
     lastChat = ChatModel(fullName: "", photoUrl: "", uid: "", lastMessage: MessageModel());
     friendRequests = [];
+    notifications = [];
   }
 
 }

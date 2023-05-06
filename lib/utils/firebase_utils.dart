@@ -257,15 +257,15 @@ Future<bool> sendFriendRequest(
     FriendRequest request, FriendRequest request2) async {
   try {
     await currentRef
-        .collection("friendRequest")
+        .collection("friendRequests")
         .doc(request.receiverId)
         .set(request.toMap());
     await fireStore
         .collection("users")
         .doc(request2.receiverId)
-        .collection("friendRequest")
+        .collection("friendRequests")
         .doc(Store().uid)
-        .set(request.toMap());
+        .set(request2.toMap());
     return true;
   } catch (e) {
     return false;
@@ -275,7 +275,7 @@ Future<bool> sendFriendRequest(
 Future<List<FriendRequest>> getFriendRequests() async {
   List<FriendRequest> requests = [];
   try {
-    final querySnapshot = await currentRef.collection('friendRequest').get();
+    final querySnapshot = await currentRef.collection('friendRequests').get();
     for (var doc in querySnapshot.docs) {
       requests.add(FriendRequest.fromMap(doc.data()));
     }
@@ -294,7 +294,7 @@ Future<void> setNotificationInFirestore(NotificationModel notification) async {
       .set(notification.toMap());
 }
 
-Future<List<NotificationModel>> getNotificationInFirestore() async {
+Future<List<NotificationModel>> getNotificationFromFirestore() async {
   List<NotificationModel> notifications = [];
   try {
     QuerySnapshot<Map<String, dynamic>> snaps = await fireStore

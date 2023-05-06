@@ -328,7 +328,7 @@ class FriendRequest {
     return FriendRequest(
       fullName: user.fullName,
       photoUrl: user.photoUrl,
-      senderId: user.uid,
+      senderId: Store().uid,
       receiverId: receiverId,
       timestamp: DateTime.now().toString(),
       status: "pending",
