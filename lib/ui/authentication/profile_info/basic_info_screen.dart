@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
@@ -9,16 +10,22 @@ import '../../ui_components/simple_button.dart';
 import 'basic_info2.dart';
 
 class BasicInfoScreen extends StatefulWidget {
-  const BasicInfoScreen({Key? key, }) : super(key: key);
+  const BasicInfoScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<BasicInfoScreen> createState() => _BasicInfoScreenState();
 }
 
 class _BasicInfoScreenState extends State<BasicInfoScreen> {
-  final TextEditingController controllerFullName = TextEditingController(text: Store().userData.fullName);
-  final TextEditingController controllerJOB = TextEditingController(text: Store().userData.job);
-  final TextEditingController controllerIntro = TextEditingController(text: Store().userData.intro);
+  final TextEditingController controllerFullName =
+      TextEditingController(text: Store().userData.fullName);
+  final TextEditingController controllerJOB =
+      TextEditingController(text: Store().userData.job);
+  final TextEditingController controllerIntro =
+      TextEditingController(text: Store().userData.intro);
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -77,7 +84,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
                 height: 20,
               ),
               CustomTextField(
-                keyboardType: TextInputType.multiline,
+                  keyboardType: TextInputType.multiline,
                   controller: controllerIntro,
                   titleText: 'INTRODUCTION YOURSELF',
                   width: size.width * 0.88,
@@ -97,7 +104,10 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
                   SimpleButton(
                       title: "CONTINUE",
                       onTap: () {
-                        updateBasicInfo();
+                        updateBasicInfo().then((value) => value
+                            ? screenPush(context, const BasicInfo2Screen())
+                            : showFailedToast(
+                                context, AppStrings.i.noInternet));
                       }),
                 ],
               )
@@ -107,23 +117,25 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
       ),
     );
   }
-  void updateBasicInfo() async {
-    // Check if any of the fields are empty
+
+  Future<bool> updateBasicInfo() async {
     if (controllerFullName.text.isEmpty ||
         controllerJOB.text.isEmpty ||
-        controllerIntro.text.isEmpty
-        ) {
-      showFailedToast(context, 'Please fill all the fields ');
-      return;
+        controllerIntro.text.isEmpty) {
+      showFailedToast(context, AppStrings.i.fillAll);
+      return false;
     }
     Store().userData.fullName = controllerFullName.text;
     Store().userData.job = controllerJOB.text;
     Store().userData.intro = controllerIntro.text;
-    if(updateUserInFirestore(Store().userData)){
-      showSuccessToast(context, 'Profile updated successfully');
-    screenPush(context,const BasicInfo2Screen());
-    return;
-    }
-    showFailedToast(context, 'Something went wrong please try again ');
+    bool v = await updateUserInFirestore(Store().userData);
+    return v;
+  }
+  @override
+  void dispose(){
+    controllerFullName.dispose();
+    controllerJOB.dispose();
+    controllerIntro.dispose();
+    super.dispose();
   }
 }

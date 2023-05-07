@@ -43,6 +43,8 @@ class AppStrings {
 
   get noInternet => "Something went wrong please try again ";
 
+  get fillAll  => "Please fill all the fields";
+
 
 
 }

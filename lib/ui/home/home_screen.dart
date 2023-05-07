@@ -254,11 +254,16 @@ class _HomeScreenState extends State<HomeScreen> {
       screenPush(context, const WelcomeScreen());
       return false;
     }
-    Store().userData = user;
     if (user.photoUrl.isEmpty) {
       screenPush(context, const PhotoProfileScreen());
       return false;
     }
+    if(user.fullName.isEmpty){
+      screenPush(context, const PhotoProfileScreen());
+      return false;
+    }
+
+     Store().userData = user;
 
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
