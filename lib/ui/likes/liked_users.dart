@@ -22,23 +22,30 @@ class LikedUsers extends StatefulWidget {
 class _LikedUsersState extends State<LikedUsers> {
   bool isLoading = true;
 
+  Future<List<UserDataModel>> getAllFriends() async =>
+      await getMultipleUsers(Store().friendsIds);
+
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLikedProfiles().then((value) => {
-          Store().friends = value,
-          getAllFriendRequests().then((value) => {
-                Store().friendRequests = value,
-                setState(() {
-                  isLoading = false;
-                }),
-              }),
-        });
+    getAllFriends().then((value) =>
+    {
+      Store().friends = value,
+      getAllFriendRequests().then((value) =>
+      {
+        Store().friendRequests = value,
+        setState(() {
+          isLoading = false;
+        }),
+      }),
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery
+        .of(context)
+        .size;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -50,9 +57,9 @@ class _LikedUsersState extends State<LikedUsers> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                AppColors.i.darkBrownColor,
-                AppColors.i.darkBrownColor.withOpacity(0.4),
-              ])),
+                    AppColors.i.darkBrownColor,
+                    AppColors.i.darkBrownColor.withOpacity(0.4),
+                  ])),
           child: SafeArea(
             child: Column(
               children: [
@@ -126,7 +133,7 @@ class _LikedUsersState extends State<LikedUsers> {
                     indicatorSize: TabBarIndicatorSize.label,
                     tabs: [
                       Text(
-                        "Friend",
+                        "Friends",
                         style: TextStyle(
                           color: AppColors.i.whiteColor,
                           fontWeight: FontWeight.w700,
@@ -147,12 +154,12 @@ class _LikedUsersState extends State<LikedUsers> {
                 SizedBox(
                   height: size.height * 0.01,
                 ),
-                const Expanded(
+                !isLoading ? const Expanded(
                   child: TabBarView(children: [
                     Friends(),
                     PendingRequests(),
                   ]),
-                ),
+                ) : const Center(child: CircularProgressIndicator(),),
               ],
             ),
           ),
@@ -161,26 +168,7 @@ class _LikedUsersState extends State<LikedUsers> {
     );
   }
 
-  Future<List<UserDataModel>> getLikedProfiles() async {
-    List<UserDataModel> friends = [];
-    for (var uid in Store().friendsIds) {
-      final user = await getUserData(uid);
-      if (user == null || user.uid == Store().uid) {
-      } else {
-        friends.add(user);
-      }
-    }
-    return friends;
-  }
 
-  Future<List<FriendRequest>> getAllFriendRequests() async {
-    List<FriendRequest> friendRequests = await getFriendRequests();
-    List<FriendRequest> filteredFriendRequests = [];
-    for (var friendRequest in friendRequests) {
-      if (friendRequest.status == "pending") {
-        filteredFriendRequests.add(friendRequest);
-      }
-    }
-    return filteredFriendRequests;
-  }
+  Future<List<FriendRequest>> getAllFriendRequests() async =>
+      await getFriendRequests();
 }

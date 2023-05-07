@@ -421,9 +421,6 @@ Future<List<String>> getFriendRequestsIds() async {
     final value = await currentRef
         .collection('friendRequests')
         .get();
-    if (value == null) {
-      return [];
-    }
     List<String> friendsIds = [];
     for (var doc in value.docs) {
       friendsIds.add(doc.id);
@@ -431,6 +428,21 @@ Future<List<String>> getFriendRequestsIds() async {
 
     return friendsIds;
   } catch (e) {
+    return [];
+  }
+}
+
+
+Future<List<UserDataModel>> getMultipleUsers(List<String> docIds) async {
+  try {
+    final docsSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where("uid",  whereIn:  docIds)
+        .get();
+  List<UserDataModel> docsData = docsSnapshot.docs.map((doc) =>UserDataModel.fromMap(doc.data())).toList();
+
+  return docsData;
+  }catch(e){
     return [];
   }
 }

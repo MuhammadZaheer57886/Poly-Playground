@@ -5,6 +5,7 @@ import 'package:poly_playground/ui/authentication/profile_info/photo_profile_scr
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/user_profile.dart';
+import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -95,6 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               screenPush(context, const ChatUserList());
                             },
                             icon: Image.asset("assets/chat.png")),
+                        IconButton(
+                            onPressed: () {
+                              screenPush(context, const NotificationList());
+                            },
+                            icon: const Icon(
+                              Icons.notifications_on_outlined,
+                              size: 32,
+                            )),
                       ],
                     ),
                   ),

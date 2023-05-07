@@ -19,6 +19,7 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   late UserDataModel userData = UserDataModel();
+  bool isLoading = true;
   late bool isLiked = false;
   FriendRequest? friendRequest;
 
@@ -69,6 +70,7 @@ class _UserProfileState extends State<UserProfile> {
                 }
             });
       }
+      isLoading = false;
     });
   }
 
@@ -134,181 +136,188 @@ class _UserProfileState extends State<UserProfile> {
                 AppColors.i.darkBrownColor.withOpacity(0.4),
               ]),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 30,
-              right: 15,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: size.height * 0.01,
+        child: !isLoading
+            ? SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 30,
+                    right: 15,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          screenPush(
-                              context, FullScreenImage(userData.photoUrl));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundColor: AppColors.i.whiteColor,
-                            backgroundImage: NetworkImage(userData.photoUrl),
-                          ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.01,
                         ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            userData.name,
-                            style: TextStyle(
-                                color: AppColors.i.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: size.width * 0.065),
-                          ),
-                          Text(
-                            userData.job,
-                            style: TextStyle(
-                                color: AppColors.i.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: size.width * 0.05),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: size.width * 0.1,
-                      ),
-                      Column(
-                        children: [
-                          isLiked
-                              ? IconButton(
-                                  onPressed: () {
-                                    screenPush(
-                                        context,
-                                        ChatScreen(
-                                          receiverId: userData.uid,
-                                        ));
-                                  },
-                                  icon: Icon(
-                                    Icons.message_rounded,
-                                    color: AppColors.i.whiteColor,
-                                    size: size.height * 0.035,
-                                  ),
-                                )
-                              : const SizedBox(
-                                  height: 55,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                screenPush(context,
+                                    FullScreenImage(userData.photoUrl));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: CircleAvatar(
+                                  radius: 35,
+                                  backgroundColor: AppColors.i.whiteColor,
+                                  backgroundImage:
+                                      NetworkImage(userData.photoUrl),
                                 ),
-                          const SizedBox(
-                            height: 14,
-                          ),
-                          isLiked
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.video_call_rounded,
-                                    color: AppColors.i.whiteColor,
-                                    size: size.height * 0.04,
-                                  ))
-                              : Container(height: 55),
-                        ],
-                      )
-                    ],
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userData.name,
+                                  style: TextStyle(
+                                      color: AppColors.i.blackColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: size.width * 0.065),
+                                ),
+                                Text(
+                                  userData.job,
+                                  style: TextStyle(
+                                      color: AppColors.i.blackColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: size.width * 0.05),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: size.width * 0.1,
+                            ),
+                            Column(
+                              children: [
+                                isLiked
+                                    ? IconButton(
+                                        onPressed: () {
+                                          screenPush(
+                                              context,
+                                              ChatScreen(
+                                                receiverId: userData.uid,
+                                              ));
+                                        },
+                                        icon: Icon(
+                                          Icons.message_rounded,
+                                          color: AppColors.i.whiteColor,
+                                          size: size.height * 0.035,
+                                        ),
+                                      )
+                                    : const SizedBox(
+                                        height: 55,
+                                      ),
+                                const SizedBox(
+                                  height: 14,
+                                ),
+                                isLiked
+                                    ? IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.video_call_rounded,
+                                          color: AppColors.i.whiteColor,
+                                          size: size.height * 0.04,
+                                        ))
+                                    : Container(height: 55),
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Stack(
+                          children: [
+                            Container(
+                              width: size.width * 0.85,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                  color: AppColors.i.darkBrownColor
+                                      .withOpacity(0.4),
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: size.width * 0.35,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.i.darkBrownColor,
+                                      borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          topLeft: Radius.circular(10))),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Level 3",
+                                  style:
+                                      TextStyle(color: AppColors.i.whiteColor),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.05,
+                        ),
+                        Text(
+                          "About me",
+                          style: TextStyle(
+                              color: AppColors.i.blackColor,
+                              fontSize: size.width * 0.05,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          userData.intro,
+                          style: TextStyle(
+                              color: AppColors.i.blackColor,
+                              fontSize: size.width * 0.04,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.05,
+                        ),
+                        Row(
+                          children: [
+                            interestWidget("Hiking", () {}),
+                            interestWidget("Art", () {}),
+                            interestWidget("Movie", () {}),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.06,
+                        ),
+                        Text(
+                          "Pictures",
+                          style: TextStyle(
+                              color: AppColors.i.blackColor,
+                              fontSize: size.width * 0.05,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.05,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            takePictureBox(context, size, userData.image1),
+                            takePictureBox(context, size, userData.image2),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  Stack(
-                    children: [
-                      Container(
-                        width: size.width * 0.85,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: AppColors.i.darkBrownColor.withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(15)),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: size.width * 0.35,
-                            height: 20,
-                            decoration: BoxDecoration(
-                                color: AppColors.i.darkBrownColor,
-                                borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
-                                    topLeft: Radius.circular(10))),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Level 3",
-                            style: TextStyle(color: AppColors.i.whiteColor),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                  Text(
-                    "About me",
-                    style: TextStyle(
-                        color: AppColors.i.blackColor,
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  Text(
-                    userData.intro,
-                    style: TextStyle(
-                        color: AppColors.i.blackColor,
-                        fontSize: size.width * 0.04,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                  Row(
-                    children: [
-                      interestWidget("Hiking", () {}),
-                      interestWidget("Art", () {}),
-                      interestWidget("Movie", () {}),
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * 0.06,
-                  ),
-                  Text(
-                    "Pictures",
-                    style: TextStyle(
-                        color: AppColors.i.blackColor,
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      takePictureBox(context, size, userData.image1),
-                      takePictureBox(context, size, userData.image2),
-                    ],
-                  )
-                ],
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }
