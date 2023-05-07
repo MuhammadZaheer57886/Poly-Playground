@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
@@ -103,11 +104,11 @@ class _FriendListState extends State<FriendList> {
               ],
             ),
             IconButton(
-              onPressed:(){
+              onPressed:(){ 
                 Store().friend = friend;
                 onTap();
               } ,
-              icon:  forChat ? const Icon(Icons.chat,) :   const Icon(Icons.video_call,),
+              icon:  forChat ? const Icon(Icons.chat,) :   _videoCallIcon(friend),
             ),
           ],
         ));
@@ -155,5 +156,21 @@ class _FriendListState extends State<FriendList> {
     setState(() {
       friendList = filteredFriends;
     });
+  }
+  
+  Widget _videoCallIcon(UserDataModel friend) {
+      return ZegoSendCallInvitationButton(
+   isVideoCall: true,
+   resourceID: "zegouikit_call",    // For offline call notification
+   invitees: [
+      ZegoUIKitUser(
+         id: friend.uid,
+         name: friend.fullName,
+      ),
+      
+   ],
+   iconSize: const Size(30, 30),
+    buttonSize: const Size(40, 40),
+);
   }
 }

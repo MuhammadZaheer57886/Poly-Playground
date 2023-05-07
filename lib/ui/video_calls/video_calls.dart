@@ -285,9 +285,9 @@ void _showModalBottomSheet(BuildContext context, Size size) {
                               await _handleCameraAndMic(Permission.microphone);
                               String callId = getRandomNumber();
                             await  updateCallId(callId);
-                              screenPush(
-                                    context,
-                                    ZegoCall(callID: callId,));
+                              // screenPush(
+                              //       context,
+                              //       ZegoCall(callID: callId,));
                 },forChat: false,
       );
 

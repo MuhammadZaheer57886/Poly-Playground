@@ -5,10 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import '../../../common/pop_message.dart';
+import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../ui_components/custom_text_field.dart';
+import '../../video_calls/utils/zegokeys.dart';
 import '../phone/phone_number_screen.dart';
 import '../signup/signup_screen.dart';
 import '../welcome_screen.dart';
@@ -33,7 +37,16 @@ class LloginwidgetState extends State<Loginwidget> {
   
   String? emailError;
   String? passError;
-  
+  @override
+  void initState() {
+    super.initState();
+
+    if (Store().userData.uid.isNotEmpty) {
+      onUserLogin();
+    }else{
+      ZegoUIKitPrebuiltCallInvitationService().uninit();
+    }
+  }
 
   @override
   void dispose() {
@@ -295,4 +308,33 @@ class LloginwidgetState extends State<Loginwidget> {
     showFailedToast(context, e.toString());
   }
 }
+}
+
+void onUserLogin() {
+  /// 1.2.1. initialized ZegoUIKitPrebuiltCallInvitationService
+  /// when app's user is logged in or re-logged in
+  /// We recommend calling this method as soon as the user logs in to your app.
+  ZegoUIKitPrebuiltCallInvitationService().init(
+    appID: ZegoConfig.appID ,
+    appSign: ZegoConfig.appSign ,
+    userID: Store().userData.uid,
+      userName: Store().userData.fullName,
+    plugins: [ZegoUIKitSignalingPlugin()],
+    requireConfig: (ZegoCallInvitationData data) {
+      final config = (data.invitees.length > 1)
+          ? ZegoCallType.videoCall == data.type
+              ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
+              : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
+          : ZegoCallType.videoCall == data.type
+              ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+              : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+
+      /// support minimizing, show minimizing button
+      config.topMenuBarConfig.isVisible = true;
+      config.topMenuBarConfig.buttons
+          .insert(0, ZegoMenuBarButtonName.minimizingButton);
+
+      return config;
+    },
+  );
 }
