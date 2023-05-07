@@ -525,7 +525,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         image1.isEmpty ? userData.image1 : await uploadImage(image1);
     userData.image2 =
         image2.isEmpty ? userData.image2 : await uploadImage(image2);
-    if (updateUserInFirestore(userData)) {
+    if (await updateUserInFirestore(userData)) {
       showSuccessToast(context, 'Profile updated successfully');
       Store().userData = userData;
       Navigator.pop(context);

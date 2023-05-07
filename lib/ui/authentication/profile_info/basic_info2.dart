@@ -256,8 +256,8 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                 children: [
                   SimpleButton(
                       title: "CONTINUE",
-                      onTap: () {
-                        if (updateInfo()) {
+                      onTap: () async {
+                        if (await updateInfo()) {
                           screenPush(context, const AddPictureScreen());
                         }
                       }),
@@ -270,7 +270,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
     );
   }
 
-  bool updateInfo() {
+  Future<bool> updateInfo() async {
     if (controllerDay.text.isEmpty ||
         controllerMonth.text.isEmpty ||
         controllerYear.text.isEmpty ||
@@ -291,7 +291,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
     Store().userData.date = '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
     Store().userData.city = controllerCity.text;
     Store().userData.town = controllerTown.text;
-    if(updateUserInFirestore(Store().userData)){
+    if(await updateUserInFirestore(Store().userData)){
       return true;
     }
     showFailedToast(context, 'Something went wrong please try again ');

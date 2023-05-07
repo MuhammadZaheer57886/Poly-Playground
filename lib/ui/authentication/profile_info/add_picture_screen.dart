@@ -241,7 +241,7 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
       });
       return false;
     }
-    final v = updateUserInFirestore(userData);
+    final v = await updateUserInFirestore(userData);
     if (v) {
       setState(() {
         isLoading = false;

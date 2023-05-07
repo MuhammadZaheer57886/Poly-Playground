@@ -26,9 +26,9 @@ Future<String> setUser() async {
   }
 }
 
-bool updateUserInFirestore(UserDataModel userData) {
+Future<bool> updateUserInFirestore(UserDataModel userData) async {
   try {
-    currentRef.update(userData.toMap());
+  await  currentRef.update(userData.toMap());
   } catch (e) {
     return false;
   }

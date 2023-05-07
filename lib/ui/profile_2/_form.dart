@@ -157,8 +157,8 @@ class _ProfileFormState extends State<ProfileForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             SimpleButton(
-                    color: AppColors.i.darkBrownColor, title: 'Next', onTap: () {
-                    if (updateProfile2()) {
+                    color: AppColors.i.darkBrownColor, title: 'Next', onTap: () async {
+                    if (await updateProfile2()) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -218,7 +218,7 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
 
-  bool updateProfile2() {
+  Future<bool> updateProfile2() async {
     if (!_formKey.currentState!.validate()) {
       showFailedToast(context, 'Please fill all the fields');
       return false;
@@ -245,7 +245,6 @@ class _ProfileFormState extends State<ProfileForm> {
       showFailedToast(context, 'Please select single status');
       return false;
     }
-    print('Form is valid');
     _formKey.currentState!.save();
     UserDataModel userData = Store().userData;
     userData.name = nameController.text;
@@ -256,7 +255,7 @@ class _ProfileFormState extends State<ProfileForm> {
     userData.bio = bioController.text;
     userData.single = singleStatus;
 
-    if (updateUserInFirestore(userData)) {
+    if (await updateUserInFirestore(userData)) {
       showSuccessToast(context, 'Profile created successfully');
       return true;
     }
