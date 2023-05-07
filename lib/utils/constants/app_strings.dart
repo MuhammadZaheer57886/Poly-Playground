@@ -41,6 +41,8 @@ class AppStrings {
   get friendRequestRejectedNotificationTitle => "Request Rejected";
   get friendRequestRejectedNotificationBody => "${Store().userData.name} rejected your friend request";
 
+  get noInternet => "Something went wrong please try again ";
+
 
 
 }

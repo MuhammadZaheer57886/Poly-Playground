@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-import 'package:poly_playground/common/pop_message.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
@@ -181,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               return Stack(children: [
                                 GestureDetector(
-                                  onDoubleTap:(){
+                                  onDoubleTap: () {
                                     handelFriendRequest(index);
                                   },
                                   onTap: () {
@@ -256,10 +255,11 @@ class _HomeScreenState extends State<HomeScreen> {
       return false;
     }
     Store().userData = user;
-    if (Store().userData.photoUrl.isEmpty) {
+    if (user.photoUrl.isEmpty) {
       screenPush(context, const PhotoProfileScreen());
       return false;
     }
+
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
     // Store().likedUsersIds = await getLikedUsers();
@@ -285,10 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
         users.removeWhere((element) => element.uid == Store().uid);
         users.removeWhere(
             (element) => Store().dislikedUsersIds.contains(element.uid));
+        users
+            .removeWhere((element) => Store().friendsIds.contains(element.uid));
         users.removeWhere(
-                (element) => Store().friendsIds.contains(element.uid));
-        users.removeWhere(
-                (element) => Store().friendRequestsIds.contains(element.uid));
+            (element) => Store().friendRequestsIds.contains(element.uid));
       });
     }
     return Store().isUser;
@@ -301,16 +301,17 @@ class _HomeScreenState extends State<HomeScreen> {
       users.removeWhere((element) => element.uid == uid);
     });
   }
-    Future<void> handelFriendRequest(int index) async {
-      UserDataModel user = users[index];
+
+  Future<void> handelFriendRequest(int index) async {
+    UserDataModel user = users[index];
+    setState(() {
+      users[index] = users[users.length - 1];
+      users.removeAt(users.length - 1);
+    });
+    if (!await makeFriendRequest(user)) {
       setState(() {
-        users[index] = users[users.length - 1];
-        users.removeAt(users.length - 1);
+        users.insert(index, user);
       });
-      if(!await makeFriendRequest(user)){
-        setState(() {
-          users.insert(index, user);
-        });
-      }
     }
+  }
 }
