@@ -131,14 +131,14 @@ class _PhotoProfileScreenState extends State<PhotoProfileScreen> {
   }
 
   void setProfile() {
-    uploadImage(imageUrl).then((value) {
+    uploadImage(imageUrl).then((value) async {
       if (value.isEmpty) {
         showFailedToast(context, 'Please insert your photo.');
 
         return;
       }
       Store().userData.photoUrl = value;
-      if (updateUserInFirestore(Store().userData)) {
+      if (await updateUserInFirestore(Store().userData)) {
         screenPush(context, const BasicInfoScreen());
         return;
       }
