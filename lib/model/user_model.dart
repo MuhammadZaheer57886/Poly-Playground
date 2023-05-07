@@ -1,3 +1,8 @@
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
+
+import '../utils/my_utils.dart';
+
 class UserDataModel {
   String city;
   String date;
@@ -53,7 +58,7 @@ class UserDataModel {
     this.token = '',
   });
 
-  static UserDataModel fromMap( Map<String, dynamic> map) {
+  static UserDataModel fromMap(Map<String, dynamic> map) {
     UserDataModel user = UserDataModel();
     user.city = map['city'];
     user.date = map['date'];
@@ -119,7 +124,7 @@ class DealModel {
   String duration;
   String price;
   String discount;
-  bool selected=false;
+  bool selected = false;
 
   DealModel({
     required this.duration,
@@ -127,23 +132,23 @@ class DealModel {
     required this.discount,
     required this.selected,
   });
-
 }
+
 class MessageModel {
   final String senderId;
   final String receiverId;
   final String message;
-  late  bool isRead;
+  late bool isRead;
   final String timestamp;
   final String type;
 
   MessageModel({
     this.senderId = "",
-     this.receiverId = "",
-     this.message = "",
-     this.isRead = false,
-     this.timestamp = "",
-     this.type = "",
+    this.receiverId = "",
+    this.message = "",
+    this.isRead = false,
+    this.timestamp = "",
+    this.type = "",
   });
 
   Map<String, dynamic> toMap() {
@@ -163,20 +168,23 @@ class MessageModel {
       receiverId: map['receiverId'],
       message: map['message'],
       isRead: map['isRead'],
-      timestamp:map['timestamp'],
+      timestamp: map['timestamp'],
       type: map['type'],
     );
   }
 }
+
 class FriendModel {
   String fullName;
   String photoUrl;
   String uid;
+
   FriendModel({
-    required this.fullName ,
-    required this.photoUrl ,
+    required this.fullName,
+    required this.photoUrl,
     required this.uid,
   });
+
   factory FriendModel.fromMap(Map<String, dynamic> map) {
     return FriendModel(
       fullName: map['fullName'],
@@ -184,6 +192,7 @@ class FriendModel {
       uid: map['uid'],
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
@@ -192,17 +201,20 @@ class FriendModel {
     };
   }
 }
+
 class ChatModel {
   String fullName;
   String photoUrl;
   String uid;
   MessageModel lastMessage;
+
   ChatModel({
-    required this.fullName ,
-    required this.photoUrl ,
+    required this.fullName,
+    required this.photoUrl,
     required this.uid,
     required this.lastMessage,
   });
+
   factory ChatModel.fromMap(Map<String, dynamic> map) {
     return ChatModel(
       fullName: map['fullName'],
@@ -211,6 +223,7 @@ class ChatModel {
       lastMessage: MessageModel.fromMap(map['lastMessage']),
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
@@ -256,24 +269,27 @@ class CallHistoryModel {
       senderId: map['senderId'],
       receiverId: map['receiverId'],
       ringing: map['ringing'],
-      timestamp:map['timestamp'],
+      timestamp: map['timestamp'],
       type: map['type'],
       duration: map['duration'],
       lastCall: map['lastCall'],
     );
   }
 }
+
 class CallModel {
   String fullName;
   String photoUrl;
   String uid;
   CallHistoryModel lastCall;
+
   CallModel({
-    required this.fullName ,
-    required this.photoUrl ,
+    required this.fullName,
+    required this.photoUrl,
     required this.uid,
     required this.lastCall,
   });
+
   factory CallModel.fromMap(Map<String, dynamic> map) {
     return CallModel(
       fullName: map['fullName'],
@@ -282,6 +298,7 @@ class CallModel {
       lastCall: CallHistoryModel.fromMap(map['lastCall']),
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
@@ -290,4 +307,124 @@ class CallModel {
       'lastCall': lastCall.toMap(),
     };
   }
+}
+
+class FriendRequest {
+  final String fullName;
+  final String photoUrl;
+  final String senderId;
+  final String receiverId;
+  final String timestamp;
+  String status;
+
+  FriendRequest({
+    required this.fullName,
+    required this.photoUrl,
+    required this.senderId,
+    required this.receiverId,
+    required this.timestamp,
+    required this.status,
+  });
+
+  static FriendRequest createFriendRequest(
+      UserDataModel user, String receiverId) {
+    return FriendRequest(
+      fullName: user.fullName,
+      photoUrl: user.photoUrl,
+      senderId: Store().uid,
+      receiverId: receiverId,
+      timestamp: formatDate().toString(),
+      status: "pending",
+    );
+  }
+
+  static fromMap(Map<String, dynamic> map) {
+    return FriendRequest(
+      fullName: map['fullName'],
+      photoUrl: map['photoUrl'],
+      senderId: map['senderId'],
+      receiverId: map['receiverId'],
+      timestamp: map['timestamp'],
+      status: map['status'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'timestamp': timestamp,
+      'status': status,
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+    };
+  }
+
+  updateStatus(String status) {
+    this.status = status;
+  }
+}
+
+class NotificationModel {
+  final String title;
+  final String type;
+  final String senderId;
+  final String receiverId;
+  final String timestamp;
+  final String photoUrl;
+  bool status;
+
+  String id;
+
+  NotificationModel(
+      {required this.receiverId,
+      required this.senderId,
+      required this.timestamp,
+      required this.title,
+      required this.type,
+      required this.photoUrl,
+      this.status = false,
+      this.id = ""});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'timestamp': timestamp,
+      'title': title,
+      'type': type,
+      'photoUrl': photoUrl,
+      'status': status,
+      'id': id,
+    };
+  }
+
+  factory NotificationModel.fromMap(Map<String, dynamic> map) {
+    return NotificationModel(
+      receiverId: map['receiverId'],
+      senderId: map['senderId'],
+      timestamp: map['timestamp'],
+      title: map['title'],
+      type: map['type'],
+      photoUrl: map['photoUrl'],
+      status: map['status'],
+      id: map['id'],
+    );
+  }
+
+  static NotificationModel createNotification(
+      String receiverId,String title, String type, UserDataModel sender) {
+    return NotificationModel(
+      receiverId: receiverId,
+      senderId: sender.uid,
+      timestamp: formatDate().toString(),
+      title: title,
+      type: type,
+      photoUrl: sender.photoUrl,
+    );
+  }
+
+  updateStatus() => status = true;
+
+
 }

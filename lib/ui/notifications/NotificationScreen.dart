@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:poly_playground/ui/chat/chat_screen.dart';
-import 'package:poly_playground/ui/chat/components/friend_list_item.dart';
+import 'package:poly_playground/ui/chat/chat_user_list.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
-import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -13,31 +14,21 @@ import '../home/profile_screen/profile_screen.dart';
 import '../likes/liked_users.dart';
 import '../video_calls/video_calls.dart';
 
-class ChatUserList extends StatefulWidget {
-  const ChatUserList({Key? key}) : super(key: key);
+class NotificationList extends StatefulWidget {
+  const NotificationList({Key? key}) : super(key: key);
 
   @override
-  State<ChatUserList> createState() => _ChatUserList();
+  State<NotificationList> createState() => _NotificationList();
 }
 
-class _ChatUserList extends State<ChatUserList> {
-  List<ChatModel> chats = [];
+class _NotificationList extends State<NotificationList> {
   bool isLoading = false;
-  Future<bool> getAllFriends() async {
-    final friends = await getFriends();
-    Store().friends = friends;
-    setState(() {
-      isLoading = false;
-    });
-    return friends.isNotEmpty;
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    updateChatList();
-    getAllFriends();
+    updateNotifications();
   }
 
   @override
@@ -63,11 +54,9 @@ class _ChatUserList extends State<ChatUserList> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 0.07,
-                    ),
+                    const SizedBox(height: 20),
                     Container(
-                      height: 40,
+                      height: 50,
                       width: size.width,
                       color: AppColors.i.whiteColor,
                       child: Row(
@@ -100,7 +89,7 @@ class _ChatUserList extends State<ChatUserList> {
                               icon: Image.asset("assets/chat.png")),
                           IconButton(
                               onPressed: () {
-                                screenPush(context, const NotificationList());
+                                // screenPush(context, const NotificationList());
                               },
                               icon: const Icon(
                                 Icons.notifications_on_outlined,
@@ -111,9 +100,6 @@ class _ChatUserList extends State<ChatUserList> {
                     ),
                     Container(
                       margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: AppColors.i.whiteColor,
-                          borderRadius: BorderRadius.circular(20)),
                       width: size.width,
                       height: size.height * 0.83,
                       child: Column(
@@ -121,25 +107,26 @@ class _ChatUserList extends State<ChatUserList> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
-                            child:   Text("Chats",
-                                      style: TextStyle(
-                                          color: AppColors.i.blackColor,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: size.width * 0.06)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 15),
+                            child: Text("Notifications",
+                                style: TextStyle(
+                                    color: AppColors.i.whiteColor,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: size.width * 0.06)),
                           ),
                           Expanded(
-                            child: Store().lastChats.isNotEmpty
+                            child: Store().notifications.isNotEmpty
                                 ? ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: Store().lastChats.length,
+                                    itemCount: Store().notifications.length,
                                     itemBuilder: (context, index) {
-                                      return chatCard(
-                                          size, Store().lastChats[index]);
+                                      return notificationCard(
+                                          size, Store().notifications[index]);
                                     })
                                 : Center(
                                     child: Text(
-                                      "You have no messages!",
+                                      "You have no notification!",
                                       style: TextStyle(
                                           color: AppColors.i.blackColor,
                                           fontWeight: FontWeight.w700,
@@ -155,18 +142,6 @@ class _ChatUserList extends State<ChatUserList> {
               ),
             ),
           ),
-          floatingActionButton: Container(
-            margin: const EdgeInsets.only(bottom: 30, right: 10),
-            child: FloatingActionButton(
-              onPressed: () {
-                _showModalBottomSheet(
-                    context, size); // code to add a new message
-              },
-              backgroundColor: AppColors.i.darkBrownColor.withOpacity(0.8),
-              child: const Icon(Icons.add),
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
         isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -175,18 +150,24 @@ class _ChatUserList extends State<ChatUserList> {
     );
   }
 
-  Widget chatCard(Size size, ChatModel lastChat) {
+  Widget notificationCard(Size size, NotificationModel notification) {
     return GestureDetector(
       onTap: () async {
-        Store().lastChat = lastChat;
-        await updateReadStatus(lastChat);
-        screenPush(context, ChatScreen(receiverId: lastChat.uid));
+        if(!notification.status) {
+          notification.updateStatus();
+          await updateNotificationToFirestore(notification);
+        }
+        navidateFromNotificationScreen(notification);
+
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-            color: AppColors.i.darkBrownColor.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20)),
+          color: notification.status ?AppColors.i.darkBrownColor.withOpacity(0.3) : AppColors.i.darkBrownColor.withOpacity(0.5),
+          border: Border(
+            bottom: BorderSide(color: AppColors.i.blackColor),
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
           child: Row(
@@ -194,53 +175,46 @@ class _ChatUserList extends State<ChatUserList> {
             children: [
               CircleAvatar(
                 radius: size.width * 0.07,
-                backgroundImage: NetworkImage(lastChat.photoUrl),
+                backgroundImage: NetworkImage(notification.photoUrl),
               ),
-              SizedBox(
-                width: size.width * 0.5,
+              Container(
+                width: size.width * 0.65,
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      lastChat.fullName,
-                      style: TextStyle(
-                          color: AppColors.i.blackColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: size.width * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          notification.type,
+                          style: TextStyle(
+                              color: AppColors.i.blackColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: size.width * 0.05),
+                        ),
+                        Text(
+                          getMessageTime(notification.timestamp),
+                          style: TextStyle(
+                              color: AppColors.i.whiteColor.withOpacity(0.8),
+                              fontWeight: FontWeight.w400,
+                              fontSize: size.width * 0.04),
+                        ),
+                      ],
                     ),
-                    Text(
-                      lastChat.lastMessage.message,
-                      style: TextStyle(
-                          color: AppColors.i.blackColor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: size.width * 0.04),
+                    Container(
+                      child: Text(
+                        notification.title.length > 30
+                            ? '${notification.title.substring(0, 27)}...'
+                            : notification.title,
+                        style: TextStyle(
+                            color: AppColors.i.blackColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18.5),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    DateFormat('h:mm a').format(
-                        DateFormat('MMM dd, yyyy h:mm:ss.SSSS a')
-                            .parse(lastChat.lastMessage.timestamp)),
-                    style: TextStyle(
-                        color: AppColors.i.whiteColor.withOpacity(0.8),
-                        fontWeight: FontWeight.w400,
-                        fontSize: size.width * 0.04),
-                  ),
-                   const SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    width: size.width * 0.03,
-                    height: size.width * 0.03,
-                    decoration: BoxDecoration(
-                        color: !lastChat.lastMessage.isRead && lastChat.lastMessage.senderId  != Store().uid  ?  AppColors.i.greenColor : Colors.transparent,
-                        borderRadius: BorderRadius.circular(20)),
-                    ),
-
-                ],
               ),
             ],
           ),
@@ -249,36 +223,36 @@ class _ChatUserList extends State<ChatUserList> {
     );
   }
 
-  void updateChatList() async {
+  void updateNotifications() async {
     setState(() {
       isLoading = true;
     });
-    final List<ChatModel> chatList = await getLastMessages();
-    if (chatList.isNotEmpty) {
-      Store().lastChats = chatList;
-      Store().lastChats.sort(
-          (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
+    final List<NotificationModel> notifications =
+        await getNotificationFromFirestore();
+
+    if (notifications.isNotEmpty) {
+      Store().notifications = notifications;
     }
     setState(() {
       isLoading = false;
     });
   }
 
-  void _showModalBottomSheet(BuildContext context, Size size) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (BuildContext context) {
-        return FriendList(
-          onTap: () {
-            screenPush(
-                context,
-                ChatScreen(
-                    receiverId:
-                    Store().friend!.uid));
-          },
-        );
-      },
-    );
+  void navidateFromNotificationScreen(NotificationModel notification) {
+    switch(notification.type)
+        {
+      case "Friend Request":
+        screenPush(context, LikedUsers());
+        break;
+      case "Message":
+        screenPush(context, ChatScreen(receiverId: notification.senderId));
+        break;
+      default:
+        "";
+        break;
+    }
   }
+
+
+
 }

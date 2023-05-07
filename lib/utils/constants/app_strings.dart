@@ -3,6 +3,8 @@ import '../../common/store.dart';
 class AppStrings {
   static AppStrings i = AppStrings();
 
+
+
   get appName => "Poly Playground";
   get welcomeMsg =>
       "By clicking Log In, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.";
@@ -19,11 +21,26 @@ class AppStrings {
   get paymentComment => "By tapping “Continue”. you agree to our Terms and your Apple ID will be charged. Your subscription will automatically renew at the same price and package length until you cancel in your App Store account.";
   get appId => "poly_playground";
   get appDescription => "Dating Application for Polyamorous People";
+
+  get serverKey => "AAAA0tAQQ0E:APA91bHLglpArpGyG7Gr6wlD4XL905YPYhwplJU6aCyK25TEVHvMGOAe8PZxk2yktfajTuxW2jLeAR0n065UwlY5OIWbROPSpsRG1ak16Cuh5xIrRZoaJ3rAKFhOjUed3CYdiwydXOXp";
+
+  get notificationSound  => "Tri-tone";
+
   get messageNotificationTitle   => "New Message";
   get messageNotificationBody => "You got a new message from ${Store().userData.name}";
 
-  get messageNotificationSound  => "Tri-tone";
+  get friendRequestNotificationTitle => "Friend Request";
+  get friendRequestNotificationBody => "${Store().userData.name} sent you a friend request";
 
-  get serverKey => "AAAA0tAQQ0E:APA91bHLglpArpGyG7Gr6wlD4XL905YPYhwplJU6aCyK25TEVHvMGOAe8PZxk2yktfajTuxW2jLeAR0n065UwlY5OIWbROPSpsRG1ak16Cuh5xIrRZoaJ3rAKFhOjUed3CYdiwydXOXp";
+  get canselFriendRequestNotificationTitle => "Request Canceled";
+  get cancelFriendRequestNotificationBody => "${Store().userData.name} canceled the friend request";
+
+  get friendRequestAcceptedNotificationTitle => "Request Accepted";
+  get friendRequestAcceptedNotificationBody => "${Store().userData.name} accepted your friend request";
+
+  get friendRequestRejectedNotificationTitle => "Request Rejected";
+  get friendRequestRejectedNotificationBody => "${Store().userData.name} rejected your friend request";
+
+
 
 }

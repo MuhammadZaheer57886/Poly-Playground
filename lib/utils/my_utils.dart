@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
+import 'package:poly_playground/utils/http_requests.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 import 'package:intl/intl.dart';
@@ -46,20 +48,24 @@ bool isValidDate(int day, int month, int year) {
   }
   return true;
 }
-bool isEighteenYearsOld(int day,int month,int year) {
+
+bool isEighteenYearsOld(int day, int month, int year) {
   final date = DateTime(year, month, day);
   final now = DateTime.now();
-  final age = now.year - date.year - ((now.month > date.month || (now.month == date.month && now.day >= date.day)) ? 0 : 1);
+  final age = now.year -
+      date.year -
+      ((now.month > date.month ||
+              (now.month == date.month && now.day >= date.day))
+          ? 0
+          : 1);
 
   return age >= 18;
 }
 
-
-
 ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
   return ChatModel(
     fullName: friend.fullName,
-    photoUrl: friend.uid == Store().uid ? Store().friend!.photoUrl : friend.photoUrl,
+    photoUrl: friend.photoUrl,
     lastMessage: lastMessage,
     uid: friend.uid,
   );
@@ -68,17 +74,17 @@ ChatModel createChatModel(UserDataModel friend, MessageModel lastMessage) {
 CallModel createCallModel(FriendModel friend, CallHistoryModel lastCall) {
   return CallModel(
     fullName: friend.fullName,
-    photoUrl: friend.uid == Store().uid ? Store().friend!.photoUrl : friend.photoUrl,
+    photoUrl: friend.photoUrl,
     lastCall: lastCall,
     uid: friend.uid,
   );
 }
 
-
 String formatDate() {
   final formatter = DateFormat('MMM dd, yyyy h:mm:ss.SSS a');
   return formatter.format(DateTime.now());
 }
+
 String getMessageTime(String date) {
   DateTime messageTime = DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(date);
   DateTime now = DateTime.now();
@@ -106,6 +112,87 @@ Future<bool> likeUser(String uid) async {
   bool isAdded = await addLike(uid);
   if (isAdded) {
     Store().likedUsersIds.add(uid);
+    return true;
+  }
+  return false;
+}
+
+Future<bool> makeFriendRequest(UserDataModel user) async {
+  FriendRequest request = FriendRequest.createFriendRequest(
+    user,
+    user.uid,
+  );
+  FriendRequest request2 = FriendRequest.createFriendRequest(
+    Store().userData,
+    user.uid,
+  );
+
+  bool send = await sendFriendRequest(request, request2);
+  if (send) {
+    Store().friendRequests.add(request);
+    await friendRequestNotification(user);
+    NotificationModel notification = NotificationModel.createNotification(
+        user.uid,
+        AppStrings.i.friendRequestNotificationBody,
+        "Friend Request",
+        Store().userData);
+    setNotificationInFirestore(notification);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+Future<bool> acceptFriendRequest(FriendRequest request) async {
+  Store().friendRequests.remove(request);
+  await deleteFriendRequestFromeFireBase(request);
+  await addFriendToFireStore(request.senderId);
+  NotificationModel notification = NotificationModel.createNotification(
+      request.senderId,
+      AppStrings.i.friendRequestAcceptedNotificationBody,
+      "Request Accepted",
+      Store().userData);
+  setNotificationInFirestore(notification);
+  UserDataModel? userData = await getUserData(request.senderId);
+  if (userData != null) {
+    Store().friends.add(userData);
+    friendRequestAcceptedNotification(userData!);
+    return true;
+  }
+  return false;
+}
+
+Future<bool> cancelFriendRequest(FriendRequest request) async {
+  Store().friendRequests.remove(request);
+  await deleteFriendRequestFromeFireBase(request);
+  NotificationModel notification = NotificationModel.createNotification(
+      request.receiverId,
+      AppStrings.i.cancelFriendRequestNotificationBody,
+      "Request Canceled",
+      Store().userData);
+  await setNotificationInFirestore(notification);
+  UserDataModel? userData = await getUserData(request.receiverId);
+  if (userData != null) {
+    cancelFriendRequestNotification(userData);
+    return true;
+  }
+  return false;
+}
+
+Future<bool> rejectFriendRequest(FriendRequest request) async {
+  Store().friendRequests.remove(request);
+  await deleteFriendRequestFromeFireBase(request);
+  dislikeUser(request.senderId);
+  NotificationModel notification = NotificationModel.createNotification(
+      request.receiverId,
+      AppStrings.i.friendRequestNotificationBody,
+      "Request Rejected",
+      Store().userData);
+  setNotificationInFirestore(notification);
+  UserDataModel? userData = await getUserData(request.senderId);
+  if (userData != null) {
+    Store().dislikedUsersIds.add(userData.uid);
+    friendRequestRejectedNotification(userData!);
     return true;
   }
   return false;
