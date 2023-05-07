@@ -286,6 +286,7 @@ class _ChatUserList extends State<ChatUserList> {
       builder: (BuildContext context) {
         return FriendList(
           onTap: () {
+            
             screenPush(
                 context,
                 ChatScreen(

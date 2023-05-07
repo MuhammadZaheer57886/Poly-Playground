@@ -24,13 +24,7 @@ class ZegoCall extends StatelessWidget {
       userName: Store().userData.fullName,
       callID: callID,
       // You can also use groupVideo/groupVoice/oneOnOneVoice to make more types of calls.
-      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()..audioVideoContainerBuilder = (isLocal, width, height) {
-        return Container(
-          width: 100,
-          height: 100,
-          color: Colors.white,
-        );
-      },
+      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()..onOnlySelfInRoom =(context) => Navigator.pop(context),
 
     );
   }
