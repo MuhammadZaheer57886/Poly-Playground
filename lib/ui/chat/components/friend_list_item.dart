@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/store.dart';
 import '../../../utils/constants/app_colors.dart';
@@ -107,7 +108,7 @@ class _FriendListState extends State<FriendList> {
                 Store().friend = friend;
                 onTap();
               },
-              icon:  forChat ? Icon(Icons.chat,) :  Icon(Icons.video_call,),
+              icon:  forChat ? const Icon(Icons.chat,) :  _videoCallIcon(friend),
             ),
           ],
         ));
@@ -137,13 +138,13 @@ class _FriendListState extends State<FriendList> {
 
   void setFriendListForCall() {
     List<UserDataModel> friends = Store().friends;
-    List<ChatModel> lastChats = Store().lastChats;
+    List<CallModel> lastCall = Store().lastCalls;
     List<UserDataModel> filteredFriends = [];
 
     for (int i = 0; i < friends.length; i++) {
       bool isMatching = false;
-      for (int j = 0; j < lastChats.length; j++) {
-        if (friends[i].uid == lastChats[j].uid) {
+      for (int j = 0; j < lastCall.length; j++) {
+        if (friends[i].uid == lastCall[j].uid) {
           isMatching = true;
           break;
         }
@@ -155,5 +156,21 @@ class _FriendListState extends State<FriendList> {
     setState(() {
       friendList = filteredFriends;
     });
+  }
+  
+  Widget _videoCallIcon(UserDataModel friend) {
+      return ZegoSendCallInvitationButton(
+   isVideoCall: true,
+   resourceID: "zegouikit_call",    // For offline call notification
+   invitees: [
+      ZegoUIKitUser(
+         id: friend.uid,
+         name: friend.fullName,
+      ),
+      
+   ],
+   iconSize: const Size(30, 30),
+    buttonSize: const Size(40, 40),
+);
   }
 }

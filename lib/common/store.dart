@@ -26,6 +26,8 @@ class Store {
   List<NotificationModel> notifications = [];
   List<String> friendsIds = [];
   List<String> friendRequestsIds = [];
+  List<CallModel> lastCalls = [];
+  
 
 
   void clear() {
@@ -48,6 +50,8 @@ class Store {
     notifications = [];
     friendsIds = [];
     friendRequestsIds = [];
+    lastCalls = [];
+
   }
 
 }

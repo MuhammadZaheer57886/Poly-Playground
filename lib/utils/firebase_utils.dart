@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../common/store.dart';
 import '../model/user_model.dart';
 
@@ -54,6 +55,7 @@ Future<bool> logOut() async {
     return false;
   }
   Store().clear();
+  ZegoUIKitPrebuiltCallInvitationService().uninit();
   return true;
 }
 
@@ -138,6 +140,34 @@ Future<bool> updateLastMessageToFirestore(
   }
 }
 
+Future<bool> updateLastCallToFirestore(CallModel call,CallModel call2) async {
+  try {
+    await currentRef.collection("Calls").doc(call.uid).update(call.toMap());
+    await fireStore
+        .collection("users")
+        .doc(call2.uid)
+        .collection("Calls")
+        .doc(Store().uid)
+        .update(call2.toMap());
+
+    return true;
+  } catch (e) {
+    try {
+      await currentRef.collection("calls").doc(call.uid).set(call.toMap());
+      await fireStore
+          .collection("users")
+          .doc(call2.uid)
+          .collection("calls")
+          .doc(Store().uid)
+          .set(call2.toMap());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+}
+
+
 Future<bool> removeLike(String uid) async {
   try {
     await currentRef.collection("likes").doc(uid).delete();
@@ -208,10 +238,17 @@ Future<List<String>> getLikedUsers() async {
   return likes;
 }
 
-Future<String?> requestToken() async {
-  try {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission();
+
+// updateCallId(String callId) async {
+//   try {
+//     await currentRef.update({"call_id": callId});
+//     await FirebaseFirestore.instance.collection('users').doc(Store().friend!.uid).update({"call_id": callId});
+    
+//   } catch (e) {}
+  
+Future<String?>  requestToken()async{
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+ try{ await messaging.requestPermission();
 
     final token = await messaging.getToken();
 
@@ -432,7 +469,6 @@ Future<List<String>> getFriendRequestsIds() async {
   }
 }
 
-
 Future<List<UserDataModel>> getMultipleUsers(List<String> docIds) async {
   try {
     final docsSnapshot = await FirebaseFirestore.instance
@@ -445,4 +481,4 @@ Future<List<UserDataModel>> getMultipleUsers(List<String> docIds) async {
   }catch(e){
     return [];
   }
-}
+ }

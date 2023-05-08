@@ -29,6 +29,7 @@ class UserDataModel {
   String open;
   String phone;
   String token;
+  String zegoKey;
 
   UserDataModel({
     this.phone = '',
@@ -56,6 +57,7 @@ class UserDataModel {
     this.single = '',
     this.open = '',
     this.token = '',
+    this.zegoKey = '',
   });
 
   static UserDataModel fromMap(Map<String, dynamic> map) {

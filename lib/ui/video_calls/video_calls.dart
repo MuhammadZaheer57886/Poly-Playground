@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
 import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 import '../../common/nav_function.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -12,7 +13,7 @@ import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
 import '../likes/liked_users.dart';
-import 'utils/agoracall.dart';
+import 'utils/zegocall.dart';
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({Key? key}) : super(key: key);
@@ -288,14 +289,15 @@ void _showModalBottomSheet(BuildContext context, Size size) {
     showModalBottomSheet(backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-      return FriendList(onTap: () async {
-                              Navigator.pop(context);
-        await _handleCameraAndMic(Permission.camera);
+      return FriendList(onTap:() async {
+                              await _handleCameraAndMic(Permission.camera);
                               await _handleCameraAndMic(Permission.microphone);
-                              screenPush(
-                                    context,
-                                    const AgoraCall());
-      },forChat: false,
+                              String callId = getRandomNumber();
+                            await  updateCallId(callId);
+                              // screenPush(
+                              //       context,
+                              //       ZegoCall(callID: callId,));
+                },forChat: false,
       );
 
       },
