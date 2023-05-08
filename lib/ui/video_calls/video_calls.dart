@@ -12,7 +12,6 @@ import '../chat/chat_user_list.dart';
 import '../chat/components/friend_list_item.dart';
 import '../home/profile_screen/profile_screen.dart';
 import '../likes/liked_users.dart';
-import 'utils/agoracall.dart';
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({Key? key}) : super(key: key);
@@ -24,11 +23,12 @@ class CallListScreen extends StatefulWidget {
 class _CallListScreenState extends State<CallListScreen> {
   List<CallModel> calls = [];
   bool isLoading = false;
-  Future<bool> getAllFriends() async{
-  final friends = await getFriends();
-   Store().friends = friends;
-   return friends.isNotEmpty;
-}
+
+  Future<bool> getAllFriends() async {
+    final friends = await getFriends();
+    Store().friends = friends;
+    return friends.isNotEmpty;
+  }
 
   @override
   void initState() {
@@ -50,9 +50,9 @@ class _CallListScreenState extends State<CallListScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.i.darkBrownColor,
-                  AppColors.i.darkBrownColor.withOpacity(0.4),
-                ])),
+              AppColors.i.darkBrownColor,
+              AppColors.i.darkBrownColor.withOpacity(0.4),
+            ])),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -87,7 +87,8 @@ class _CallListScreenState extends State<CallListScreen> {
                       IconButton(
                           onPressed: () {
                             screenPush(context, const LikedUsers());
-                          }, icon: Image.asset("assets/love.png")),
+                          },
+                          icon: Image.asset("assets/love.png")),
                       IconButton(
                           onPressed: () {
                             screenPush(context, const ChatUserList());
@@ -153,20 +154,20 @@ class _CallListScreenState extends State<CallListScreen> {
                       Expanded(
                         child: calls.isNotEmpty
                             ? ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: calls.length,
-                            itemBuilder: (context, index) {
-                              return callHistoyCart(size, calls[index]);
-                            })
+                                shrinkWrap: true,
+                                itemCount: calls.length,
+                                itemBuilder: (context, index) {
+                                  return callHistoyCart(size, calls[index]);
+                                })
                             : Center(
-                          child: Text(
-                            "You have no Calls!",
-                            style: TextStyle(
-                                color: AppColors.i.blackColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: size.width * 0.05),
-                          ),
-                        ),
+                                child: Text(
+                                  "You have no Calls!",
+                                  style: TextStyle(
+                                      color: AppColors.i.blackColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: size.width * 0.05),
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -180,7 +181,7 @@ class _CallListScreenState extends State<CallListScreen> {
         margin: const EdgeInsets.only(bottom: 20, right: 10),
         child: FloatingActionButton(
           onPressed: () {
-            _showModalBottomSheet(context,size); // code to add a new message
+            _showModalBottomSheet(context, size); // code to add a new message
           },
           backgroundColor: AppColors.i.darkBrownColor.withOpacity(0.8),
           child: const Icon(Icons.add),
@@ -201,7 +202,7 @@ class _CallListScreenState extends State<CallListScreen> {
             color: AppColors.i.darkBrownColor.withOpacity(0.8),
             borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 15, top: 5 , bottom: 5),
+          padding: const EdgeInsets.only(left: 8, right: 15, top: 5, bottom: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -223,9 +224,8 @@ class _CallListScreenState extends State<CallListScreen> {
                     ),
                     Row(
                       children: [
-                        const Icon(
-                           Icons.call_received_sharp
-                          , color: Colors.black),
+                        const Icon(Icons.call_received_sharp,
+                            color: Colors.black),
                         const SizedBox(width: 10),
                         Text(
                           'call duration',
@@ -242,8 +242,9 @@ class _CallListScreenState extends State<CallListScreen> {
               Column(
                 children: [
                   Text(
-                    DateFormat('h:mm a')
-                        .format(DateFormat('MMM dd, yyyy h:mm:ss.SSSS a').parse(lastCall.lastCall.timestamp)),
+                    DateFormat('h:mm a').format(
+                        DateFormat('MMM dd, yyyy h:mm:ss.SSSS a')
+                            .parse(lastCall.lastCall.timestamp)),
                     style: TextStyle(
                         color: AppColors.i.whiteColor.withOpacity(0.8),
                         fontWeight: FontWeight.w400,
@@ -284,26 +285,24 @@ class _CallListScreenState extends State<CallListScreen> {
     // }
   }
 
-void _showModalBottomSheet(BuildContext context, Size size) {
-    showModalBottomSheet(backgroundColor: Colors.transparent,
+  void _showModalBottomSheet(BuildContext context, Size size) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-      return FriendList(onTap: () async {
-                              Navigator.pop(context);
-        await _handleCameraAndMic(Permission.camera);
-                              await _handleCameraAndMic(Permission.microphone);
-                              screenPush(
-                                    context,
-                                    const AgoraCall());
-      },forChat: false,
-      );
-
+        return FriendList(
+          onTap: () async {
+            Navigator.pop(context);
+            await _handleCameraAndMic(Permission.camera);
+            await _handleCameraAndMic(Permission.microphone);
+          },
+          forChat: false,
+        );
       },
     );
   }
-  
- Future<void> _handleCameraAndMic(Permission permission) async{
-  final status = await permission.request();
 
- }
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+  }
 }
