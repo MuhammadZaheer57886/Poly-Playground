@@ -41,11 +41,7 @@ class LloginwidgetState extends State<Loginwidget> {
   void initState() {
     super.initState();
 
-    if (Store().userData.uid.isNotEmpty) {
-      onUserLogin();
-    }else{
-      ZegoUIKitPrebuiltCallInvitationService().uninit();
-    }
+   
   }
 
   @override
@@ -310,31 +306,3 @@ class LloginwidgetState extends State<Loginwidget> {
 }
 }
 
-void onUserLogin() {
-  /// 1.2.1. initialized ZegoUIKitPrebuiltCallInvitationService
-  /// when app's user is logged in or re-logged in
-  /// We recommend calling this method as soon as the user logs in to your app.
-  ZegoUIKitPrebuiltCallInvitationService().init(
-    appID: ZegoConfig.appID ,
-    appSign: ZegoConfig.appSign ,
-    userID: Store().userData.uid,
-      userName: Store().userData.fullName,
-    plugins: [ZegoUIKitSignalingPlugin()],
-    requireConfig: (ZegoCallInvitationData data) {
-      final config = (data.invitees.length > 1)
-          ? ZegoCallType.videoCall == data.type
-              ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
-              : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
-          : ZegoCallType.videoCall == data.type
-              ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
-              : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
-
-      /// support minimizing, show minimizing button
-      config.topMenuBarConfig.isVisible = true;
-      config.topMenuBarConfig.buttons
-          .insert(0, ZegoMenuBarButtonName.minimizingButton);
-
-      return config;
-    },
-  );
-}

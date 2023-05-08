@@ -5,6 +5,7 @@ import 'package:poly_playground/ui/authentication/profile_info/photo_profile_scr
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
 import '../../utils/constants/app_colors.dart';
@@ -32,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
       screenPush(context, const WelcomeScreen());
       return;
     }
+      onUserLogin();
+     
     handleState().then((value) => {
           setState(() {
             isLoading = false;
@@ -302,4 +305,5 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+
 }
