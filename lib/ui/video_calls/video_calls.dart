@@ -32,9 +32,8 @@ class _CallListScreenState extends State<CallListScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // updateCallList();
+    updateCallList();
     getAllFriends();
   }
 
@@ -289,9 +288,9 @@ void _showModalBottomSheet(BuildContext context, Size size) {
       context: context,
       builder: (BuildContext context) {
       return FriendList(onTap: () async {
-                              Navigator.pop(context);
-        await _handleCameraAndMic(Permission.camera);
-                              await _handleCameraAndMic(Permission.microphone);
+                              // Navigator.pop(context);
+        // await _handleCameraAndMic(Permission.camera);
+        // await _handleCameraAndMic(Permission.microphone);
                               screenPush(
                                     context,
                                     const AgoraCall());
@@ -302,8 +301,7 @@ void _showModalBottomSheet(BuildContext context, Size size) {
     );
   }
   
- Future<void> _handleCameraAndMic(Permission permission) async{
-  final status = await permission.request();
-
- }
+//  Future<void> _handleCameraAndMic(Permission permission) async{
+//   final status = await permission.request();
+//  }
 }

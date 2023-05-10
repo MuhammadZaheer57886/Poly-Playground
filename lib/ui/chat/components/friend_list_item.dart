@@ -137,13 +137,13 @@ class _FriendListState extends State<FriendList> {
 
   void setFriendListForCall() {
     List<UserDataModel> friends = Store().friends;
-    List<ChatModel> lastChats = Store().lastChats;
+    List<CallModel> lastcall = Store().lastcall;
     List<UserDataModel> filteredFriends = [];
 
     for (int i = 0; i < friends.length; i++) {
       bool isMatching = false;
-      for (int j = 0; j < lastChats.length; j++) {
-        if (friends[i].uid == lastChats[j].uid) {
+      for (int j = 0; j < lastcall.length; j++) {
+        if (friends[i].uid == lastcall[j].uid) {
           isMatching = true;
           break;
         }

@@ -26,6 +26,8 @@ class Store {
   List<NotificationModel> notifications = [];
   List<String> friendsIds = [];
   List<String> friendRequestsIds = [];
+  
+  List <CallModel> lastcall = [];
 
 
   void clear() {
