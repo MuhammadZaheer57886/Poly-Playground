@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:poly_playground/utils/constants/app_strings.dart';
-import '../../../common/nav_function.dart';
-import '../../../common/pop_message.dart';
-import '../../../common/store.dart';
-import '../../../utils/constants/app_colors.dart';
-import '../../../utils/firebase_utils.dart';
-import '../../../utils/my_utils.dart';
-import '../../payment/payment.dart';
-import '../../ui_components/simple_button.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/ui/payment/payment.dart';
+import 'package:poly_playground/ui/ui_components/simple_button.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class AddPictureScreen extends StatefulWidget {
   const AddPictureScreen({Key? key}) : super(key: key);
@@ -107,15 +106,15 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SimpleButton(title: "CONTINUE", onTap: () async {
+                  SimpleButton(title: "CONTINUE", onTap: () {
 
-                    final V = await updateUser();
-                    if ( V) {
+                  updateUser().then((v){
+                    if (v) {
                       screenPush(context, const Payment());
 
                     } else {
                       showFailedToast(context, 'something went wrong');
-                    }
+                    }});
                   }),
                 ],
               )
