@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/profile_info/add_picture_screen.dart';
 import 'package:poly_playground/ui/authentication/profile_info/basic_info2.dart';
 import 'package:poly_playground/ui/authentication/profile_info/basic_info_screen.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
@@ -268,12 +269,14 @@ class _HomeScreenState extends State<HomeScreen> {
       screenPush(context, const BasicInfo2Screen());
       return false;
     }
+    if(user.image1.isEmpty && user.image2.isEmpty && user.image3.isEmpty && user.image4.isEmpty ){
+      screenPush(context, const AddPictureScreen());
+    }
 
-     Store().userData = user!;
+     Store().userData = user;
 
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
-    // Store().likedUsersIds = await getLikedUsers();
     Store().friendsIds = await getFriendsIds();
     Store().friendRequestsIds = await getFriendRequestsIds();
     return true;

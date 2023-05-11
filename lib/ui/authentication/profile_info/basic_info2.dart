@@ -261,9 +261,12 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
                       SimpleButton(
                           title: "CONTINUE",
                           onTap: ()  {
-                             updateInfo().then((value) {
+                             updateInfo().then((value){
                                if(value) {
                                  screenPush(context, const AddPictureScreen());
+                               }
+                               else{
+                                 showFailedToast(context, AppStrings.i.noInternet);
                                }
                             });
                           }),
@@ -288,6 +291,7 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
   }
 
   Future<bool> updateInfo() async {
+
     if (controllerDay.text.isEmpty ||
         controllerMonth.text.isEmpty ||
         controllerYear.text.isEmpty ||
@@ -298,7 +302,9 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
     }
     if (!isValidDate(int.parse(controllerDay.text),
         int.parse(controllerMonth.text), int.parse(controllerYear.text))) {
+
       showFailedToast(context, "Please enter a valid date");
+
       return false;
     }
     if (!isEighteenYearsOld(int.parse(controllerDay.text),
@@ -306,15 +312,24 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
       showFailedToast(context, "You must be 18 years old");
       return false;
     }
+    setState(() {
+      isLoading = true;
+    });
     Store().userData.role = role;
     Store().userData.date =
         '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
     Store().userData.city = controllerCity.text;
     Store().userData.town = controllerTown.text;
     if (await updateUserInFirestore(Store().userData)) {
+      setState(() {
+        isLoading = false;
+      });
       return true;
     }
-    showFailedToast(context, AppStrings.i.noInternet);
+    setState(() {
+      isLoading = false;
+    });
+
     return false;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
 import '../../../common/nav_function.dart';
 import '../../../common/pop_message.dart';
 import '../../../common/store.dart';
@@ -26,14 +27,7 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    // if (isLoading) {
-    //   return  Container(
-    //       color: Colors.transparent,
-    //       child: const Center(
-    //         child: CircularProgressIndicator(),
-    //       ),
-    //   );
-    // }
+
     return Stack(children: [
       Scaffold(
         appBar: AppBar(
@@ -129,7 +123,6 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
           ),
         ),
       ),
-      // if (isLoading) showDialog(context: context, builder: (context)=>const Center(child:CircularProgressIndicator())),
       if (isLoading) FutureBuilder(
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             return Container(
@@ -159,11 +152,11 @@ class _AddPictureScreenState extends State<AddPictureScreen> {
                   alignment: Alignment.center,
                   width: size.width * 0.09,
                   height: size.width * 0.09,
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(
+                  decoration: BoxDecoration(
+                      color: AppColors.i.whiteColor, shape: BoxShape.circle),
+                  child:  Icon(
                     Icons.add,
-                    color: Colors.grey,
+                    color: AppColors.i.greyColor,
                   ),
                 )
               : Container(
