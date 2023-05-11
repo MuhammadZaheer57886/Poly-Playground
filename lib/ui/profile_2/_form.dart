@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/nav_function.dart';
 import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/common/store.dart';
 import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/home/home_screen.dart';
+import 'package:poly_playground/ui/profile_2/textfield_constrans.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-import 'package:poly_playground/utils/my_utils.dart';
-import '../../common/store.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/firebase_utils.dart';
-import '../home/home_screen.dart';
-import 'textfield_constrans.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({Key? key}) : super(key: key);
@@ -30,47 +28,24 @@ class _ProfileFormState extends State<ProfileForm> {
 
   List<String> orientations = [
     'Select Orientation',
-    'Straight',
-    'Gay',
-    'Lesbian',
+    'Homosexual',
     'Bisexual',
-    'Asexual',
-    'Demisexual',
-    'Pansexual',
-    'Queer',
+    'Asexual'
   ];
   List<String> genderIdentities = [
     'Select Gender Identity',
-    'Agender',
-    'Androgynous',
-    'Bigender',
-    'Cisgender',
-    'Demigender',
-    'Genderfluid',
-    'Genderqueer',
-    'Nonbinary',
-    'Transgender',
-    'Two-Spirit'
+    'Male',
+    'Female',
+    'Transgender'
   ];
   List<String> pronouns = [
     'Select Your Pronoun',
     'he/him',
     'she/her',
     'they/them',
-    'ze/zir',
-    'ey/em',
-    'per/pers',
-    've/ver',
-    'xe/xem',
-    'fae/faer',
-    'hir/hirs',
-    'ne/nem',
-    'sie/hir',
-    'ey/em',
-    'thon/thon',
   ];
   List<String> singleStatuses = [
-    'Select Single Status',
+    'Are you Single ?',
     'Yes',
     'No',
   ];
@@ -100,23 +75,29 @@ class _ProfileFormState extends State<ProfileForm> {
               },
             ),
             const SizedBox(height: 10),
-            MyDropdown(dropDownList: orientations, onChanged: (value) {
-              setState(() {
-                orientation = value;
-              });
-            }),
+            MyDropdown(
+                dropDownList: orientations,
+                onChanged: (value) {
+                  setState(() {
+                    orientation = value;
+                  });
+                }),
             const SizedBox(height: 10),
-            MyDropdown(dropDownList: genderIdentities, onChanged: (value) {
-              setState(() {
-                genderIdentity = value;
-              });
-            }),
+            MyDropdown(
+                dropDownList: genderIdentities,
+                onChanged: (value) {
+                  setState(() {
+                    genderIdentity = value;
+                  });
+                }),
             const SizedBox(height: 10),
-            MyDropdown(dropDownList: pronouns, onChanged: (value) {
-              setState(() {
-                pronoun = value;
-              });
-            }),
+            MyDropdown(
+                dropDownList: pronouns,
+                onChanged: (value) {
+                  setState(() {
+                    pronoun = value;
+                  });
+                }),
             const SizedBox(height: 10),
             TextFormFieldContainer(
               hintText: 'Enter your solo profile user name',
@@ -141,31 +122,45 @@ class _ProfileFormState extends State<ProfileForm> {
               },
             ),
             const SizedBox(height: 10),
-            MyDropdown(dropDownList: singleStatuses, onChanged: (value) {
-              setState(() {
-                singleStatus = value;
-              });
-            }),
+            MyDropdown(
+                dropDownList: singleStatuses,
+                onChanged: (value) {
+                  setState(() {
+                    singleStatus = value;
+                  });
+                }),
             const SizedBox(height: 10),
-            MyDropdown(dropDownList: openStatuses, onChanged: (value) {
-              setState(() {
-                openStatus = value;
-              });
-            }),
+            MyDropdown(
+                dropDownList: openStatuses,
+                onChanged: (value) {
+                  setState(() {
+                    openStatus = value;
+                  });
+                }),
             const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            SimpleButton(
-                    color: AppColors.i.darkBrownColor, title: 'Next', onTap: () async {
-                    if (await updateProfile2()) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
-                    }
+                SimpleButton(
+                  color: AppColors.i.darkBrownColor,
+                  title: 'Next',
+                  onTap: () async {
+                    // if (await updateProfile2()) {
+                    //   Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => const HomeScreen()));
+                    // }
+                    updateProfile2().then((v) {
+                      if (v) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomeScreen()));
+                      }
+                    });
                   },
-                  ),
+                ),
                 FloatingActionButton(
                   onPressed: () {},
                   backgroundColor: AppColors.i.darkBrownColor,
@@ -183,10 +178,10 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   Widget dropDown(
-      BuildContext context,
-      List<String> dropDownList,
-      Function(String) onChanged,
-      ) {
+    BuildContext context,
+    List<String> dropDownList,
+    Function(String) onChanged,
+  ) {
     late String dropdownValue = dropDownList[0];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -217,18 +212,17 @@ class _ProfileFormState extends State<ProfileForm> {
     );
   }
 
-
   Future<bool> updateProfile2() async {
     if (!_formKey.currentState!.validate()) {
       showFailedToast(context, 'Please fill all the fields');
       return false;
     }
 
-    if (orientation.contains("Select") || orientation.isEmpty ) {
+    if (orientation.contains("Select") || orientation.isEmpty) {
       showFailedToast(context, 'Please select orientation');
       return false;
     }
-    if (genderIdentity.contains("Select") || genderIdentity.isEmpty ) {
+    if (genderIdentity.contains("Select") || genderIdentity.isEmpty) {
       showFailedToast(context, 'Please Select gender identity');
       return false;
     }
@@ -237,18 +231,18 @@ class _ProfileFormState extends State<ProfileForm> {
       return false;
     }
 
-    if (singleStatus.contains("Select") || singleStatus.isEmpty ) {
+    if (singleStatus.contains("Select") || singleStatus.isEmpty) {
       showFailedToast(context, 'Please select single status');
       return false;
     }
-    if (openStatus.contains("Select")|| openStatus.isEmpty ) {
+    if (openStatus.contains("Select") || openStatus.isEmpty) {
       showFailedToast(context, 'Please select single status');
       return false;
     }
     _formKey.currentState!.save();
     UserDataModel userData = Store().userData;
     userData.name = nameController.text;
-    userData.orientation = orientation ;
+    userData.orientation = orientation;
     userData.genderIdentity = genderIdentity;
     userData.pronouns = pronoun;
     userData.userName = userNameController.text;

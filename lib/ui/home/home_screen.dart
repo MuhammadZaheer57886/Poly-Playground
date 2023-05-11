@@ -8,6 +8,7 @@ import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/user_profile.dart';
 import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
+import 'package:poly_playground/ui/profile_2/profile2.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import '../../common/store.dart';
 import '../../model/user_model.dart';
@@ -271,6 +272,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if(user.image1.isEmpty && user.image2.isEmpty && user.image3.isEmpty && user.image4.isEmpty ){
       screenPush(context, const AddPictureScreen());
+    }
+    if(user.name.isEmpty){
+      screenPush(context, const Profile2());
     }
 
      Store().userData = user;

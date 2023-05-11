@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
 import 'package:poly_playground/ui/payment/payment.dart';
-
-import '../../common/nav_function.dart';
-import '../../common/store.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/my_utils.dart';
-import '_form.dart';
+import 'package:poly_playground/ui/profile_2/_form.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class Profile2 extends StatefulWidget {
   const Profile2({super.key});
@@ -36,9 +34,9 @@ class _Profile2State extends State<Profile2> {
             onPressed: () {
               screenPushRep(context, const Payment());
             },
-            icon: const Icon(
+            icon:  Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: AppColors.i.whiteColor,
             ),
           ),
         ),
@@ -67,12 +65,12 @@ class _Profile2State extends State<Profile2> {
                   width: 60,
                   height: 60,
                 ),
-                const Text(
+                Text(
                   'Profile', // replace with your screen title
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white),
+                      color: AppColors.i.whiteColor),
                 ),
                 SizedBox(height: size.height * 0.05),
                 addPhotos(
@@ -120,11 +118,11 @@ class _Profile2State extends State<Profile2> {
                     alignment: Alignment.center,
                     width: size.width * 0.09,
                     height: size.width * 0.09,
-                    decoration: const BoxDecoration(
-                        color: Colors.white, shape: BoxShape.circle),
-                    child: const Icon(
+                    decoration: BoxDecoration(
+                        color: AppColors.i.whiteColor, shape: BoxShape.circle),
+                    child: Icon(
                       Icons.mode_edit,
-                      color: Colors.grey,
+                      color: AppColors.i.greyColor,
                     ),
                   ),
                 ),
@@ -136,12 +134,12 @@ class _Profile2State extends State<Profile2> {
         Column(
           children: [
             GestureDetector(
-                onTap:()=> setImage1(),
+                onTap: () => setImage1(),
                 child: takePictureBox(
                     context, size, Store().userData.image1, image1)),
             const SizedBox(height: 20),
             GestureDetector(
-                onTap:()=> setImage2(),
+                onTap: () => setImage2(),
                 child: takePictureBox(
                     context, size, Store().userData.image2, image2)),
           ],
@@ -150,12 +148,12 @@ class _Profile2State extends State<Profile2> {
         Column(
           children: [
             GestureDetector(
-                onTap:()=> setImage3(),
+                onTap: () => setImage3(),
                 child: takePictureBox(
                     context, size, Store().userData.image3, image3)),
             const SizedBox(height: 20),
             GestureDetector(
-                onTap:()=> setImage4(),
+                onTap: () => setImage4(),
                 child: takePictureBox(
                     context, size, Store().userData.image4, image4)),
           ],
@@ -190,12 +188,12 @@ class _Profile2State extends State<Profile2> {
             alignment: Alignment.center,
             width: size.width * 0.06,
             height: size.width * 0.06,
-            decoration: const BoxDecoration(
-                color: Colors.white, shape: BoxShape.circle),
-            child: const Icon(
+            decoration: BoxDecoration(
+                color: AppColors.i.whiteColor, shape: BoxShape.circle),
+            child: Icon(
               Icons.mode_edit,
-              color: Colors.grey,
-              size:  15,
+              color: AppColors.i.greyColor,
+              size: 15,
             ),
           ),
         ),
@@ -213,6 +211,7 @@ class _Profile2State extends State<Profile2> {
       });
     });
   }
+
   void setImage2() {
     getImageFromUser().then((value) {
       setState(() {
@@ -220,10 +219,10 @@ class _Profile2State extends State<Profile2> {
       });
       uploadImage(value).then((val) {
         Store().userData.image2 = val;
-
       });
     });
   }
+
   void setImage3() {
     getImageFromUser().then((value) {
       setState(() {
@@ -234,8 +233,8 @@ class _Profile2State extends State<Profile2> {
       });
     });
   }
-  void setImage4() {
 
+  void setImage4() {
     getImageFromUser().then((value) {
       setState(() {
         image4 = value;
