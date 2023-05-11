@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
-import '../../../common/pop_message.dart';
-import '../../../common/store.dart';
-import '../../../utils/constants/app_colors.dart';
-import '../../../utils/firebase_utils.dart';
-import '../../../utils/my_utils.dart';
-import '../../ui_components/custom_text_field.dart';
-import '../../ui_components/simple_button.dart';
-import 'add_picture_screen.dart';
+import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/ui/authentication/profile_info/add_picture_screen.dart';
+import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
+import 'package:poly_playground/ui/ui_components/simple_button.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/constants/app_strings.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class BasicInfo2Screen extends StatefulWidget {
   const BasicInfo2Screen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class BasicInfo2Screen extends StatefulWidget {
 }
 
 class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
+  bool isLoading = false;
   String role = "";
   final TextEditingController controllerDay = TextEditingController();
   final TextEditingController controllerMonth = TextEditingController();
@@ -28,244 +30,259 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        width: size.width,
-        height: size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              AppColors.i.darkBrownColor,
-              AppColors.i.darkBrownColor.withOpacity(0.4),
-              AppColors.i.darkBrownColor.withOpacity(0.4),
-            ])),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: size.height * 0.1,
-              ),
-              Text(
-                "Role",
-                style: TextStyle(
-                  color: AppColors.i.blackColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: size.width * 0.05,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  AppColors.i.darkBrownColor,
+                  AppColors.i.darkBrownColor.withOpacity(0.4),
+                  AppColors.i.darkBrownColor.withOpacity(0.4),
+                ])),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: size.height * 0.1,
+                  ),
+                  Text(
+                    "Role",
+                    style: TextStyle(
+                      color: AppColors.i.blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.width * 0.05,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(
-                        width: size.width * 0.25,
-                        child: Text(
-                          "Unicorn",
-                          style: TextStyle(
-                            color: AppColors.i.blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size.width * 0.045,
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.25,
+                            child: Text(
+                              "Unicorn",
+                              style: TextStyle(
+                                color: AppColors.i.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.width * 0.045,
+                              ),
+                            ),
                           ),
-                        ),
+                          Radio(
+                              value: "unicorn",
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value as String;
+                                });
+                              })
+                        ],
                       ),
-                      Radio(
-                          value: "unicorn",
-                          groupValue: role,
-                          onChanged: (value) {
-                            setState(() {
-                              role = value as String;
-                            });
-                          })
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.25,
+                            child: Text(
+                              "Griffin",
+                              style: TextStyle(
+                                color: AppColors.i.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.width * 0.045,
+                              ),
+                            ),
+                          ),
+                          Radio(
+                              value: "Griffin",
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value as String;
+                                });
+                              })
+                        ],
+                      ),
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(
-                        width: size.width * 0.25,
-                        child: Text(
-                          "Griffin",
-                          style: TextStyle(
-                            color: AppColors.i.blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size.width * 0.045,
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.25,
+                            child: Text(
+                              "Couple",
+                              style: TextStyle(
+                                color: AppColors.i.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.width * 0.045,
+                              ),
+                            ),
                           ),
-                        ),
+                          Radio(
+                              value: "Couple",
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value as String;
+                                });
+                              })
+                        ],
                       ),
-                      Radio(
-                          value: "Griffin",
-                          groupValue: role,
-                          onChanged: (value) {
-                            setState(() {
-                              role = value as String;
-                            });
-                          })
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.25,
+                            child: Text(
+                              "Undecided",
+                              style: TextStyle(
+                                color: AppColors.i.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.width * 0.045,
+                              ),
+                            ),
+                          ),
+                          Radio(
+                              value: "Undecided",
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value as String;
+                                });
+                              })
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Date of Birth",
+                    style: TextStyle(
+                      color: AppColors.i.blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.width * 0.05,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
+                      CustomTextField(
+                        titleText: "Day",
                         width: size.width * 0.25,
-                        child: Text(
-                          "Couple",
-                          style: TextStyle(
-                            color: AppColors.i.blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size.width * 0.045,
-                          ),
-                        ),
+                        controller: controllerDay,
+                        isDark: false,
+                        radius: 15,
+                        keyboardType: TextInputType.number,
                       ),
-                      Radio(
-                          value: "Couple",
-                          groupValue: role,
-                          onChanged: (value) {
-                            setState(() {
-                              role = value as String;
-                            });
-                          })
+                      CustomTextField(
+                        titleText: "Month",
+                        width: size.width * 0.25,
+                        controller: controllerMonth,
+                        keyboardType: TextInputType.number,
+                        isDark: false,
+                        radius: 15,
+                      ),
+                      CustomTextField(
+                        titleText: "Year",
+                        width: size.width * 0.25,
+                        keyboardType: TextInputType.number,
+                        controller: controllerYear,
+                        isDark: false,
+                        radius: 15,
+                      ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.25,
-                        child: Text(
-                          "Undecided",
-                          style: TextStyle(
-                            color: AppColors.i.blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size.width * 0.045,
-                          ),
-                        ),
-                      ),
-                      Radio(
-                          value: "Undecided",
-                          groupValue: role,
-                          onChanged: (value) {
-                            setState(() {
-                              role = value as String;
-                            });
-                          })
-                    ],
+                  const SizedBox(
+                    height: 20,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Date of Birth",
-                style: TextStyle(
-                  color: AppColors.i.blackColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: size.width * 0.05,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                  Text(
+                    "Select your city:",
+                    style: TextStyle(
+                      color: AppColors.i.blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.width * 0.045,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   CustomTextField(
-                    titleText: "Day",
-                    width: size.width * 0.25,
-                    controller: controllerDay,
-                    isDark: false,
-                    radius: 15,
-                    keyboardType: TextInputType.number,
+                      titleText: "Town",
+                      width: size.width * 0.88,
+                      keyboardType: TextInputType.text,
+                      controller: controllerCity,
+                      isDark: false,
+                      radius: 15,
+                      pl: 20),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Choose your country:",
+                    style: TextStyle(
+                      color: AppColors.i.blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.width * 0.045,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   CustomTextField(
-                    titleText: "Month",
-                    width: size.width * 0.25,
-                    controller: controllerMonth,
-                    keyboardType: TextInputType.number,
-                    isDark: false,
-                    radius: 15,
+                      titleText: "Country",
+                      width: size.width * 0.88,
+                      keyboardType: TextInputType.text,
+                      controller: controllerTown,
+                      isDark: false,
+                      radius: 15,
+                      pl: 20),
+                  SizedBox(
+                    height: size.height * 0.08,
                   ),
-                  CustomTextField(
-                    titleText: "Year",
-                    width: size.width * 0.25,
-                    keyboardType: TextInputType.number,
-                    controller: controllerYear,
-                    isDark: false,
-                    radius: 15,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SimpleButton(
+                          title: "CONTINUE",
+                          onTap: ()  {
+                             updateInfo().then((value) {
+                               if(value) {
+                                 screenPush(context, const AddPictureScreen());
+                               }
+                            });
+                          }),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Select your city:",
-                style: TextStyle(
-                  color: AppColors.i.blackColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: size.width * 0.045,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CustomTextField(
-                  titleText: "Town",
-                  width: size.width * 0.88,
-                  keyboardType: TextInputType.text,
-                  controller: controllerCity,
-                  isDark: false,
-                  radius: 15,
-                  pl: 20),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Choose your country:",
-                style: TextStyle(
-                  color: AppColors.i.blackColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: size.width * 0.045,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CustomTextField(
-                  titleText: "Country",
-                  width: size.width * 0.88,
-                  keyboardType: TextInputType.text,
-                  controller: controllerTown,
-                  isDark: false,
-                  radius: 15,
-                  pl: 20),
-              SizedBox(
-                height: size.height * 0.08,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SimpleButton(
-                      title: "CONTINUE",
-                      onTap: () async {
-                        if (await updateInfo()) {
-                          screenPush(context, const AddPictureScreen());
-                        }
-                      }),
-                ],
-              )
-            ],
+            ),
           ),
-        ),
+          if (isLoading)
+            FutureBuilder(
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                return Container(
+                    height: size.height,
+                    color: Colors.white24,
+                    child: const Center(child: CircularProgressIndicator()));
+              },
+            ),
+        ],
       ),
     );
   }
@@ -276,25 +293,38 @@ class _BasicInfo2ScreenState extends State<BasicInfo2Screen> {
         controllerYear.text.isEmpty ||
         controllerCity.text.isEmpty ||
         controllerTown.text.isEmpty) {
-      showFailedToast(context, "Please fill all fields");
+      showFailedToast(context, AppStrings.i.fillAll);
       return false;
     }
-    if(!isValidDate(int.parse(controllerDay.text),int.parse(controllerMonth.text),int.parse(controllerYear.text))){
+    if (!isValidDate(int.parse(controllerDay.text),
+        int.parse(controllerMonth.text), int.parse(controllerYear.text))) {
       showFailedToast(context, "Please enter a valid date");
       return false;
     }
-    if(!isEighteenYearsOld(int.parse(controllerDay.text),int.parse(controllerMonth.text),int.parse(controllerYear.text))){
+    if (!isEighteenYearsOld(int.parse(controllerDay.text),
+        int.parse(controllerMonth.text), int.parse(controllerYear.text))) {
       showFailedToast(context, "You must be 18 years old");
       return false;
     }
     Store().userData.role = role;
-    Store().userData.date = '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
+    Store().userData.date =
+        '${controllerDay.text}/${controllerMonth.text}/${controllerYear.text}';
     Store().userData.city = controllerCity.text;
     Store().userData.town = controllerTown.text;
-    if(await updateUserInFirestore(Store().userData)){
+    if (await updateUserInFirestore(Store().userData)) {
       return true;
     }
-    showFailedToast(context, 'Something went wrong please try again ');
+    showFailedToast(context, AppStrings.i.noInternet);
     return false;
+  }
+
+  @override
+  void dispose() {
+    controllerDay.dispose();
+    controllerMonth.dispose();
+    controllerYear.dispose();
+    controllerCity.dispose();
+    controllerTown.dispose();
+    super.dispose();
   }
 }

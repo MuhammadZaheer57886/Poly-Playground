@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/ui/authentication/profile_info/basic_info2.dart';
+import 'package:poly_playground/ui/authentication/profile_info/basic_info_screen.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
@@ -259,11 +261,15 @@ class _HomeScreenState extends State<HomeScreen> {
       return false;
     }
     if(user.fullName.isEmpty){
-      screenPush(context, const PhotoProfileScreen());
+      screenPush(context, const BasicInfoScreen());
+      return false;
+    }
+    if(user.role.isEmpty){
+      screenPush(context, const BasicInfo2Screen());
       return false;
     }
 
-     Store().userData = user;
+     Store().userData = user!;
 
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
