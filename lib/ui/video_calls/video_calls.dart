@@ -27,7 +27,11 @@ class _CallListScreenState extends State<CallListScreen> {
   Future<bool> getAllFriends() async{
   final friends = await getFriends();
    Store().friends = friends;
+   setState(() {
+      isLoading = false;
+    });
    return friends.isNotEmpty;
+   
 }
 
   @override

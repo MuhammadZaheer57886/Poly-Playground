@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
@@ -27,7 +28,7 @@ class AagoraStateCall extends State<AgoraCall> {
   late RtcEngine agoraEngine; // Agora engine instance
   bool muted = false; // Indicates if the local user is muted
   bool videoEnabled = true; // Indicates if the local user's video is enabled
-
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
@@ -97,6 +98,11 @@ class AagoraStateCall extends State<AgoraCall> {
         options: options,
         uid: uid,
       );
+      firestore.collection('remote_users').doc(uid.toString()).set({
+    'remoreUid' : _remoteUid,
+    'uid': uid,
+    'timestamp': DateTime.now(),
+  });
     } catch (e) {
       print(e);
     }
@@ -158,10 +164,10 @@ class AagoraStateCall extends State<AgoraCall> {
                       ),
                     ),
                   ),
-                  RawMaterialButton(
-                    onPressed: _isJoined ? null : () => {join()},
-                    child: const Text("Join"),
-                  ),
+                  // RawMaterialButton(
+                  //   onPressed: _isJoined ? null : () => {join()},
+                  //   child: const Text("Join"),
+                  // ),
                   // ElevatedButton(
                   //     onPressed: _isJoined ? () => {leave()} : null,
                   //     child: const Text("Leave"),
