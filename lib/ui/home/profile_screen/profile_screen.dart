@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
 import 'package:poly_playground/model/user_model.dart';
-import 'package:provider/provider.dart';
-import '../../../common/store.dart';
-import '../../../provider/sign_in_provider.dart';
-import '../../../utils/constants/app_colors.dart';
-import '../../authentication/welcome_screen.dart';
-import '../edit_profile_screen.dart';
-import '../settings_screen.dart';
+import 'package:poly_playground/ui/home/settings_screen.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -21,7 +17,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sp = context.read<SignInProvider>();
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -33,15 +28,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon:  Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color:AppColors.i.whiteColor ,
           ),
         ),
         title: Text(
           "Profile",
           style: TextStyle(
-              color: Colors.black,
+              color: AppColors.i.blackColor,
               fontSize: size.width * 0.055,
               fontWeight: FontWeight.w600),
         ),
@@ -80,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: Colors.white,
+                        backgroundColor: AppColors.i.whiteColor,
                         backgroundImage: userData.photoUrl.isNotEmpty
                             ? NetworkImage(userData.photoUrl)
                             : null,
@@ -95,21 +90,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             userData.fullName,
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
                           Text(
                             userData.date,
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
                           Text(
                             '${userData.city}, ${userData.town}',
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppColors.i.blackColor,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.width * 0.037),
                           ),
@@ -118,24 +113,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      // SizedBox(
-                      //   width: size.width * 0.05,
-                      // ),
-                      // ElevatedButton(
-                      //   style: ElevatedButton.styleFrom(
-                      //     minimumSize: const Size(100, 30),
-                      //     backgroundColor: AppColors.i.darkBrownColor,
-                      //   ),
-                      //   onPressed: () {
-                      //     sp.signOutGoogle();
-                      //     screenPushRep(context, const WelcomeScreen());
-                      //   },
-                      //   child: const Text(
-                      //     "Sign Out",
-                      //     style: TextStyle(
-                      //         color: Colors.white, fontWeight: FontWeight.w700),
-                      //   ),
-                      // ),
                     ],
                   ),
                   SizedBox(
@@ -149,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: size.width * 0.9,
                           height: 20,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.i.whiteColor,
                               borderRadius: BorderRadius.circular(15)),
                         ),
                         Row(
@@ -166,9 +143,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               width: 10,
                             ),
-                            const Text(
+                            Text(
                               "Level 3",
-                              style: TextStyle(color: Colors.red),
+                              style: TextStyle(color: AppColors.i.redColor),
                             )
                           ],
                         ),
@@ -181,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     "About me",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.i.blackColor,
                         fontSize: size.width * 0.05,
                         fontWeight: FontWeight.w700),
                   ),
@@ -189,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // "[bio]",
                     userData.bio,
                     style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.i.blackColor,
                         fontSize: size.width * 0.04,
                         fontWeight: FontWeight.w500),
                   ),
@@ -209,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     "Pictures",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.i.blackColor,
                         fontSize: size.width * 0.05,
                         fontWeight: FontWeight.w700),
                   ),
@@ -266,11 +243,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         margin: const EdgeInsets.only(right: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            color: AppColors.i.whiteColor, borderRadius: BorderRadius.circular(15)),
         child: Text(
           text,
-          style: const TextStyle(
-            color: Colors.black,
+          style:  TextStyle(
+            color: AppColors.i.blackColor,
           ),
         ),
       ),

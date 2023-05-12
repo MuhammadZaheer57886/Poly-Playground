@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../common/store.dart';
-import '../model/user_model.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
 
 FirebaseFirestore fireStore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -223,8 +223,7 @@ Future<String?> requestToken() async {
     return null;
   }
 }
-
-Future<void> updateReadStatus(ChatModel chat) async {
+ void updateReadStatus(ChatModel chat)  {
   try {
     chat.lastMessage.isRead = true;
     fireStore

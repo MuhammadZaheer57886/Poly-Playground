@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/pop_message.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
-import '../../common/pop_message.dart';
-import '../../common/store.dart';
-import '../../model/user_model.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/firebase_utils.dart';
-import '../../utils/my_utils.dart';
-import '../ui_components/simple_button.dart';
+import 'package:poly_playground/ui/ui_components/simple_button.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon:  Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
             color: AppColors.i.whiteColor,
           ),
@@ -84,22 +84,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Stack(
                     alignment: Alignment.topRight,
                     children: [
-                      Container(
-                        width: size.width * 0.34,
-                        height: size.width * 0.34,
-                        decoration: BoxDecoration(
-                          color: AppColors.i.whiteColor,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: profileImage.isEmpty
-                                ? NetworkImage(
-                                    userData.photoUrl,
-                                  )
-                                : FileImage(File(profileImage))
-                                    as ImageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      CircleAvatar(
+                        radius: size.width * 0.20,
+                        backgroundColor: AppColors.i.greyColor,
+                        backgroundImage: profileImage.isEmpty
+                                  ? NetworkImage(
+                                      userData.photoUrl,
+                                    )
+                                  : FileImage(File(profileImage)) as ImageProvider,
                       ),
                       Positioned(
                         top: 5,
@@ -113,7 +105,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: size.width * 0.07,
                             height: size.width * 0.07,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: AppColors.i.whiteColor.withOpacity(0.8)),
+                                shape: BoxShape.circle,
+                                color: AppColors.i.whiteColor.withOpacity(0.8)),
                             child: Icon(
                               Icons.mode_edit,
                               color: AppColors.i.blackColor,
@@ -442,11 +435,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                ), //
+                ),
         ],
       ),
     );
   }
+
   void editeProfileImage() {
     getImageFromUser().then((value) {
       if (value.isNotEmpty) {
@@ -487,7 +481,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         image1.isEmpty &&
         image2.isEmpty &&
         role.isEmpty) {
-      showFailedToast(context, 'No Informayion Updated');
+      showFailedToast(context, 'No Information Updated');
       Navigator.pop(context);
       return;
     }
@@ -497,10 +491,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final idDate = isValidDate(int.parse(controllerDay.text),
         int.parse(controllerMonth.text), int.parse(controllerYear.text));
-    final isEighteen = isEighteenYearsOld(
-        int.parse(controllerDay.text),
-        int.parse(controllerMonth.text),
-        int.parse(controllerYear.text));
+    final isEighteen = isEighteenYearsOld(int.parse(controllerDay.text),
+        int.parse(controllerMonth.text), int.parse(controllerYear.text));
     if (!idDate || !isEighteen) {
       showFailedToast(context, 'Invalid Date! date not updated');
     }
@@ -514,7 +506,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         controllerJob.text.isEmpty ? userData.job : controllerJob.text;
     userData.intro =
         controllerIntro.text.isEmpty ? userData.intro : controllerIntro.text;
-
     userData.role = role;
     userData.date = idDate && isEighteen ? date : userData.date;
     userData.city =
@@ -525,12 +516,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         image1.isEmpty ? userData.image1 : await uploadImage(image1);
     userData.image2 =
         image2.isEmpty ? userData.image2 : await uploadImage(image2);
-    if (await updateUserInFirestore(userData)) {
-      showSuccessToast(context, 'Profile updated successfully');
-      Store().userData = userData;
-      Navigator.pop(context);
-    } else {
-      showFailedToast(context, 'Failed to update profile');
-    }
+    updateUserInFirestore(userData).then((v) {
+      if (v) {
+        showSuccessToast(context, 'Profile updated successfully');
+        Store().userData = userData;
+        Navigator.pop(context);
+      } else {
+        showFailedToast(context, 'Failed to update profile');
+      }
+    });
   }
 }

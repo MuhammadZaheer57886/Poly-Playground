@@ -1,5 +1,4 @@
 import 'package:poly_playground/common/store.dart';
-import 'package:poly_playground/utils/constants/app_strings.dart';
 
 import '../utils/my_utils.dart';
 
@@ -19,7 +18,6 @@ class UserDataModel {
   String town;
   String uid;
   String name;
-  String dob;
   String orientation;
   String genderIdentity;
   String pronouns;
@@ -47,7 +45,6 @@ class UserDataModel {
     this.town = '',
     this.uid = '',
     this.name = '',
-    this.dob = '',
     this.orientation = '',
     this.genderIdentity = '',
     this.pronouns = '',
@@ -75,7 +72,6 @@ class UserDataModel {
     user.town = map['town'];
     user.uid = map['uid'];
     user.name = map['name'];
-    user.dob = map['dob'];
     user.orientation = map['orientation'];
     user.genderIdentity = map['genderIdentity'];
     user.pronouns = map['pronouns'];
@@ -105,7 +101,6 @@ class UserDataModel {
       'uid': uid,
       'email': email,
       'name': name,
-      'dob': dob,
       'orientation': orientation,
       'genderIdentity': genderIdentity,
       'pronouns': pronouns,

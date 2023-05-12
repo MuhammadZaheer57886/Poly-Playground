@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/chat/chat_screen.dart';
 import 'package:poly_playground/ui/chat/components/friend_list_item.dart';
 import 'package:poly_playground/ui/home/home_screen.dart';
+import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
+import 'package:poly_playground/ui/likes/liked_users.dart';
 import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
+import 'package:poly_playground/ui/video_calls/video_calls.dart';
 import 'package:poly_playground/utils/constants/app_colors.dart';
-import '../../common/nav_function.dart';
-import '../../common/store.dart';
-import '../../model/user_model.dart';
-import '../../utils/firebase_utils.dart';
-import '../home/profile_screen/profile_screen.dart';
-import '../likes/liked_users.dart';
-import '../video_calls/video_calls.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
 
 class ChatUserList extends StatefulWidget {
   const ChatUserList({Key? key}) : super(key: key);
@@ -64,10 +64,10 @@ class _ChatUserList extends State<ChatUserList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
-                      height: 0.07,
+                      height: 20,
                     ),
                     Container(
-                      height: 40,
+                      height: 50,
                       width: size.width,
                       color: AppColors.i.whiteColor,
                       child: Row(
@@ -115,7 +115,7 @@ class _ChatUserList extends State<ChatUserList> {
                           color: AppColors.i.whiteColor,
                           borderRadius: BorderRadius.circular(20)),
                       width: size.width,
-                      height: size.height * 0.83,
+                      height: size.height * 0.80,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -179,7 +179,7 @@ class _ChatUserList extends State<ChatUserList> {
     return GestureDetector(
       onTap: () async {
         Store().lastChat = lastChat;
-        await updateReadStatus(lastChat);
+        updateReadStatus(lastChat);
         screenPush(context, ChatScreen(receiverId: lastChat.uid));
       },
       child: Container(

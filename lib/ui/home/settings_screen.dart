@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/ui/authentication/login/forgotpassword.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
+import 'package:poly_playground/ui/home/edit_profile_screen.dart';
 import 'package:poly_playground/ui/ui_components/simple_button.dart';
-import '../../common/store.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/firebase_utils.dart';
-import '../authentication/login/forgotpassword.dart';
-import 'edit_profile_screen.dart';
-import 'home_screen.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -17,10 +16,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // bool isDarkMode = false;
-
-  // get fibaseAuth => null;
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -33,15 +28,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: AppColors.i.whiteColor,
           ),
         ),
         title: Text(
           "Settings",
           style: TextStyle(
-              color: Colors.white,
+              color: AppColors.i.whiteColor,
               fontWeight: FontWeight.w500,
               fontSize: size.width * 0.055),
         ),
@@ -65,23 +60,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.09,
-                decoration: const BoxDecoration(color: Colors.white),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(color: AppColors.i.whiteColor),
                 child: Row(
                   children: [
-                    // Container(
-                    //   margin: const EdgeInsets.all(6),
-                    //   width: size.width * 0.1,
-                    //   height: size.width * 0.1,
-                    //   decoration: const BoxDecoration(
-                    //     color: Colors.white,
-                    //     image: DecorationImage(
-                    //         image: AssetImage("assets/temp/5.png"),
-                    //         fit: BoxFit.cover),
-                    //   ),
-                    // ),
                     CircleAvatar(
-
                       radius: size.width * 0.08,
+                      backgroundColor: AppColors.i.greyColor,
                       backgroundImage: NetworkImage(Store().userData.photoUrl),
                     ),
                     const SizedBox(
@@ -94,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Text(
                           Store().userData.fullName.toUpperCase(),
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontSize: size.width * 0.05,
                             fontWeight: FontWeight.w700,
                           ),
@@ -102,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Text(
                           Store().userData.email,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.i.blackColor,
                             fontSize: size.width * 0.035,
                             fontWeight: FontWeight.w700,
                           ),
@@ -118,8 +103,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.07,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: AppColors.i.whiteColor,
                 ),
                 child: Row(
                   children: [
@@ -129,9 +114,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Text(
                       "Switch to Dark Mode",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontWeight: FontWeight.w500,
-                          fontSize: size.width * 0.04),
+                          fontSize: size.width * 0.05),
                     ),
                     const Spacer(),
                     Switch(
@@ -139,7 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: Store().isDarkMode,
                         onChanged: (value) {
                           setState(() {
-                            Store().isDarkMode = !value;
+                            Store().isDarkMode = value;
                           });
                         }),
                   ],
@@ -156,15 +141,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   width: size.width,
                   height: size.height * 0.08,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: AppColors.i.whiteColor,
                   ),
                   child: Row(
                     children: [
                       Text(
                         "Edit Profile",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontSize: size.width * 0.05,
                           fontWeight: FontWeight.w500,
                         ),
@@ -186,15 +171,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   width: size.width,
                   height: size.height * 0.08,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: AppColors.i.whiteColor,
                   ),
                   child: Row(
                     children: [
                       Text(
                         "Change Password",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.i.blackColor,
                           fontSize: size.width * 0.05,
                           fontWeight: FontWeight.w500,
                         ),
@@ -206,23 +191,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               SizedBox(
-                height: size.height*0.09,
+                height: size.height * 0.09,
               ),
-              SimpleButton(title: "Log Out", onTap: ()  async {
-                // await logOut() ? screenPush(context, const HomeScreen()) : '';
-                final v = await logOut();
-                if(v){
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    screenPushBackUntil(context, const WelcomeScreen());
-                  });
-                }
-              })
+              SimpleButton(
+                  title: "Log Out",
+                  onTap: () async {
+                    // await logOut() ? screenPush(context, const HomeScreen()) : '';
+                    final v = await logOut();
+                    if (v) {
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        screenPushBackUntil(context, const WelcomeScreen());
+                      });
+                    }
+                  })
             ],
           ),
         ),
       ),
     );
   }
-
-
 }

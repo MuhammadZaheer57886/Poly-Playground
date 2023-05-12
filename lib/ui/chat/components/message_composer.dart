@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:poly_playground/common/pop_message.dart';
-import '../../../common/store.dart';
-import '../../../model/user_model.dart';
-import '../../../utils/constants/app_colors.dart';
-import '../../../utils/firebase_utils.dart';
-import '../../../utils/http_requests.dart';
-import '../../../utils/my_utils.dart';
-import '../../ui_components/custom_text_field.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/ui_components/custom_text_field.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
+import 'package:poly_playground/utils/http_requests.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class MessageComposer extends StatefulWidget {
   final String receiverId;
@@ -59,7 +58,6 @@ class _MessageComposerState extends State<MessageComposer> {
             ),
           ),
           Padding(
-
             padding: const EdgeInsets.only(bottom: 10),
             child: IconButton(
               icon: Icon(
@@ -71,12 +69,7 @@ class _MessageComposerState extends State<MessageComposer> {
               onPressed: () async {
                 String msg = _messageController.text;
                   _messageController.clear();
-
-                if (! await send(msg)) {
-                  showFailedToast(context, "something went wrong");
-                  _messageController.text = msg;
-
-                }
+                send(msg);
               },
             ),
           ),
@@ -106,5 +99,4 @@ class _MessageComposerState extends State<MessageComposer> {
     await messageNotification();
     return true;
   }
-
 }

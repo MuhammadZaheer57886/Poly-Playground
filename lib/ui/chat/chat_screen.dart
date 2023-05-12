@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
+import 'package:poly_playground/ui/chat/chat_user_list.dart';
+import 'package:poly_playground/ui/chat/components/message_composer.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
 import 'package:poly_playground/utils/my_utils.dart';
-import '../../common/store.dart';
-import '../../model/user_model.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/firebase_utils.dart';
-import 'components/message_composer.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
@@ -44,8 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      // onPressed: () => screenPush(context, const ChatUserList()),
+                      onPressed: () => screenPush(context, const ChatUserList()),
                       icon: const Icon(
                         Icons.arrow_back,
                       ),
@@ -117,7 +119,6 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              // color: Colors.blue,
               color: AppColors.i.darkBrownColor.withOpacity(0.8),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -160,7 +161,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
-                  // bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 )
             ),
@@ -175,6 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
   Widget messageView(MessageModel message) {
     if (prevMessageDate != getMessageTime(message.timestamp)) {
       messageDate = getMessageTime(message.timestamp);
