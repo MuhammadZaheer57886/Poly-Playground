@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:poly_playground/common/nav_function.dart';
+import 'package:poly_playground/common/store.dart';
+import 'package:poly_playground/model/user_model.dart';
 import 'package:poly_playground/ui/authentication/profile_info/add_picture_screen.dart';
 import 'package:poly_playground/ui/authentication/profile_info/basic_info2.dart';
 import 'package:poly_playground/ui/authentication/profile_info/basic_info_screen.dart';
 import 'package:poly_playground/ui/authentication/profile_info/photo_profile_screen.dart';
 import 'package:poly_playground/ui/authentication/welcome_screen.dart';
+import 'package:poly_playground/ui/chat/chat_user_list.dart';
 import 'package:poly_playground/ui/home/profile_screen/profile_screen.dart';
 import 'package:poly_playground/ui/home/profile_screen/user_profile.dart';
+import 'package:poly_playground/ui/likes/liked_users.dart';
 import 'package:poly_playground/ui/notifications/NotificationScreen.dart';
 import 'package:poly_playground/ui/profile_2/profile2.dart';
 import 'package:poly_playground/ui/video_calls/video_calls.dart';
-import '../../common/store.dart';
-import '../../model/user_model.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/firebase_utils.dart';
-import '../../utils/my_utils.dart';
-import '../chat/chat_user_list.dart';
-import '../likes/liked_users.dart';
+import 'package:poly_playground/utils/constants/app_colors.dart';
+import 'package:poly_playground/utils/firebase_utils.dart';
+import 'package:poly_playground/utils/my_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -113,64 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-// Container(
-//   height: 50,
-//   width: size.width,
-//   color: Colors.white,
-//   child: Row(
-//     mainAxisAlignment: MainAxisAlignment.spaceAround,
-//     children: [
-//       IconButton(
-//           onPressed: () {
-//             Scaffold.of(context).openDrawer();
-//           }, icon: Image.asset("assets/menu.png")
-//
-//           ),
-//
-//       IconButton(
-//           onPressed: () {},
-//           icon: Image.asset("assets/search.png")),
-//
-//       InkWell(
-//         onTap: () {},
-//         child: Text(
-//           "FOR YOU",
-//           style: TextStyle(
-//               color: Colors.yellow.shade800,
-//               fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: Text(
-//           "TRENDING",
-//           style: TextStyle(
-//               color: Colors.red.shade800,
-//               fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: const Text(
-//           "NEARBY",
-//           style: TextStyle(
-//               color: Colors.black, fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: const Text(
-//           "NEW",
-//           style: TextStyle(
-//               color: Colors.black, fontWeight: FontWeight.w700),
-//         ),
-//       )
-//     ],
-//   ),
-// ),
-// const SizedBox(
-//   height: 10,
-// ),
                   Expanded(
                     child: users.isNotEmpty
                         ? GridView.builder(
@@ -254,31 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<bool> getDetails() async {
     final user = await getUserData(Store().uid);
-    if (user == null) {
-      screenPush(context, const WelcomeScreen());
+    if(!checkDetails(user)){
       return false;
     }
-    if (user.photoUrl.isEmpty) {
-      screenPush(context, const PhotoProfileScreen());
-      return false;
-    }
-    if(user.fullName.isEmpty){
-      screenPush(context, const BasicInfoScreen());
-      return false;
-    }
-    if(user.role.isEmpty){
-      screenPush(context, const BasicInfo2Screen());
-      return false;
-    }
-    if(user.image1.isEmpty && user.image2.isEmpty && user.image3.isEmpty && user.image4.isEmpty ){
-      screenPush(context, const AddPictureScreen());
-    }
-    if(user.name.isEmpty){
-      screenPush(context, const Profile2());
-    }
-
-     Store().userData = user;
-
+    Store().userData = user!;
     Store().users = await getAllUsers();
     Store().dislikedUsersIds = await getDislikedUsers();
     Store().friendsIds = await getFriendsIds();
@@ -331,5 +252,33 @@ class _HomeScreenState extends State<HomeScreen> {
         users.insert(index, user);
       });
     }
+  }
+
+  bool checkDetails(UserDataModel? user) {
+    if (user == null) {
+      screenPush(context, const WelcomeScreen());
+      return false;
+    }
+    if (user.photoUrl.isEmpty) {
+      screenPush(context, const PhotoProfileScreen());
+      return false;
+    }
+    if(user.fullName.isEmpty){
+      screenPush(context, const BasicInfoScreen());
+      return false;
+    }
+    if(user.role.isEmpty){
+      screenPush(context, const BasicInfo2Screen());
+      return false;
+    }
+    if(user.image1.isEmpty && user.image2.isEmpty && user.image3.isEmpty && user.image4.isEmpty ){
+      screenPush(context, const AddPictureScreen());
+      return false;
+    }
+    if(user.name.isEmpty){
+      screenPush(context, const Profile2());
+      return false;
+    }
+    return true;
   }
 }

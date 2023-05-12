@@ -169,9 +169,7 @@ Future<List<UserDataModel>> getAllUsers() async {
   List<UserDataModel> users = [];
   try {
     final value = await fireStore.collection("users").get();
-    if (value == null) {
-      return users;
-    }
+
     for (var doc in value.docs) {
       users.add(UserDataModel.fromMap(doc.data()));
     }
@@ -324,7 +322,7 @@ Future<void> updateNotificationToFirestore(NotificationModel notification) async
       .update(notification.toMap());
 }
 
-Future<void> deleteFriendRequestFromeFireBase(FriendRequest request) async {
+Future<bool> deleteFriendRequestFromeFireBase(FriendRequest request) async {
   String id = request.senderId == Store().uid ? request.receiverId : request.senderId;
   try {
     await currentRef
@@ -337,26 +335,11 @@ Future<void> deleteFriendRequestFromeFireBase(FriendRequest request) async {
         .collection("friendRequests")
         .doc(Store().uid)
         .delete();
+    return true;
   }catch(e){
+    return false;
   }
 }
-// Future<void> updateFriendRequestFromeFireBase(FriendRequest request) async {
-//   String id = request.senderId == Store().uid ? request.receiverId : request.senderId;
-//   try {
-//     await currentRef
-//         .collection('friendRequests')
-//         .doc(id)
-//         .update({"status":request.status});
-//     await fireStore
-//         .collection('users')
-//         .doc(id)
-//         .collection("friendRequests")
-//         .doc(Store().uid)
-//         .update({"status":request.status});
-//   }catch(e){
-//   }
-// }
-
 Future<void> addFriendToFireStore(String friendId) async {
   await currentRef
       .collection('friends')
@@ -375,9 +358,6 @@ Future<FriendRequest?> checkFriendRequest(String friendId) async {
         .collection('friendRequests')
         .doc(friendId)
         .get();
-    if (value == null) {
-      return null;
-    }
     return FriendRequest.fromMap(value.data()!);
   } catch (e) {
     return null;
@@ -389,9 +369,7 @@ Future<List<String>> getFriendsIds() async {
     final value = await currentRef
         .collection('friends')
         .get();
-    if (value == null) {
-      return [];
-    }
+
     List<String> friendsIds = [];
     for (var doc in value.docs) {
       friendsIds.add(doc.id);
@@ -404,13 +382,10 @@ Future<List<String>> getFriendsIds() async {
 }
 Future <bool> checkIsFriend(String friendId) async {
   try {
-    final value = await currentRef
+     await currentRef
         .collection('friends')
         .doc(friendId)
         .get();
-    if (value == null) {
-      return false;
-    }
     return true;
   } catch (e) {
     return false;
@@ -431,7 +406,6 @@ Future<List<String>> getFriendRequestsIds() async {
     return [];
   }
 }
-
 
 Future<List<UserDataModel>> getMultipleUsers(List<String> docIds) async {
   try {
