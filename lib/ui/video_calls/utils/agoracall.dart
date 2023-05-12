@@ -164,14 +164,7 @@ class AagoraStateCall extends State<AgoraCall> {
                       ),
                     ),
                   ),
-                  // RawMaterialButton(
-                  //   onPressed: _isJoined ? null : () => {join()},
-                  //   child: const Text("Join"),
-                  // ),
-                  // ElevatedButton(
-                  //     onPressed: _isJoined ? () => {leave()} : null,
-                  //     child: const Text("Leave"),
-                  // ),
+                  
                 ],
               ),
             ),

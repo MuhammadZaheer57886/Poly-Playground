@@ -110,64 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-// Container(
-//   height: 50,
-//   width: size.width,
-//   color: Colors.white,
-//   child: Row(
-//     mainAxisAlignment: MainAxisAlignment.spaceAround,
-//     children: [
-//       IconButton(
-//           onPressed: () {
-//             Scaffold.of(context).openDrawer();
-//           }, icon: Image.asset("assets/menu.png")
-//
-//           ),
-//
-//       IconButton(
-//           onPressed: () {},
-//           icon: Image.asset("assets/search.png")),
-//
-//       InkWell(
-//         onTap: () {},
-//         child: Text(
-//           "FOR YOU",
-//           style: TextStyle(
-//               color: Colors.yellow.shade800,
-//               fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: Text(
-//           "TRENDING",
-//           style: TextStyle(
-//               color: Colors.red.shade800,
-//               fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: const Text(
-//           "NEARBY",
-//           style: TextStyle(
-//               color: Colors.black, fontWeight: FontWeight.w700),
-//         ),
-//       ),
-//       InkWell(
-//         onTap: () {},
-//         child: const Text(
-//           "NEW",
-//           style: TextStyle(
-//               color: Colors.black, fontWeight: FontWeight.w700),
-//         ),
-//       )
-//     ],
-//   ),
-// ),
-// const SizedBox(
-//   height: 10,
-// ),
                   Expanded(
                     child: users.isNotEmpty
                         ? GridView.builder(
